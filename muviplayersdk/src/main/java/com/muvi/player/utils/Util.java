@@ -123,8 +123,10 @@ public class Util {
     public static boolean hide_pause = false;
     public static boolean call_finish_at_onUserLeaveHint = true;
     //   public static final String authTokenStr = "e8ae05a2ef3fd0c6688952c8f7557823"; //vishwam.tv
-    public static final String authTokenStr = "4d4fe07c6d8c8317ab45e6b1a2dff08a"; //monica studio
+   // public static final String authTokenStr = "4d4fe07c6d8c8317ab45e6b1a2dff08a"; //monica studio
 //   public static final String authTokenStr = "445882348316089103b8729dcb397c51"; //classic demo
+      public static final String authTokenStr = "4298851905443517c9f161e6b0471969"; //aato demo
+
 
     public static String Dwonload_pdf_rootUrl = "https://www.muvi.com/docs/";
 

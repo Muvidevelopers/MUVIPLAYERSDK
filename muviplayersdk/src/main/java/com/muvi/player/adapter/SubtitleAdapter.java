@@ -56,8 +56,8 @@ public class SubtitleAdapter extends BaseAdapter {
         //sets the text for item name and item description from the current item object
         title.setText(items.get(position));
 
-        Typeface typeface = Typeface.createFromAsset(context.getAssets(),context.getResources().getString(R.string.regular_fonts));
-        title.setTypeface(typeface);
+        /*Typeface typeface = Typeface.createFromAsset(context.getAssets(),context.getResources().getString(R.string.regular_fonts));
+        title.setTypeface(typeface);*/
 
 
         // returns the view for the current row

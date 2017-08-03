@@ -58,8 +58,8 @@ public class ResolutionChangeAdapter extends BaseAdapter {
         //sets the text for item name and item description from the current item object
         title.setText(items.get(position));
 
-        Typeface typeface = Typeface.createFromAsset(context.getAssets(),context.getResources().getString(R.string.regular_fonts));
-        title.setTypeface(typeface);
+        /*Typeface typeface = Typeface.createFromAsset(context.getAssets(),context.getResources().getString(R.string.regular_fonts));
+        title.setTypeface(typeface);*/
 
         ImageView imageView = (ImageView)convertView.findViewById(R.id.selected_resolution);
         if(items.get(position).contains(Util.VideoResolution))
