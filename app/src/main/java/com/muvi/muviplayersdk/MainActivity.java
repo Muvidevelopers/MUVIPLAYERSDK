@@ -5,9 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.muvi.player.activity.ExoPlayerActivity;
-import com.muvi.player.activity.Player;
-import com.muvi.player.utils.Util;
+import com.muvi.muviplayersdk.activity.ExoPlayerActivity;
+import com.muvi.muviplayersdk.activity.Player;
+import com.muvi.muviplayersdk.utils.Util;
 
 import java.util.ArrayList;
 
@@ -43,16 +43,21 @@ public class MainActivity extends AppCompatActivity {
         //playerModel.setThirdPartyPlayer(true);
 
 
-         playerModel.setVideoUrl("ms3://ms3.test.expressplay.com:8443/hms/ms3/rights/?b=ABMABAADERwACURSTTQtTXV2aWlLABDFhMheL5zGWNtbrYbV-gQsAHC7twMwo3i_sbh-DSkU8SGLSWgRqDCz9Uc_m6QkcBxOYn6vCiFlVLzelTwPaC5YcLEk2lC_FTvxE5N2V6yt8zvV2t4HcSkeEjU2w6uiuXowXFSyfEsVsztoPxCNM_mlEhyx4zVqunyjoLhC1p74YXvuAAAAFF0u7-I6RrMo2XBV7ZmXC7gZUyVc#https%3A%2F%2Fd780r7dx11wya.cloudfront.net%2Fuploads%2Fmovie_stream%2Ffull_movie%2F79711%2Fstream.mpd");
+         playerModel.setVideoUrl("ms3://ms3.test.expressplay.com:8443/hms/ms3/rights/?b=ABMABAADERwACURSTTQtTXV2aWl2ABAe2Dh-9TM6dhJAmG5sx6PzAIA2d943WTbc8mk6roj0y7BniqrgszpHL7FZAXdL8uHRAvYZwFwWy7NsSiAEz9xF5MS34RHloYcZmZWawmx58fB-CwO1oEySMKDMZUb-i3T061UfO6wEG3YgxaLJtmsBFKmC9VSGGz-IWi_W3bRUpefuK_LrpUPYlaBhpumnHTt5gQAAABRsWf9ZadhLZhUJMLYky_sT-JNaSg#https%3A%2F%2Fvimeoassets-singapore.s3-ap-southeast-1.amazonaws.com%2F4050%2FEncodedVideo%2Fuploads%2Fmovie_stream%2Ffull_movie%2F91003%2Fstream.mpd");
        //playerModel.setVideoUrl("https://d25urtqf5dbnwr.cloudfront.net/uploads/movie_stream/full_movie/79421/Cultural_Flavours___Italy_1210.mp4?Expires=1501740214&Signature=FzyWOeiuIfjQcL0sa8goBcP9y~uEkU0B2O4JmUx38kZxn9fJqbJL5gAlhQemN3flyU9kzYC2XwGYMFJouf2vcEkhONnaQqF8tjPH~waRuI1Rjv0enXjSeoBXPqLwdz9L-xPkdvxPQhkYZU9iWZLmZFdX3KP6jB8MRlYKxP6~E-6YoiuTbVOq4EBwAualA0VaVqPiIf1vGr4MQGbFLDHkhvo3PBbvmIl46wFa84yzp7Cg0Gjkq000Upwh31~QJdmUwCuD56dQ~5dU3mPIEsRqkjo2rQUXu0oLGu5rLo2a~ymeGmwG7YJVMGON9XwG5D5SaBZCBvqlRVFrPWWA6fuNQg__&Key-Pair-Id=APKAJYIDWFG3D6CNOYVA");
         // playerModel.setVideoUrl("https://d25urtqf5dbnwr.cloudfront.net/uploads/movie_stream/full_movie/80989/Kyo_Kar_242.mp4?Expires=1501716785&Signature=UsKY7fL3b6cCCZz4mcPs22r2qH~3mDRiHewodoGNY5lshRkHyIcY6wT6E4UewC9L44TXSzEVWd5dl1r0r5IOqDW39vjbs-yR67CoDf~cKnvUoGtvsEwrxKrSsdcpogWb7AkjErhlKU~xZx0-Axhdz77dZaQto4hIZ40ZJn8HPyF25Oc7mahRwRBNAO4A-jaz4AV2eFKya79rHopRCTXf~FDEJ~UIVDQw3S52U0q9ZB-4Z7IhETu4FnJjO-eqn70mU3AoikCKuonUb0r1MihJRm5LrNzafXluCe8hL8pJ7XZgrAAZOqFpVYoIHmANuNwvc7G0xbgasX88Ewnck7sfuw__&Key-Pair-Id=APKAJYIDWFG3D6CNOYVA\n");
-        playerModel.setStreamUniqueId("a03adf46f077c337759e1acd7ad06fd5");
-        playerModel.setMovieUniqueId("a82d5a4c060a67c8dbd251aa5296a2c2");
-        playerModel.setUserId("141832");
-        playerModel.setEmailId("bkss@gmail.com");
-        playerModel.setAuthTokenStr( Util.authTokenStr.trim());
+        playerModel.setStreamUniqueId("cd222bdc2af51646483a4ae9271074b6");
+        playerModel.setMovieUniqueId("b3acd62aaa10103ae0e9cea9f031ac54");
+        playerModel.setUserId("151404");
+        playerModel.setEmailId("bb@gmail.com");
+        playerModel.setAuthTokenStr("25e74a5c88d19c4b57c8138bf47abdf7");
         playerModel.setRootUrl(Util.rootUrl().trim());
+        playerModel.setAppName(getResources().getString(com.example.muviplayersdk.R.string.app_name));
+
+       // If the contnet is a single part
         playerModel.setEpisode_id("0");
+        // If the contnet is a multi part
+        playerModel.setEpisode_id("cd222bdc2af51646483a4ae9271074b6"); // set stream unique id as episode id
 
         playerModel.setVideoTitle("Humanima - Gorillas And Men");
         playerModel.setVideoStory("This series explores the world of men and women who have forged a unique bond with wildlife and nature. They have dedicated their lives to their passion. They care deeply about the protection of the environment and share a common desire for the preservation of animal life. They make us realize that we can respect and share our world with other species.\n");

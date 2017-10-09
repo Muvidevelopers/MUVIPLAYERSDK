@@ -20,7 +20,7 @@
 
 
 
-        <activity android:name="com.muvi.player.activity.ExoPlayerActivity"
+        <activity android:name=".activity.ExoPlayerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label=""
             android:screenOrientation="portrait"
@@ -28,34 +28,34 @@
 
 
         <activity
-            android:name="com.muvi.player.activity.ThirdPartyPlayer"
+            android:name=".activity.ThirdPartyPlayer"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label=""
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.muvi.player.activity.YouTubeAPIActivity"
+            android:name=".activity.YouTubeAPIActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label=""
             android:windowSoftInputMode="stateHidden" />
 
         <activity
-            android:name="com.muvi.player.activity.ResolutionChangeActivity"
+            android:name=".activity.ResolutionChangeActivity"
             android:configChanges="screenSize|orientation"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
-            android:name="com.muvi.player.activity.Subtitle_Resolution"
+            android:name=".activity.Subtitle_Resolution"
             android:configChanges="screenSize|orientation"
             android:label=""
             android:screenOrientation="sensor"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
         <activity
-            android:name="com.muvi.player.activity.ResumePopupActivity"
+            android:name=".activity.ResumePopupActivity"
             android:configChanges="screenSize|orientation"
             android:label=""
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
-            android:name="com.muvi.player.activity.SubtitleList"
+            android:name=".activity.SubtitleList"
             android:configChanges="screenSize|orientation"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 

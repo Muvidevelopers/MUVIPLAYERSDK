@@ -6,9 +6,9 @@
     <gradient
         android:angle="45"
         android:centerX="35%"
-        android:centerColor="#DDD"
-        android:startColor="#DDD"
-        android:endColor="#DDD"
+        android:centerColor="@color/cancel_button_background"
+        android:startColor="@color/cancel_button_background"
+        android:endColor="@color/cancel_button_background"
         android:type="linear"
         />
     <padding
@@ -23,6 +23,6 @@
         />
     <stroke
         android:width="3dp"
-        android:color="#DDD"
+        android:color="@color/cancel_button_background"
         />
 </shape>

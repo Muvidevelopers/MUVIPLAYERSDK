@@ -6,9 +6,9 @@
     <gradient
         android:angle="45"
         android:centerX="35%"
-        android:centerColor="#fff"
-        android:startColor="#fff"
-        android:endColor="#fff"
+        android:centerColor="@color/resumePopupColor"
+        android:startColor="@color/resumePopupColor"
+        android:endColor="@color/resumePopupColor"
         android:type="linear"
         />
     <padding
@@ -23,6 +23,6 @@
         />
     <stroke
         android:width="3dp"
-        android:color="#000"
+        android:color="@color/languagePopupColor"
         />
 </shape>
