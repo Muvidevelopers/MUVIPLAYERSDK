@@ -52,6 +52,12 @@ public class Player implements Serializable{
     public ArrayList<String> offline_language = new ArrayList<>();
     public ArrayList<String> offline_language_code = new ArrayList<>();
 
+
+    public ArrayList<String> chromecast_subtitle_url = new ArrayList<>();
+    public ArrayList<String> chromecast_subtitle_language = new ArrayList<>();
+    public ArrayList<String> chromecast_subtitle_language_code = new ArrayList<>();
+
+
     String downloadStatus = "0";
 
     public String getAppId() {
@@ -99,6 +105,37 @@ public class Player implements Serializable{
     public ArrayList<String> getOffline_language_code() {
         return offline_language_code;
     }
+
+
+    // This is for subtitle support in chromecast
+
+
+    public void setChromecsatSubtitleUrl(ArrayList<String> chromecast_subtitle_url) {
+        this.chromecast_subtitle_url = chromecast_subtitle_url;
+    }
+
+    public ArrayList<String> getChromecsatSubtitleUrl() {
+        return chromecast_subtitle_url;
+    }
+
+    public void setChromecsatSubtitleLanguage(ArrayList<String> chromecast_subtitle_language) {
+        this.chromecast_subtitle_language = chromecast_subtitle_language;
+    }
+
+    public ArrayList<String> getChromecsatSubtitleLanguage() {
+        return chromecast_subtitle_language;
+    }
+
+
+    public void setChromecsatSubtitleLanguageCode(ArrayList<String> chromecast_subtitle_language_code) {
+        this.chromecast_subtitle_language_code = chromecast_subtitle_language_code;
+    }
+
+    public ArrayList<String> getChromecsatSubtitleLanguageCode() {
+        return chromecast_subtitle_language_code;
+    }
+
+
 
     //********************** END ***************************//
 
