@@ -4,7 +4,15 @@
     android:layout_height="wrap_content"
     android:background="#fff"
     android:padding="10dp"
-    android:orientation="vertical">
+    android:orientation="horizontal">
+
+    <ImageView
+        android:layout_width="18dp"
+        android:src="@drawable/selected_resolution"
+        android:id="@+id/selected_resolution"
+        android:layout_marginLeft="10dp"
+        android:layout_gravity="center"
+        android:layout_height="23dp" />
 
     <TextView
         android:layout_width="match_parent"
@@ -16,11 +24,5 @@
         android:layout_marginLeft="18dp"
         android:textColor="#808080"
         android:orientation="vertical" />
-<!--    <View
-        android:layout_width="match_parent"
-        android:background="@color/holo_red_dark"
-        android:layout_marginTop="3dp"
-        android:id="@+id/view"
-        android:layout_height="2dp" />-->
 
 </LinearLayout>

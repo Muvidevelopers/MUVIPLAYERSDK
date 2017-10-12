@@ -19,6 +19,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
 import android.net.TrafficStats;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -41,7 +42,10 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -300,6 +304,13 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
     TextView story;
 
     private EMVideoView emVideoView;
+
+    Animation myAnim;
+    LinearLayout volume_brightness_control_layout;
+    ImageButton volume_brightness_control;
+    TextView volume_bright_value;
+    Window mWindow;
+    AudioManager am;
     int seek_label_pos = 0;
     int content_types_id = 0;
 
@@ -653,6 +664,23 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
         Typeface watchTrailerButtonTypeface = Typeface.createFromAsset(getAssets(), getResources().getString(R.string.fonts));
         videoCastCrewTitleTextView.setTypeface(watchTrailerButtonTypeface);
         videoCastCrewTitleTextView.setText(Util.getTextofLanguage(ExoPlayerActivity.this, Util.CAST_CREW_BUTTON_TITLE, Util.DEFAULT_CAST_CREW_BUTTON_TITLE));
+
+
+
+        // This code is responsible for change volume and brightness using swipe control .. & Player center buton animation...
+
+        myAnim= AnimationUtils.loadAnimation(this, R.anim.bounce);
+        am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        mWindow = getWindow();
+        emVideoView.setOnTouchListener(clickFrameSwipeListener);
+
+        volume_brightness_control_layout = (LinearLayout) findViewById(R.id.volume_brightness_control_layout);
+        volume_brightness_control = (ImageButton) findViewById(R.id.volume_brightness_control);
+        volume_bright_value = (TextView) findViewById(R.id.volume_bright_value);
+
+        //===================End===================//
+
+
 
         // ExoPlayerActivity.this is changed for the new requirement of Offline Viewing.
         startService(new Intent(ExoPlayerActivity.this, DataConsumptionService.class));
@@ -1031,7 +1059,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
             }
         });
 
-        emVideoView.setOnClickListener(new View.OnClickListener() {
+  /*      emVideoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -1098,7 +1126,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
 
             }
-        });
+        });*/
 
         compress_expand.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1216,15 +1244,12 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                     } else {
                         updateProgressBar();
                     }
-
                 }
                 else{
-
 
                     if (playerModel.getPlayPos() >= emVideoView.getDuration() / 1000) {
                         played_length = 0;
                     }
-
                     video_completed = false;
                     if (progressView != null) {
                         ((ProgressBar) findViewById(R.id.progress_view)).setVisibility(View.VISIBLE);
@@ -1232,30 +1257,32 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                         latest_center_play_pause.setVisibility(View.GONE);
                     }
 
-
                     try {
 
                         //video log
                         if (content_types_id == 4) {
-
                             if (SubTitlePath.size() > 0) {
+
+                                Util.DefaultSubtitle =SubTitleName.get(0).trim();
+
                                 CheckSubTitleParsingType("1");
                                 subtitleDisplayHandler = new Handler();
                                 subsFetchTask = new SubtitleProcessingTask("1");
                                 subsFetchTask.execute();
+                            } else {
+                                CallVideoLog(ASYNC_VODEOLOG_DETAILS);
                             }
-
-
 
                             PreviousUsedDataByApp(false);
                             /**ad **/
                             if (playerModel.getAdNetworkId() == 3){
                                 requestAds(playerModel.getChannel_id());
-
                             }
                             /**ad **/
                             emVideoView.start();
+
                             updateProgressBar();
+                            startTimer();
                         } else {
                             startTimer();
 
@@ -1278,6 +1305,9 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                                 updateProgressBar();
 
                                 if (SubTitlePath.size() > 0) {
+
+                                    Util.DefaultSubtitle =SubTitleName.get(0).trim();
+
 
                                     CheckSubTitleParsingType("1");
                                     subtitleDisplayHandler = new Handler();
@@ -1574,40 +1604,59 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
                             int currentPositionStr = millisecondsToString(emVideoView.getCurrentPosition());
                             playerPosition = currentPositionStr;
+                            if(content_types_id == 4)
+                            {
+
+                                try {
+                                    if((emVideoView.getCurrentPosition()/1000)==0)
+                                        return;
+
+                                    if(((emVideoView.getCurrentPosition()/1000) % 60) == 0){
+                                        CallVideoLog(ASYNC_FF_VODEOLOG_DETAILS);
+                                          Log.v("BIBHU1","************************************=");
+
+                                    }
+                                }catch (Exception e){}
 
 
-                            if (isFastForward == true) {
-                                isFastForward = false;
 
-                                log_temp_id = "0";
+                            }else
+                            {
+
+                                if (isFastForward == true) {
+                                    isFastForward = false;
+
+                                    log_temp_id = "0";
 
 
-                                int duration = emVideoView.getDuration() / 1000;
-                                if (currentPositionStr > 0 && currentPositionStr == duration) {
-                                    watchStatus = "complete";
-                                    CallVideoLog(ASYNC_FF_VODEOLOG_DETAILS);
-                                } else {
-                                    watchStatus = "halfplay";
-                                    CallVideoLog(ASYNC_FF_VODEOLOG_DETAILS);
-                                }
+                                    int duration = emVideoView.getDuration() / 1000;
+                                    if (currentPositionStr > 0 && currentPositionStr == duration) {
+                                        watchStatus = "complete";
+                                        CallVideoLog(ASYNC_FF_VODEOLOG_DETAILS);
+                                    } else {
+                                        watchStatus = "halfplay";
+                                        CallVideoLog(ASYNC_FF_VODEOLOG_DETAILS);
+                                    }
 
-                            } else if (isFastForward == false && currentPositionStr >= millisecondsToString(playerPreviousPosition)) {
+                                } else if (isFastForward == false && currentPositionStr >= millisecondsToString(playerPreviousPosition)) {
 
-                                playerPreviousPosition = 0;
+                                    playerPreviousPosition = 0;
 
-                                int duration = emVideoView.getDuration() / 1000;
-                                if (currentPositionStr > 0 && currentPositionStr == duration) {
+                                    int duration = emVideoView.getDuration() / 1000;
+                                    if (currentPositionStr > 0 && currentPositionStr == duration) {
 
-                                    watchStatus = "complete";
-                                    CallVideoLog(ASYNC_VODEOLOG_DETAILS);
+                                        watchStatus = "complete";
+                                        CallVideoLog(ASYNC_VODEOLOG_DETAILS);
 
-                                } else if (currentPositionStr > 0 && currentPositionStr % 60 == 0) {
+                                    } else if (currentPositionStr > 0 && currentPositionStr % 60 == 0) {
 
-                                    watchStatus = "halfplay";
-                                    CallVideoLog(ASYNC_VODEOLOG_DETAILS);
+                                        watchStatus = "halfplay";
+                                        CallVideoLog(ASYNC_VODEOLOG_DETAILS);
 
+                                    }
                                 }
                             }
+
                         }
                         //get the current timeStamp
                     }
@@ -1821,6 +1870,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
             seekBarProgress = emVideoView.getCurrentPosition();
 
+            Log.v("BIBHU1","current position="+seekBarProgress);
+
             if (emVideoView.getCurrentPosition() % 2 == 0)
                 BufferBandWidth();
 
@@ -1855,7 +1906,21 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                 current_time.setVisibility(View.GONE);
                 subtitle_change_btn.setVisibility(View.INVISIBLE);
                 mediaRouteButton.setVisibility(View.INVISIBLE);
-            } else {
+            }
+
+            else if(content_types_id == 4 && (previous_matching_time == current_matching_time)){
+                ((ProgressBar) findViewById(R.id.progress_view)).setVisibility(View.VISIBLE);
+                // Added Later By Bibhu
+
+                primary_ll.setVisibility(View.GONE);
+                last_ll.setVisibility(View.GONE);
+                center_play_pause.setVisibility(View.GONE);
+                latest_center_play_pause.setVisibility(View.GONE);
+                current_time.setVisibility(View.GONE);
+                subtitle_change_btn.setVisibility(View.INVISIBLE);
+                mediaRouteButton.setVisibility(View.INVISIBLE);
+            }
+            else {
 
                 if (content_types_id == 4) {
 
@@ -3149,7 +3214,9 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
     public void onDestroy() {
         super.onDestroy();
 
-        mCastContext.getSessionManager().removeSessionManagerListener(mSessionManagerListener, CastSession.class);
+        try{
+            mCastContext.getSessionManager().removeSessionManagerListener(mSessionManagerListener, CastSession.class);
+        }catch (Exception e){}
 
         Util.app_is_in_player_context = false;
         Log.v("BIBHU", "***********************************************************************************Ondestory called");
@@ -3236,9 +3303,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 //                Toast.makeText(getApplicationContext(), "subtitles loaded!!",Toast.LENGTH_SHORT).show();
             }
 
-            if(content_types_id != 4) {
-                CallVideoLog(ASYNC_VODEOLOG_DETAILS);
-            }
+            CallVideoLog(ASYNC_VODEOLOG_DETAILS);
 
             super.onPostExecute(result);
         }
@@ -4658,17 +4723,17 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
             List tracks = new ArrayList();
 
-            Log.v("BIBHU", "url size============" + playerModel.offline_url.size());
-            if (playerModel.offline_url.size() > 0) {
+            Log.v("BIBHU", "url size============" + playerModel.getChromecsatSubtitleUrl().size());
+            if (playerModel.getChromecsatSubtitleUrl().size() > 0) {
 
-                for (int i = 0; i < playerModel.offline_url.size(); i++) {
+                for (int i = 0; i < playerModel.getChromecsatSubtitleUrl().size(); i++) {
 
                     MediaTrack mediaTrack = new MediaTrack.Builder(i,
                             MediaTrack.TYPE_TEXT)
-                            .setName(playerModel.offline_language.get(i))
+                            .setName(playerModel.getChromecsatSubtitleLanguage().get(i))
                             .setSubtype(MediaTrack.SUBTYPE_SUBTITLES)
-                            .setContentId(playerModel.offline_url.get(i))
-                            .setLanguage(playerModel.SubTitleLanguage.get(i))
+                            .setContentId(playerModel.getChromecsatSubtitleUrl().get(i))
+                            .setLanguage(playerModel.getChromecsatSubtitleLanguageCode().get(i))
                             .setContentType("text/vtt")
                             .build();
 
@@ -4757,17 +4822,17 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
             List tracks = new ArrayList();
 
-            Log.v("BIBHU", "url size============" + playerModel.offline_url.size());
-            if (playerModel.offline_url.size() > 0) {
+            Log.v("BIBHU", "url size============" + playerModel.getChromecsatSubtitleUrl().size());
+            if (playerModel.getChromecsatSubtitleUrl().size() > 0) {
 
-                for (int i = 0; i < playerModel.offline_url.size(); i++) {
+                for (int i = 0; i < playerModel.getChromecsatSubtitleUrl().size(); i++) {
 
                     MediaTrack mediaTrack = new MediaTrack.Builder(i,
                             MediaTrack.TYPE_TEXT)
-                            .setName(playerModel.offline_language.get(i))
+                            .setName(playerModel.getChromecsatSubtitleLanguage().get(i))
                             .setSubtype(MediaTrack.SUBTYPE_SUBTITLES)
-                            .setContentId(playerModel.offline_url.get(i))
-                            .setLanguage(playerModel.SubTitleLanguage.get(i))
+                            .setContentId(playerModel.getChromecsatSubtitleUrl().get(i))
+                            .setLanguage(playerModel.getChromecsatSubtitleLanguageCode().get(i))
                             .setContentType("text/vtt")
                             .build();
 
@@ -5272,10 +5337,10 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
     @Override
     public void onTaskpreExecute(String Requestdata) {
 
-        if(Requestdata.equals(""+ASYNC_FF_VODEOLOG_DETAILS))
+      /*  if(Requestdata.equals(""+ASYNC_FF_VODEOLOG_DETAILS))
         {
             stoptimertask();
-        }
+        }*/
 
     }
 
@@ -5318,6 +5383,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
            {
                // Call Bufferlog Here
                CallBufferLog();
+               Log.v("BIBHU1", "CallBufferLog CALLED ");
            }
 
             //#######################################//
@@ -5384,9 +5450,188 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
         //********************************************************************************************************//
 
 
-
     }
+   //===============================END=====================================================//
 
 
-    //===============================END=====================================================//
+
+
+    // This code is responsible for change volume and brightness using swipe control ..
+
+    OnSwipeTouchListener clickFrameSwipeListener = new OnSwipeTouchListener(){
+
+        int startVolume;
+        int maxVolume;
+        int startBrightness;
+        int maxBrightness;
+
+        @Override
+        public void onMove(Direction dir, float diff) {
+
+
+            if(dir == Direction.LEFT || dir == Direction.RIGHT) {
+
+                // Here we have to implement seek control in player using finger swiping.
+
+            }else
+            {
+                if(initialX >= emVideoView.getWidth()/2 || mWindow==null) {
+                    float diffVolume;
+                    int finalVolume;
+
+                    diffVolume = (float) maxVolume * diff / ((float) emVideoView.getHeight() / 2);
+                    if (dir == Direction.DOWN) {
+                        diffVolume = -diffVolume;
+                    }
+                    finalVolume = startVolume + (int) diffVolume;
+                    if (finalVolume < 0)
+                        finalVolume = 0;
+                    else if (finalVolume > maxVolume)
+                        finalVolume = maxVolume;
+
+                    am.setStreamVolume(AudioManager.STREAM_MUSIC, finalVolume, 0);
+
+                    volume_brightness_control.setImageResource(R.drawable.volume);
+                    volume_bright_value.setText(""+finalVolume);
+                    volume_brightness_control_layout.setVisibility(View.VISIBLE);
+                    latest_center_play_pause.setVisibility(View.INVISIBLE);
+
+                }
+                else if(initialX < emVideoView.getWidth()/2){
+                    float diffBrightness;
+                    int finalBrightness;
+
+                    diffBrightness = (float) maxBrightness * diff / ((float) emVideoView.getHeight() / 2);
+                    if (dir == Direction.DOWN) {
+                        diffBrightness = -diffBrightness;
+                    }
+                    finalBrightness = startBrightness + (int) diffBrightness;
+                    if (finalBrightness < 0)
+                        finalBrightness = 0;
+                    else if (finalBrightness > maxBrightness)
+                        finalBrightness = maxBrightness;
+
+                    WindowManager.LayoutParams layout = mWindow.getAttributes();
+                    layout.screenBrightness = (float)finalBrightness / 100;
+                    mWindow.setAttributes(layout);
+
+                    volume_brightness_control.setImageResource(R.drawable.brightness);
+                    volume_bright_value.setText(""+finalBrightness);
+                    volume_brightness_control_layout.setVisibility(View.VISIBLE);
+                    latest_center_play_pause.setVisibility(View.INVISIBLE);
+
+
+                /*PreferenceManager.getDefaultSharedPreferences(getContext()) .edit()
+                        .putInt(BETTER_VIDEO_PLAYER_BRIGHTNESS, finalBrightness)
+                        .apply();*/
+                }
+            }
+
+        }
+
+        @Override
+        public void onClick() {
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                    if (Util.hide_pause) {
+                        Util.hide_pause = false;
+                    }
+
+                    if (((ProgressBar) findViewById(R.id.progress_view)).getVisibility() == View.VISIBLE) {
+                        primary_ll.setVisibility(View.VISIBLE);
+                        center_play_pause.setVisibility(View.GONE);
+                        latest_center_play_pause.setVisibility(View.GONE);
+                        current_time.setVisibility(View.GONE);
+                        subtitle_change_btn.setVisibility(View.INVISIBLE);
+                        mediaRouteButton.setVisibility(View.INVISIBLE);
+
+
+                    } else {
+                        if (primary_ll.getVisibility() == View.VISIBLE) {
+                            primary_ll.setVisibility(View.GONE);
+                            last_ll.setVisibility(View.GONE);
+                            center_play_pause.setVisibility(View.GONE);
+                            latest_center_play_pause.setVisibility(View.GONE);
+                            current_time.setVisibility(View.GONE);
+                            subtitle_change_btn.setVisibility(View.INVISIBLE);
+                            mediaRouteButton.setVisibility(View.INVISIBLE);
+
+                            End_Timer();
+                        } else {
+                            primary_ll.setVisibility(View.VISIBLE);
+
+                            if(isDrm)
+                            {
+                                if (SubTitlePath.size() > 0) {
+                                    subtitle_change_btn.setVisibility(View.VISIBLE);
+                                }
+                            }else {
+                                if (SubTitlePath.size() > 0 || ResolutionUrl.size()>0) {
+                                    subtitle_change_btn.setVisibility(View.VISIBLE);
+                                }
+                            }
+
+                            // This is changed Later
+
+                            if(mediaRouteButton.isEnabled())
+                            {
+                                mediaRouteButton.setVisibility(View.VISIBLE);
+                            }else
+                            {
+                                mediaRouteButton.setVisibility(View.GONE);
+                            }
+
+
+                            last_ll.setVisibility(View.VISIBLE);
+                            center_play_pause.setVisibility(View.VISIBLE);
+                            latest_center_play_pause.setVisibility(View.VISIBLE);
+                            current_time.setVisibility(View.VISIBLE);
+                            current_time.setVisibility(View.GONE);
+                            showCurrentTime();
+                            current_time.setVisibility(View.VISIBLE);
+                            Start_Timer();
+                        }
+
+                    }
+
+
+                }
+            });
+
+        }
+
+        @Override
+        public void onAfterMove() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    volume_brightness_control_layout.setVisibility(View.GONE);
+                    if (primary_ll.getVisibility() == View.VISIBLE && ((ProgressBar) findViewById(R.id.progress_view)).getVisibility() != View.VISIBLE) {
+                        latest_center_play_pause.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onBeforeMove(Direction dir) {
+
+            if(dir == Direction.LEFT || dir == Direction.RIGHT) {
+            }
+            else{
+                maxBrightness = 100;
+                if(mWindow!=null) {
+                    startBrightness = (int) (mWindow.getAttributes().screenBrightness * 100);
+                }
+                maxVolume = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+                startVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC);
+            }
+        }
+    };
+
+    //=========================================End========================================//
+
 }
