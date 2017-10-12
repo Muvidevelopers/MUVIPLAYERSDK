@@ -5,11 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
 import com.example.muviplayersdk.R;
 import com.muvi.muviplayersdk.utils.FontUtls;
+import com.muvi.muviplayersdk.utils.Util;
 
 import java.util.ArrayList;
 
@@ -53,8 +55,20 @@ public class SubtitleAdapter extends BaseAdapter {
         // get the TextView for item name and item description
         TextView title = (TextView)convertView.findViewById(R.id.title);
 
+
         //sets the text for item name and item description from the current item object
         title.setText(items.get(position));
+
+        ImageView selected_resolution = (ImageView)convertView.findViewById(R.id.selected_resolution);
+        if(items.get(position).contains(Util.DefaultSubtitle))
+        {
+            selected_resolution.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            selected_resolution.setVisibility(View.INVISIBLE);
+        }
+
 
         FontUtls.loadFont(context,context.getResources().getString(R.string.fonts_regular),title);
 

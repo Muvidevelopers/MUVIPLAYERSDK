@@ -1262,12 +1262,15 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                         //video log
                         if (content_types_id == 4) {
                             if (SubTitlePath.size() > 0) {
+
+                                Util.DefaultSubtitle =SubTitleName.get(0).trim();
+
                                 CheckSubTitleParsingType("1");
                                 subtitleDisplayHandler = new Handler();
                                 subsFetchTask = new SubtitleProcessingTask("1");
                                 subsFetchTask.execute();
                             } else {
-                                CallBufferLog();
+                                CallVideoLog(ASYNC_VODEOLOG_DETAILS);
                             }
 
                             PreviousUsedDataByApp(false);
@@ -1277,7 +1280,9 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                             }
                             /**ad **/
                             emVideoView.start();
+
                             updateProgressBar();
+                            startTimer();
                         } else {
                             startTimer();
 
@@ -1300,6 +1305,9 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                                 updateProgressBar();
 
                                 if (SubTitlePath.size() > 0) {
+
+                                    Util.DefaultSubtitle =SubTitleName.get(0).trim();
+
 
                                     CheckSubTitleParsingType("1");
                                     subtitleDisplayHandler = new Handler();
@@ -1596,14 +1604,21 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
                             int currentPositionStr = millisecondsToString(emVideoView.getCurrentPosition());
                             playerPosition = currentPositionStr;
-
                             if(content_types_id == 4)
                             {
+
                                 try {
-                                    stoptimertask();
+                                    if((emVideoView.getCurrentPosition()/1000)==0)
+                                        return;
+
+                                    if(((emVideoView.getCurrentPosition()/1000) % 60) == 0){
+                                        CallVideoLog(ASYNC_FF_VODEOLOG_DETAILS);
+                                          Log.v("BIBHU1","************************************=");
+
+                                    }
                                 }catch (Exception e){}
 
-                                CallBufferLog();
+
 
                             }else
                             {
@@ -1855,6 +1870,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
             seekBarProgress = emVideoView.getCurrentPosition();
 
+            Log.v("BIBHU1","current position="+seekBarProgress);
+
             if (emVideoView.getCurrentPosition() % 2 == 0)
                 BufferBandWidth();
 
@@ -1889,7 +1906,21 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                 current_time.setVisibility(View.GONE);
                 subtitle_change_btn.setVisibility(View.INVISIBLE);
                 mediaRouteButton.setVisibility(View.INVISIBLE);
-            } else {
+            }
+
+            else if(content_types_id == 4 && (previous_matching_time == current_matching_time)){
+                ((ProgressBar) findViewById(R.id.progress_view)).setVisibility(View.VISIBLE);
+                // Added Later By Bibhu
+
+                primary_ll.setVisibility(View.GONE);
+                last_ll.setVisibility(View.GONE);
+                center_play_pause.setVisibility(View.GONE);
+                latest_center_play_pause.setVisibility(View.GONE);
+                current_time.setVisibility(View.GONE);
+                subtitle_change_btn.setVisibility(View.INVISIBLE);
+                mediaRouteButton.setVisibility(View.INVISIBLE);
+            }
+            else {
 
                 if (content_types_id == 4) {
 
@@ -3183,7 +3214,9 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
     public void onDestroy() {
         super.onDestroy();
 
-        mCastContext.getSessionManager().removeSessionManagerListener(mSessionManagerListener, CastSession.class);
+        try{
+            mCastContext.getSessionManager().removeSessionManagerListener(mSessionManagerListener, CastSession.class);
+        }catch (Exception e){}
 
         Util.app_is_in_player_context = false;
         Log.v("BIBHU", "***********************************************************************************Ondestory called");
@@ -3270,13 +3303,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 //                Toast.makeText(getApplicationContext(), "subtitles loaded!!",Toast.LENGTH_SHORT).show();
             }
 
-            if(content_types_id != 4) {
-                CallVideoLog(ASYNC_VODEOLOG_DETAILS);
-            }
-            if(content_types_id == 4) {
-
-                CallBufferLog();
-            }
+            CallVideoLog(ASYNC_VODEOLOG_DETAILS);
 
             super.onPostExecute(result);
         }
@@ -5310,10 +5337,10 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
     @Override
     public void onTaskpreExecute(String Requestdata) {
 
-        if(Requestdata.equals(""+ASYNC_FF_VODEOLOG_DETAILS))
+      /*  if(Requestdata.equals(""+ASYNC_FF_VODEOLOG_DETAILS))
         {
             stoptimertask();
-        }
+        }*/
 
     }
 
@@ -5356,6 +5383,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
            {
                // Call Bufferlog Here
                CallBufferLog();
+               Log.v("BIBHU1", "CallBufferLog CALLED ");
            }
 
             //#######################################//
