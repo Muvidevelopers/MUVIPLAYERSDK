@@ -115,7 +115,8 @@ public class Util {
 
     //=========End========================//
 
-    public static final String app_id = "49A4D3B2";
+    public static String app_id = "";
+//    public static String app_id = "49A4D3B2";
 
     public static boolean drawer_line_visibility = true;
     /*public static PPVModel ppvModel = null;
@@ -176,7 +177,7 @@ public class Util {
     public static String rootUrl(){
         //String rootUrl = "https://sonydadc.muvi.com/rest/";
 //        String rootUrl = "http://muvistudio.edocent.com/rest/";
-        String rootUrl = "http://www.muvi.com/rest/";
+        String rootUrl = "https://www.muvi.com/rest/";
         //String rootUrl = "https://www.idogic.com/rest/";
         return rootUrl;
 

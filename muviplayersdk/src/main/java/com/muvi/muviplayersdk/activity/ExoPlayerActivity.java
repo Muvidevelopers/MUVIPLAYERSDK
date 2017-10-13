@@ -17,6 +17,7 @@ import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
@@ -132,11 +133,14 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.BlockingQueue;
@@ -403,6 +407,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
     boolean change_resolution = false;
     boolean is_paused = false;
+    Timer MovableTimer;
 
 
     @Override
@@ -424,7 +429,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                     public void run() {
 
                         if(video_prepared){
-                            if (mediaRouteButton.isEnabled()) {
+                            if (mediaRouteButton.isEnabled() && playerModel.getChromeCastEnable()) {
                                 mediaRouteButton.setVisibility(View.VISIBLE);
                             } else {
                                 mediaRouteButton.setVisibility(View.GONE);
@@ -458,15 +463,19 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_final_exoplayer);
 
         playerModel = (Player) getIntent().getSerializableExtra("PlayerModel");
+//        Util.app_id = playerModel.getAppId();
+        setContentView(R.layout.activity_final_exoplayer);
+
 
         if (playerModel.getVideoUrl().contains(".mpd")) {
             isDrm = true;
         } else {
             isDrm = false;
         }
+
+
 
 
         if (!playerModel.getVideoUrl().trim().equals("")) {
@@ -682,6 +691,9 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
 
 
+
+
+
         // ExoPlayerActivity.this is changed for the new requirement of Offline Viewing.
         startService(new Intent(ExoPlayerActivity.this, DataConsumptionService.class));
         registerReceiver(SelectedUrl, new IntentFilter("UrlPosition"));
@@ -761,7 +773,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
         if (isDrm) {
             if (SubTitlePath.size() < 1) {
-                subtitle_change_btn.setVisibility(View.INVISIBLE);
+                subtitle_change_btn.setVisibility(View.GONE);
             } else {
                 subtitle_change_btn.setBackgroundResource(R.drawable.cc_button_radious);
                 subtitle_change_btn.setImageResource(R.drawable.subtitle_image_drm);
@@ -770,7 +782,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
             }
         } else {
             if ((SubTitlePath.size() < 1) && (ResolutionUrl.size() < 1)) {
-                subtitle_change_btn.setVisibility(View.INVISIBLE);
+                subtitle_change_btn.setVisibility(View.GONE);
                 Log.v("BIBHU1", "subtitle_image button Invisible called");
             } else {
                 subtitle_change_btn.setBackgroundResource(0);
@@ -918,7 +930,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                         Log.v("BIBHU11", "CastAndCrewActivity End_Timer cancel called");
 
 
-                        subtitle_change_btn.setVisibility(View.INVISIBLE);
+                        subtitle_change_btn.setVisibility(View.GONE);
                         primary_ll.setVisibility(View.GONE);
                         last_ll.setVisibility(View.GONE);
                         center_play_pause.setVisibility(View.GONE);
@@ -950,9 +962,38 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
         emailAddressTextView = (TextView) findViewById(R.id.ipAddressTextView);
         dateTextView = (TextView) findViewById(R.id.dateTextView);
 
-        ipAddressTextView.setVisibility(View.GONE);
+       /* ipAddressTextView.setVisibility(View.GONE);
         emailAddressTextView.setVisibility(View.GONE);
-        dateTextView.setVisibility(View.GONE);
+        dateTextView.setVisibility(View.GONE);*/
+
+
+        // This timer is only responsible to active movable timer
+
+        if(playerModel.getWaterMark()){
+            MovableTimer = new Timer();
+            MovableTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ipAddressTextView.setVisibility(View.VISIBLE);
+                            ipAddressTextView.setText(ipAddressStr);
+                            emailAddressTextView.setVisibility(View.VISIBLE);
+                            emailAddressTextView.setText(emailIdStr);
+                            dateTextView.setVisibility(View.VISIBLE);
+                            dateTextView.setText(""+new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+                        }
+                    });
+
+
+                    MoveWaterMark();
+                }
+            }, 2000, 2000);
+        }
+
+        //**********************END**********************//
 
         compress_expand = (ImageView) findViewById(R.id.compress_expand);
         back = (ImageButton) findViewById(R.id.back);
@@ -1072,7 +1113,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                     center_play_pause.setVisibility(View.GONE);
                     latest_center_play_pause.setVisibility(View.GONE);
                     current_time.setVisibility(View.GONE);
-                    subtitle_change_btn.setVisibility(View.INVISIBLE);
+                    subtitle_change_btn.setVisibility(View.GONE);
                     mediaRouteButton.setVisibility(View.INVISIBLE);
 
 
@@ -1083,7 +1124,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                         center_play_pause.setVisibility(View.GONE);
                         latest_center_play_pause.setVisibility(View.GONE);
                         current_time.setVisibility(View.GONE);
-                        subtitle_change_btn.setVisibility(View.INVISIBLE);
+                        subtitle_change_btn.setVisibility(View.GONE);
                         mediaRouteButton.setVisibility(View.INVISIBLE);
 
                         End_Timer();
@@ -1198,6 +1239,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
         latest_center_play_pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                latest_center_play_pause.startAnimation(myAnim);
 
                 if (mCastSession != null && mCastSession.isConnected()) {
                     if (Util.hide_pause) {
@@ -1904,7 +1947,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                 center_play_pause.setVisibility(View.GONE);
                 latest_center_play_pause.setVisibility(View.GONE);
                 current_time.setVisibility(View.GONE);
-                subtitle_change_btn.setVisibility(View.INVISIBLE);
+                subtitle_change_btn.setVisibility(View.GONE);
                 mediaRouteButton.setVisibility(View.INVISIBLE);
             }
 
@@ -1917,7 +1960,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                 center_play_pause.setVisibility(View.GONE);
                 latest_center_play_pause.setVisibility(View.GONE);
                 current_time.setVisibility(View.GONE);
-                subtitle_change_btn.setVisibility(View.INVISIBLE);
+                subtitle_change_btn.setVisibility(View.GONE);
                 mediaRouteButton.setVisibility(View.INVISIBLE);
             }
             else {
@@ -1986,7 +2029,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                                         Log.v("BIBHU11", "CastAndCrewActivity End_Timer cancel called");
 
 
-                                        subtitle_change_btn.setVisibility(View.INVISIBLE);
+                                        subtitle_change_btn.setVisibility(View.GONE);
                                         primary_ll.setVisibility(View.GONE);
                                         last_ll.setVisibility(View.GONE);
                                         center_play_pause.setVisibility(View.GONE);
@@ -2248,7 +2291,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
             center_pause_paly_timer.cancel();
             center_pause_paly_timer_is_running = false;
 
-            subtitle_change_btn.setVisibility(View.INVISIBLE);
+            subtitle_change_btn.setVisibility(View.GONE);
             mediaRouteButton.setVisibility(View.INVISIBLE);
 
             primary_ll.setVisibility(View.GONE);
@@ -3039,7 +3082,11 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
             if (requestCode == 1001) {
 
                 Util.call_finish_at_onUserLeaveHint = true;
+                if (SubTitlePath.size() > 0) {
 
+                    Util.DefaultSubtitle =SubTitleName.get(0).trim();
+
+                }
 
                 if (data.getStringExtra("yes").equals("1002")) {
 
@@ -3075,7 +3122,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                                 Log.v("BIBHU11", "CastAndCrewActivity End_Timer cancel called");
 
 
-                                subtitle_change_btn.setVisibility(View.INVISIBLE);
+                                subtitle_change_btn.setVisibility(View.GONE);
                                 primary_ll.setVisibility(View.GONE);
                                 last_ll.setVisibility(View.GONE);
                                 center_play_pause.setVisibility(View.GONE);
@@ -3213,6 +3260,9 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        if (MovableTimer != null)
+            MovableTimer.cancel();
 
         try{
             mCastContext.getSessionManager().removeSessionManagerListener(mSessionManagerListener, CastSession.class);
@@ -5029,8 +5079,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                 httppost.addHeader("watch_remaining_time", "0");
                 httppost.addHeader("device_id", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
                 httppost.addHeader("user_id", userIdStr);
-                httppost.addHeader("device_type ", "2");
-                httppost.addHeader("request_data ", "");
+                httppost.addHeader("device_type", "2");
+                httppost.addHeader("request_data", "");
                 httppost.addHeader("lang_code", Util.getTextofLanguage(ExoPlayerActivity.this, Util.SELECTED_LANGUAGE_CODE, Util.DEFAULT_SELECTED_LANGUAGE_CODE));
 
 
@@ -5532,6 +5582,11 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
         @Override
         public void onClick() {
 
+            if (mCastSession != null && mCastSession.isConnected()) {
+                return;
+            }
+
+
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -5545,7 +5600,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                         center_play_pause.setVisibility(View.GONE);
                         latest_center_play_pause.setVisibility(View.GONE);
                         current_time.setVisibility(View.GONE);
-                        subtitle_change_btn.setVisibility(View.INVISIBLE);
+                        subtitle_change_btn.setVisibility(View.GONE);
                         mediaRouteButton.setVisibility(View.INVISIBLE);
 
 
@@ -5556,7 +5611,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                             center_play_pause.setVisibility(View.GONE);
                             latest_center_play_pause.setVisibility(View.GONE);
                             current_time.setVisibility(View.GONE);
-                            subtitle_change_btn.setVisibility(View.INVISIBLE);
+                            subtitle_change_btn.setVisibility(View.GONE);
                             mediaRouteButton.setVisibility(View.INVISIBLE);
 
                             End_Timer();
@@ -5576,7 +5631,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
                             // This is changed Later
 
-                            if(mediaRouteButton.isEnabled())
+                            if(mediaRouteButton.isEnabled()  && playerModel.getChromeCastEnable())
                             {
                                 mediaRouteButton.setVisibility(View.VISIBLE);
                             }else
@@ -5633,5 +5688,67 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
     };
 
     //=========================================End========================================//
+
+
+
+    // This is added for the movable water mark //
+
+    public void MoveWaterMark() {
+        Rect rectf = new Rect();
+        emVideoView.getLocalVisibleRect(rectf);
+        int mainLayout_width = rectf.width() - 50;
+        int mainLayout_height = rectf.height() - 120;
+
+
+        // Child layout Lyout details
+
+        Rect rectf1 = new Rect();
+        linearLayout1.getLocalVisibleRect(rectf1);
+        int childLayout_width = rectf1.width();
+        int childLayout_height = rectf1.height();
+
+        boolean show = true;
+
+        while (show) {
+
+            Random r = new Random();
+            final int xLeft = r.nextInt(mainLayout_width - 10) + 10;
+
+            final int min = 10;
+            final int max = mainLayout_height;
+            final int yUp = new Random().nextInt((max - min) + 1) + min;
+
+
+            Log.v("BIBHU", "==========================================" + "\n");
+
+            Log.v("BIBHU", "mainLayout_width  ===" + mainLayout_width);
+            Log.v("BIBHU", "mainLayout_height  ===" + mainLayout_height);
+
+            Log.v("BIBHU", "childLayout_width  ===" + childLayout_width);
+            Log.v("BIBHU", "childLayout_height  ===" + childLayout_height);
+
+
+            Log.v("BIBHU", "xLeft  ===" + xLeft);
+            Log.v("BIBHU", "yUp  ===" + yUp);
+
+            Log.v("BIBHU", "width addition  ===" + (childLayout_width + xLeft));
+            Log.v("BIBHU", "height addition   ===" + (childLayout_height + yUp));
+
+            if ((mainLayout_width > (childLayout_width + xLeft)) && (mainLayout_height > (childLayout_height + yUp))) {
+                show = false;
+            }
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                    linearLayout1.setX(xLeft);
+                    linearLayout1.setY(yUp);
+                }
+            });
+
+
+        }
+    }
 
 }

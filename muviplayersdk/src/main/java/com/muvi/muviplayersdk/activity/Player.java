@@ -25,7 +25,7 @@ public class Player implements Serializable{
     public static String VideoResolution = "Auto";
     public static final String loadIPUrl = "https://api.ipify.org/?format=json";
 
-    boolean waterMark=true;
+    boolean waterMark=false;
     int playPos = 0;
 
     String movieUniqueId,streamUniqueId;
@@ -40,9 +40,10 @@ public class Player implements Serializable{
     String Episode_id;
     int isFreeContent;
     String videoResolution;
-    String licenseUrl,mpdVideoUrl,isOffline="";
+    String licenseUrl,mpdVideoUrl="",isOffline="";
     int ContentTypesId = 1;
-    String  app_id = "49A4D3B2";
+    String  app_id = "";
+    boolean chromecast_enable = false;
 
 
 
@@ -59,6 +60,13 @@ public class Player implements Serializable{
 
 
     String downloadStatus = "0";
+
+    public boolean getChromeCastEnable() {
+        return chromecast_enable;
+    }
+    public void setChromeCastEnable(boolean chromecast_enable) {
+        this.chromecast_enable = chromecast_enable;
+    }
 
     public String getAppId() {
         return app_id;
@@ -425,7 +433,7 @@ public class Player implements Serializable{
         this.authTokenStr = authTokenStr;
     }
 
-    public boolean isWaterMark() {
+    public boolean getWaterMark() {
         return waterMark;
     }
 

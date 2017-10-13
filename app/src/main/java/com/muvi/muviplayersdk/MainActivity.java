@@ -1,11 +1,14 @@
 package com.muvi.muviplayersdk;
 
 import android.Manifest;
+import android.app.Application;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.print.PrintAttributes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -28,30 +31,33 @@ import com.muvi.muviplayersdk.activity.Player;
 import com.muvi.muviplayersdk.utils.Util;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
     Player playerModel;
 
-    RadioButton drm,non_drm,live;
-    CheckBox subtitle,resolution;
+    RadioButton drm, non_drm, live;
+    CheckBox subtitle, resolution, chromecast, watermark;
     FloatingActionButton fab;
     Spinner select_video;
     ArrayAdapter adapter;
     String Video_Name = "";
     Toolbar toolbar;
 
-    ArrayList<String> url_name= new ArrayList();
-    ArrayList<String> url= new ArrayList();
+    ArrayList<String> url_name = new ArrayList();
+    ArrayList<String> url = new ArrayList();
 
-    ArrayList<String> subtitleName=new ArrayList<String>();
-    ArrayList<String> subtitlepath=new ArrayList<String>();
+    ArrayList<String> subtitleName = new ArrayList<String>();
+    ArrayList<String> subtitlepath = new ArrayList<String>();
 
-    ArrayList<String> chromecast_subtitle_language=new ArrayList<String>();
-    ArrayList<String> chromecast_subtitle_url=new ArrayList<String>();
-    ArrayList<String> chromecast_subtitle_code=new ArrayList<String>();
+    ArrayList<String> chromecast_subtitle_language = new ArrayList<String>();
+    ArrayList<String> chromecast_subtitle_url = new ArrayList<String>();
+    ArrayList<String> chromecast_subtitle_code = new ArrayList<String>();
 
     ArrayList<String> resolutionFormat = new ArrayList<String>();
     ArrayList<String> resolutionUrl = new ArrayList<String>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
         live = (RadioButton) findViewById(R.id.live);
         subtitle = (CheckBox) findViewById(R.id.subtitle);
         resolution = (CheckBox) findViewById(R.id.resolution);
+        chromecast = (CheckBox) findViewById(R.id.chromecast);
+        watermark = (CheckBox) findViewById(R.id.watermark);
         fab = (FloatingActionButton) findViewById(R.id.fab);
         select_video = (Spinner) findViewById(R.id.select_video);
 
@@ -72,10 +80,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitleTextColor(Color.WHITE);
 
 
-        playerModel=new Player();
-
-
-
+        playerModel = new Player();
 
 
         url_name.add("-----Select Video----");
@@ -86,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         url.add("ms3://ms3.test.expressplay.com:8443/hms/ms3/rights/?b=ABMABAADERwACURSTTQtTXV2aWk0ABAXqtqxZIeuiWUN9l9mbXB4AIDCbwk9Y-aGbq6OwM-9LMasc4yzQ8iuzJqVbdLipch4EQQUsaX1lHs-OYwgKBfsHnmIb0IME_Zh2bLw7mXvix5X2J3fIBvkmuIPbK-xIfEOBI34LOysPqEHnt3v1G6XETMziD81Yi29B5AKpsVIlpd_wzz4Kr6DtWZGE8bhnaoakgAAABQ4YkEXOKSeIspx0wDapcCGX3s9cw#https%3A%2F%2Fvimeoassets-singapore.s3-ap-southeast-1.amazonaws.com%2F4050%2FEncodedVideo%2Fuploads%2Fmovie_stream%2Ffull_movie%2F91003%2Fstream.mpd");
         url.add("ms3://ms3.test.expressplay.com:8443/hms/ms3/rights/?b=ABMABAADERwACURSTTQtTXV2aWlVABCzoGQnnGqqVx8CU6MPdoiEAIALFM-xf8G3Y43a95Ol3GaIb5xOfxXJNJhDJYyiqtQs6uVityl2HeHRpLLJtTMkC7KrIBjjrJvkxZ_2klWKXfimeQ9gOuUwEq080u-QsBr77TRKn7T4MnkV_3PzAYtfIkAbDf2qHzNK5wDCRgMfOfZyG0hF1CDEAxiNtd653zgeGQAAABT7_rDnurt8p3R1jEd4u8IP_sfOoA#https%3A%2F%2Fvimeoassets-singapore.s3-ap-southeast-1.amazonaws.com%2F4050%2FEncodedVideo%2Fuploads%2Fmovie_stream%2Ffull_movie%2F93913%2Fstream.mpd");
 
-        adapter = new ArrayAdapter(MainActivity.this,android.R.layout.simple_list_item_1,url_name);
+        adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, url_name);
         select_video.setAdapter(adapter);
 
 
@@ -122,8 +127,8 @@ public class MainActivity extends AppCompatActivity {
                 url_name.add("FRIENDS");
 
                 url.add("");
-                url.add("https://d2l74kwt1i1y33.cloudfront.net/4050/EncodedVideo/uploads/movie_stream/full_movie/103462/Dance_plus_242.mp4?Expires=1507778254&Signature=LGPXxyfAP8a~iMaiJ4RbSYhSzoY3PVAF4e-~RFp6gniDXUxz15wx5StYzw1whUPgQJA-U8LRhYfTDk0SrxWn3TJBgj72eofkgBWxbGBo2YoU5lDN4VzqQqmrOEy6iupTnn8bUh2VwiSm7CrLMfxUbiFChhIKYxpWpFSgXz7B49dgo3F4jUfM~dZn3EXOuv0j6vP5w5KpwnBPbg88r12hGzEuVCrIf2hEHtZ9CZ~F-cZCWYu8FJkAhxYU1-wYBAqMFPidszpZ5bGRWBwVZe73-MJjOwR33Gp1fgmgsJqJYkI-sLqgzBFdpLJGl23uwrb7lBTY2bMwA9cRo9t2hjjs1g__&Key-Pair-Id=APKAJYIDWFG3D6CNOYVA");
-                url.add("https://d2l74kwt1i1y33.cloudfront.net/4050/EncodedVideo/uploads/movie_stream/full_movie/103461/Friends___Ross___Rachel___We_never_had_bonus_night__242.mp4?Expires=1507778311&Signature=RgCEFTC5N4ab9JNP2Jq7TlcvQV8It~MVVp2kWuVmo9baz864dI040~6Yegs3gpB4Ne2CbYNrCB9UnM5JUCbJEBxgowdcEtG36z-G4bpO4EPyul6NxuXo03QKDyYnKT1oojUFKulJD~nKvOWInWWLt3BGscV7pYB68bvDibNbgGo4d-heZkzeNmp~23r0lRT2gys9LgOgQU-1lDOAQp690Hinb0rrHNsrYQF33zSpQ614Lx1uZ~OU9E7sSS~BSS0GG7nEC517rGaBdX9KhVMaZbz2M75AfJwNVHEwn2FAjY0TLNyJn8JA4LcbkhUkt-y1pKoumJ17TnPK1tl82wjdtw__&Key-Pair-Id=APKAJYIDWFG3D6CNOYVA");
+                url.add("https://d2l74kwt1i1y33.cloudfront.net/4050/EncodedVideo/uploads/movie_stream/full_movie/103462/Dance_plus_242.mp4?Expires=1507861922&Signature=mRG6Uq21tjOfjX0VBzPYimfDESBMtj5XgC8OdwFzNr2oKyHYXv0HiOYR9St~2QQN~Mo9HhCZdILfAufH~~5c7hnSsY7ODGUpDa~SxIWSAIq2Ggq3eqUVNRHvJz2q32R0k4DoEQIkxgASdGj5vNXrOMM8HfHaU3xt8ke3mYTiH4zRnZh2A6ud-yKyTP3DvIlNPUCEAXQn-7XRm2L9weEJtp3wOA5ZBNfXqrm2~4b~0Y4il5QQ-B3rv1t7JkHmqmkJwNfcnzP9nhS25ODdmVQpEbuwjiqucLeik00TfKpAoTy2KOxQyrS8pz86F7ZyZcCYkUaxsncaxeTM7k7rEWx-XA__&Key-Pair-Id=APKAJYIDWFG3D6CNOYVA");
+                url.add("https://d2l74kwt1i1y33.cloudfront.net/4050/EncodedVideo/uploads/movie_stream/full_movie/103461/Friends___Ross___Rachel___We_never_had_bonus_night__480.mp4?Expires=1507861875&Signature=ZFL3g-X-QbxjxN4ChubKyO7o09RW52LrQFZmEdEhwjMWeShVpJfAuxbc7igcd5gkuFn4GAf9diVC2fGSmXkOEt0qkm8FFcFBf-A4xXtw8zTF0rJoSkE8ZIsuQOBEk4YS77-z7yeW4jPDTf2qp50-ayH2xh1FQfjdEVV6b~s6R-W~r-jLLA6UHhKWM5VrKDSA5vL7MTPymp4gm7NvW00Ent5eFRp6FWat0Q6PemSZuTFvamRvXn2Wcxy~md5FuRi0fAZ1ZVzvaa4dDyXFRnBLjGv0uehARiYY7RZbHuEMq2PPPQuMyg02hQN8sXhWLa9BZ~xRuBe-MKdaV1vd2OOR0Q__&Key-Pair-Id=APKAJYIDWFG3D6CNOYVA");
 
                 adapter.notifyDataSetChanged();
                 select_video.setSelection(0);
@@ -155,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
 
-                if(isChecked){
+                if (isChecked) {
                     subtitleName.clear();
                     subtitlepath.clear();
 
@@ -165,8 +170,26 @@ public class MainActivity extends AppCompatActivity {
                     subtitlepath.add("/storage/emulated/0/Android/data/DemoSubtitle/1507711895296.vtt");
                     subtitlepath.add("/storage/emulated/0/Android/data/DemoSubtitle/1507711896448.vtt");
 
-                }
-                else {
+                    chromecast_subtitle_language.clear();
+                    chromecast_subtitle_url.clear();
+                    chromecast_subtitle_code.clear();
+
+                    chromecast_subtitle_language.add("English");
+                    chromecast_subtitle_language.add("Telgu");
+
+                    chromecast_subtitle_url.add(" https://d2l74kwt1i1y33.cloudfront.net/4050/EncodedVideo/subtitle/3119/test.vtt?Expires=1507935854&Signature=g57fQOUzBfLjSM03xXSxhesMHfqJBKyPH9CcbAfhW5cz5-vZ~9MNIcQJKqDvVvxNE9yrddHcqOS6oCl-g-cM85h4B8Wd1pEfAhOF3~Y4JpfL4GnEEDvy2b53V8qXxy0KCdPSi-UIUZiRas0AlTTEjhuEcb~lUbnGGIs0DD4I5IIUxESq6iewX-boZyzwz6Kb7mQpZhnj9jr7MGFgq8YxlQCJEuqt2tGrn~9fg-AoOEe4OGkH9IODlbU7jgkmqrYyryFr9qxLDhkECohBTNZYprHuZo0Et0xiBRCsoPOuIk8FBLLcjAzQ6Iqq1B~mMft5M8BE0zo~zEPrXJldhwguGw__&Key-Pair-Id=APKAJYIDWFG3D6CNOYVA");
+                    chromecast_subtitle_url.add("https://d2l74kwt1i1y33.cloudfront.net/4050/EncodedVideo/subtitle/3120/telugu.vtt?Expires=1507935854&Signature=b5xIHGXsVXSkiqNI~EfBaSuAUhF8eBTYrl0nObNBKGsS286B0BkM7T-fF2V8~28-PZ~aPxAWjRn1P~e6bFud~hFtCKCnx76HfF9p3eeUBQZe3J0gD6ArF~nw0KtxGu-oNYAmUUQgFBafrFum28QB1fU8KjlGfL12w-XV6UbOBVyaytlMbne5HTag9yx1fGIivzbpSSPEg~SVu1bCfaMSPmedJEBkOkP2aq2IOv5Jc~lfV0MqX8mdjUYuRnE2ifOB7SeNKo3NCaMYRntWqlKjU9TxsmrjaufCLWvayiXpT7vhXi-PvIzL-bhiXwmtQo~8Xt3Z3am6jfu8rKVR0KNJag__&Key-Pair-Id=APKAJYIDWFG3D6CNOYVA");
+
+                    chromecast_subtitle_code.add("en");
+                    chromecast_subtitle_code.add("te");
+
+
+                    playerModel.setChromecsatSubtitleUrl(chromecast_subtitle_url);
+                    playerModel.setChromecsatSubtitleLanguage(chromecast_subtitle_language);
+                    playerModel.setChromecsatSubtitleLanguageCode(chromecast_subtitle_code);
+
+
+                } else {
                     subtitleName.clear();
                     subtitlepath.clear();
                 }
@@ -181,8 +204,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                if(isChecked)
-                {
+                if (isChecked) {
                     resolutionFormat.clear();
                     resolutionUrl.clear();
 
@@ -192,8 +214,7 @@ public class MainActivity extends AppCompatActivity {
                     resolutionUrl.add("https://r2---sn-q4fl6ne6.googlevideo.com/videoplayback?id=o-AHDLj3j1y4yQ869UykWPgRQyEHx8EdhCwXJH29nlTDzc&dur=370.845&expire=1507733965&pl=24&source=youtube&sparams=dur%2Cei%2Cid%2Cip%2Cipbits%2Citag%2Clmt%2Cmime%2Cmm%2Cmn%2Cms%2Cmv%2Cpl%2Cratebypass%2Crequiressl%2Csource%2Cexpire&mv=u&ipbits=0&requiressl=yes&ms=au&ip=159.253.144.86&mm=31&mn=sn-q4fl6ne6&lmt=1507244073185437&ratebypass=yes&itag=22&mt=1507711878&ei=bd3dWeuPGJGH1gLC65GIDQ&key=yt6&mime=video%2Fmp4&signature=7D11A4E0F2C332E5EDAEF1AAEBFCC333AE6AA0E0.9B26F7368C4CDB55547924E9407F1B5FDD8D1551&title=Our+Story+in+6+Minutes.mp4");
                     resolutionUrl.add("https://r2---sn-q4fl6ne6.googlevideo.com/videoplayback?id=o-AHDLj3j1y4yQ869UykWPgRQyEHx8EdhCwXJH29nlTDzc&dur=370.869&expire=1507733965&pl=24&source=youtube&sparams=dur%2Cei%2Cid%2Cip%2Cipbits%2Citag%2Clmt%2Cmime%2Cmm%2Cmn%2Cms%2Cmv%2Cpl%2Crequiressl%2Csource%2Cexpire&mv=u&ipbits=0&requiressl=yes&ms=au&ip=159.253.144.86&mm=31&mn=sn-q4fl6ne6&lmt=1500088043012092&itag=17&mt=1507711878&ei=bd3dWeuPGJGH1gLC65GIDQ&key=yt6&mime=video%2F3gpp&signature=97206D79287A269F7EFFB90296E8E5732A974DE7.0D42998BAC1DA42F59075BC41C5A911AF785A27E&title=Our+Story+in+6+Minutes&ratebypass=yes.3gp");
 
-                }else
-                {
+                } else {
                     resolutionFormat.clear();
                     resolutionUrl.clear();
                 }
@@ -204,6 +225,28 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        chromecast.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    playerModel.setChromeCastEnable(true);
+                } else {
+                    playerModel.setChromeCastEnable(false);
+                }
+            }
+        });
+
+        watermark.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    playerModel.setWaterMark(true);
+                } else {
+                    playerModel.setWaterMark(false);
+                }
+            }
+        });
+
         select_video.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -211,8 +254,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Video_Name = select_video.getSelectedItem().toString().trim();
 
-                if(position!=0)
-                {
+                if (position != 0) {
                     playerModel.setVideoUrl(url.get(position));
                     playerModel.setUserId("151404");
                     playerModel.setEmailId("bb@gmail.com");
@@ -228,39 +270,42 @@ public class MainActivity extends AppCompatActivity {
                     playerModel.setVideoDuration("00:23:41");
                     playerModel.setVideoReleaseDate("");
                     playerModel.setCensorRating("");
+                    playerModel.setPlayPos(13);  // Insec
+
+                    playerModel.setMpdVideoUrl("https://vimeoassets-singapore.s3-ap-southeast-1.amazonaws.com/4050/EncodedVideo/uploads/movie_stream/full_movie/91003/stream.mpd");
+                    playerModel.setLicenseUrl("https://wv.service.expressplay.com/hms/wv/rights/?ExpressPlayToken=AwAAABSMKakAAABg9I2nHc89lHeFCLMOcUXYQ6RDHa-YETSYTMoli3tYiuKOragthIzP9_puiRPSGPChIKFWndfwSB1RIfZd5pxnfmezQgLd4q7TLhV8dPQH_jKxTbU9kXBbfnqWWKytqF-ejBcZvgQni8EnORmgrRXoQ6utd2A");
 
 
-
-                    if(live.isChecked())
+                    if (live.isChecked())
                         playerModel.setContentTypesId(4);
                     //add
 
-                    if(Video_Name.contains("Test DRM")){
+                    if (Video_Name.contains("Test DRM")) {
 
                         playerModel.setStreamUniqueId("cd222bdc2af51646483a4ae9271074b6");
                         playerModel.setMovieUniqueId("b3acd62aaa10103ae0e9cea9f031ac54");
 
                     }
-                    if(Video_Name.contains("Test Multi-Bitrate")){
+                    if (Video_Name.contains("Test Multi-Bitrate")) {
 
                         playerModel.setStreamUniqueId("d10a4a2361493ef9de4fa1b295f4c5dd");
                         playerModel.setMovieUniqueId("4ebec86526cfdced230668703da0dd03");
 
                     }
 
-                    if(Video_Name.contains("Dance plus")){
+                    if (Video_Name.contains("Dance plus")) {
 
                         playerModel.setStreamUniqueId("c649c544153950c2ef6bd88e66f64dd1");
                         playerModel.setMovieUniqueId("c313c89bbfeaac4b04ed1f0d199f754e");
 
                     }
-                    if(Video_Name.contains("FRIENDS")){
+                    if (Video_Name.contains("FRIENDS")) {
 
                         playerModel.setStreamUniqueId("83697330594d1e8aade23cc07e4bd4a9");
                         playerModel.setMovieUniqueId("2bef73e66b216cff66dfacdd654eeacb");
 
                     }
-                    if(Video_Name.contains("Sanjay Test LS")){
+                    if (Video_Name.contains("Sanjay Test LS")) {
 
                         playerModel.setStreamUniqueId("2e2dbf71c6dfea51117b556befd4bdf3");
                         playerModel.setMovieUniqueId("a88175c63844102fca4ea2c68202f112");
@@ -282,15 +327,13 @@ public class MainActivity extends AppCompatActivity {
                 if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                         ActivityCompat.requestPermissions(MainActivity.this,
-                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},111);
-                    }
-                    else {
+                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 111);
+                    } else {
                         ActivityCompat.requestPermissions(MainActivity.this,
                                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                                 111);
                     }
-                }
-                else{
+                } else {
 
                     NavigateToPlayer();
                 }
@@ -409,14 +452,14 @@ public class MainActivity extends AppCompatActivity {
         startActivity(playerIntent);*/
     }
 
-    public void NavigateToPlayer(){
-        if(Video_Name.contains("-----Select Video----")){
-            Toast.makeText(getApplicationContext(),"Please Select A Video.",Toast.LENGTH_LONG).show();
+    public void NavigateToPlayer() {
+        if (Video_Name.contains("-----Select Video----")) {
+            Toast.makeText(getApplicationContext(), "Please Select A Video.", Toast.LENGTH_LONG).show();
             return;
         }
 
-        Intent playerIntent=new Intent(MainActivity.this,ExoPlayerActivity.class);
-        playerIntent.putExtra("PlayerModel",playerModel);
+        Intent playerIntent = new Intent(MainActivity.this, ExoPlayerActivity.class);
+        playerIntent.putExtra("PlayerModel", playerModel);
         startActivity(playerIntent);
     }
 
