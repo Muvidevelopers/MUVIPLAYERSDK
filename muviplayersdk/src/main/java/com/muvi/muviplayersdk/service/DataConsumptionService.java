@@ -1,4 +1,4 @@
-package com.muvi.muviplayersdk.activity;
+package com.muvi.muviplayersdk.service;
 
 import android.annotation.TargetApi;
 import android.app.DownloadManager;

@@ -36,6 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/listView"
+        android:layout_marginTop="@dimen/my_download_margin"
         android:dividerHeight="@dimen/manage_device_padding"
         android:layout_marginLeft="@dimen/my_download_margin"
         android:layout_marginRight="@dimen/my_download_margin"

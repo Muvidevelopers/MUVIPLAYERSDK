@@ -1,4 +1,4 @@
-package com.muvi.muviplayersdk;
+package com.muvi.muviplayersdkdemo;
 
 import android.app.Application;
 

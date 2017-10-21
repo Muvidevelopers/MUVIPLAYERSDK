@@ -38,6 +38,7 @@ dependencies {
     compile 'com.daimajia.slider:library:1.1.5@aar'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.devbrackets.android:exomedia:3.0.1'
+    compile 'com.android.support:cardview-v7:23.0+'
     //compile files('libs/YouTubeAndroidPlayerApi.jar')
     compile 'com.nineoldandroids:library:2.4.0'
     /*    compile files('libs/YouTubeAndroidPlayerApi.jar')

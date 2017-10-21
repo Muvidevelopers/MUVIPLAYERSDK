@@ -40,7 +40,12 @@ public class Util {
     public static String DEFAULT_WANT_TO_DOWNLOAD = "Want to Download";
     public static String DOWNLOAD_CANCELLED = "DOWNLOAD_CANCELLED";
     public static String DEFAULT_DOWNLOAD_CANCELLED = "Download Cancelled";
-
+    public static String MY_DOWNLOAD = "MY_DOWNLOAD";
+    public static String DEFAULT_MY_DOWNLOAD = "My Download";
+    public static String DEFAULT_WANT_TO_DELETE = "Want to Delete ?";
+    public static String WANT_TO_DELETE = "WANT_TO_DELETE";
+    public static String DEFAULT_DELETE_BTN = "Delete";
+    public static String DELETE_BTN = "DELETE_BTN";
 
 
 

@@ -1,49 +1,44 @@
-package com.muvi.muviplayersdk;
+package com.muvi.muviplayersdkdemo;
 
 import android.Manifest;
-import android.app.Application;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.print.PrintAttributes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.muvi.muviplayersdk.activity.ExoPlayerActivity;
+import com.muvi.muviplayersdk.activity.MyDownloads;
 import com.muvi.muviplayersdk.activity.Player;
-import com.muvi.muviplayersdk.utils.Util;
+import com.muvi.muviplayersdk.model.DownloadModel;
 
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
     Player playerModel;
 
     RadioButton drm, non_drm, live;
-    CheckBox subtitle, resolution, chromecast, watermark;
-    FloatingActionButton fab;
+    CheckBox subtitle, resolution, chromecast, watermark,offline,ip,email,date;
+    FloatingActionButton fab,my_fab;
     Spinner select_video;
     ArrayAdapter adapter;
     String Video_Name = "";
     Toolbar toolbar;
+    LinearLayout watermark_details;
 
     ArrayList<String> url_name = new ArrayList();
     ArrayList<String> url = new ArrayList();
@@ -71,7 +66,13 @@ public class MainActivity extends AppCompatActivity {
         resolution = (CheckBox) findViewById(R.id.resolution);
         chromecast = (CheckBox) findViewById(R.id.chromecast);
         watermark = (CheckBox) findViewById(R.id.watermark);
+        watermark_details = (LinearLayout) findViewById(R.id.watermark_details);
+        offline = (CheckBox) findViewById(R.id.offline);
+        ip = (CheckBox) findViewById(R.id.ip);
+        email = (CheckBox) findViewById(R.id.email);
+        date = (CheckBox) findViewById(R.id.date);
         fab = (FloatingActionButton) findViewById(R.id.fab);
+        my_fab = (FloatingActionButton) findViewById(R.id.my_fab);
         select_video = (Spinner) findViewById(R.id.select_video);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -107,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                 url_name.add("Test Multi-Bitrate");
 
                 url.add("");
-                url.add("ms3://ms3.test.expressplay.com:8443/hms/ms3/rights/?b=ABMABAADERwACURSTTQtTXV2aWk0ABAXqtqxZIeuiWUN9l9mbXB4AIDCbwk9Y-aGbq6OwM-9LMasc4yzQ8iuzJqVbdLipch4EQQUsaX1lHs-OYwgKBfsHnmIb0IME_Zh2bLw7mXvix5X2J3fIBvkmuIPbK-xIfEOBI34LOysPqEHnt3v1G6XETMziD81Yi29B5AKpsVIlpd_wzz4Kr6DtWZGE8bhnaoakgAAABQ4YkEXOKSeIspx0wDapcCGX3s9cw#https%3A%2F%2Fvimeoassets-singapore.s3-ap-southeast-1.amazonaws.com%2F4050%2FEncodedVideo%2Fuploads%2Fmovie_stream%2Ffull_movie%2F91003%2Fstream.mpd");
+                url.add("ms3://ms3.test.expressplay.com:8443/hms/ms3/rights/?b=ABMABAADERwACURSTTQtTXV2aWl_ABAFqinqe9nU3b2BcAEow8YbAIAedwfWzp2g70PdjZsFbi8NCUI-cLFI_F_-u7jYQa5h5OpxmjpSG_PjTP7a4Hh8oe6KE-s9190fTemiFgvKlj0kdmskl5Gt7h6_zQykVnvtGBayaVNmSZxUSjjGGF5cJHOQ2TlGFZ2NsYTTM9VykQsVPsyKiH6zsvnWOp5DjW73FwAAABRt0voMUAe_hyH_CDlM1yBTvfcVJA#https%3A%2F%2Fdt3ezvrjh60oo.cloudfront.net%2Fuploads%2Fmovie_stream%2Ffull_movie%2F48921%2Fstream.mpd");
                 url.add("ms3://ms3.test.expressplay.com:8443/hms/ms3/rights/?b=ABMABAADERwACURSTTQtTXV2aWlVABCzoGQnnGqqVx8CU6MPdoiEAIALFM-xf8G3Y43a95Ol3GaIb5xOfxXJNJhDJYyiqtQs6uVityl2HeHRpLLJtTMkC7KrIBjjrJvkxZ_2klWKXfimeQ9gOuUwEq080u-QsBr77TRKn7T4MnkV_3PzAYtfIkAbDf2qHzNK5wDCRgMfOfZyG0hF1CDEAxiNtd653zgeGQAAABT7_rDnurt8p3R1jEd4u8IP_sfOoA#https%3A%2F%2Fvimeoassets-singapore.s3-ap-southeast-1.amazonaws.com%2F4050%2FEncodedVideo%2Fuploads%2Fmovie_stream%2Ffull_movie%2F93913%2Fstream.mpd");
 
                 adapter.notifyDataSetChanged();
@@ -127,8 +128,8 @@ public class MainActivity extends AppCompatActivity {
                 url_name.add("FRIENDS");
 
                 url.add("");
-                url.add("https://d2l74kwt1i1y33.cloudfront.net/4050/EncodedVideo/uploads/movie_stream/full_movie/103462/Dance_plus_242.mp4?Expires=1507861922&Signature=mRG6Uq21tjOfjX0VBzPYimfDESBMtj5XgC8OdwFzNr2oKyHYXv0HiOYR9St~2QQN~Mo9HhCZdILfAufH~~5c7hnSsY7ODGUpDa~SxIWSAIq2Ggq3eqUVNRHvJz2q32R0k4DoEQIkxgASdGj5vNXrOMM8HfHaU3xt8ke3mYTiH4zRnZh2A6ud-yKyTP3DvIlNPUCEAXQn-7XRm2L9weEJtp3wOA5ZBNfXqrm2~4b~0Y4il5QQ-B3rv1t7JkHmqmkJwNfcnzP9nhS25ODdmVQpEbuwjiqucLeik00TfKpAoTy2KOxQyrS8pz86F7ZyZcCYkUaxsncaxeTM7k7rEWx-XA__&Key-Pair-Id=APKAJYIDWFG3D6CNOYVA");
-                url.add("https://d2l74kwt1i1y33.cloudfront.net/4050/EncodedVideo/uploads/movie_stream/full_movie/103461/Friends___Ross___Rachel___We_never_had_bonus_night__480.mp4?Expires=1507861875&Signature=ZFL3g-X-QbxjxN4ChubKyO7o09RW52LrQFZmEdEhwjMWeShVpJfAuxbc7igcd5gkuFn4GAf9diVC2fGSmXkOEt0qkm8FFcFBf-A4xXtw8zTF0rJoSkE8ZIsuQOBEk4YS77-z7yeW4jPDTf2qp50-ayH2xh1FQfjdEVV6b~s6R-W~r-jLLA6UHhKWM5VrKDSA5vL7MTPymp4gm7NvW00Ent5eFRp6FWat0Q6PemSZuTFvamRvXn2Wcxy~md5FuRi0fAZ1ZVzvaa4dDyXFRnBLjGv0uehARiYY7RZbHuEMq2PPPQuMyg02hQN8sXhWLa9BZ~xRuBe-MKdaV1vd2OOR0Q__&Key-Pair-Id=APKAJYIDWFG3D6CNOYVA");
+                url.add("https://d2l74kwt1i1y33.cloudfront.net/4050/EncodedVideo/uploads/movie_stream/full_movie/103462/Dance_plus_242.mp4?Expires=1508369918&Signature=QpZE8I0VQZ9V6MXxfU3FAuq7Sv79~tTShasmSRTu61d4lBWZeVsGU3BKLgHCYCGshNMU2~fphmg9VJ6OFALKmX4E6mN3Y7BYxAuSV7JaYDsqYdEZIV-Y1AvY8m5LAgQmPfuKGh3YgxJjtr-QeHfNg3vtTrSEvpTp~L3G1QqGIq9WoOnAqetWq6H3HpOqaGgvNwKfpz~lt5wm0H7WU0w36f3j92wjwOdJiiynFomOiHYNVcKDICtYUcfYEzU6cokHlhO5KCwUWPMGYIcjB6zRiGIG~bmGbaTIau0BudmSTxkQ--iJXyCwWyw3yXj~qTOPgl~6ZrW0LgjEesLGNU7JdQ__&Key-Pair-Id=APKAJYIDWFG3D6CNOYV");
+                url.add("https://d2l74kwt1i1y33.cloudfront.net/4050/EncodedVideo/uploads/movie_stream/full_movie/103461/Friends___Ross___Rachel___We_never_had_bonus_night__480.mp4?Expires=1508369782&Signature=RWwnDXQyzUY8XHTA0PhXmxyuAnmNdj1DKtU-Fkp27FJRcCeGJmKur8oqDlJdbDdWKDaxBc~ckr9DxX-TeBngMtW1p70NDPkSAil61YIzhZZKb231rta0nPxYs2S2yXwz1g-XiltdVevthBQUDHIthN8Q1G6YLVCcNNABlAvEZSydUH2LT5BiB54EHY8ojXG-UdPvWMapODkI8FsIW4nFFf0XiQ7qDGMwhEmega~Wu~OdWwIQqwgqe1w5qEJ5EsQNwt3GJOuSmMCdN0RPx1psmo9nsGYPd9gjgemGto9fG5qJIot88~uRy-vs0hrJ467gy1Z3VK1hOoMaDNkELH9tRA__&Key-Pair-Id=APKAJYIDWFG3D6CNOYVA");
 
                 adapter.notifyDataSetChanged();
                 select_video.setSelection(0);
@@ -211,8 +212,8 @@ public class MainActivity extends AppCompatActivity {
                     resolutionFormat.add("720p");
                     resolutionFormat.add("144p");
 
-                    resolutionUrl.add("https://r2---sn-q4fl6ne6.googlevideo.com/videoplayback?id=o-AHDLj3j1y4yQ869UykWPgRQyEHx8EdhCwXJH29nlTDzc&dur=370.845&expire=1507733965&pl=24&source=youtube&sparams=dur%2Cei%2Cid%2Cip%2Cipbits%2Citag%2Clmt%2Cmime%2Cmm%2Cmn%2Cms%2Cmv%2Cpl%2Cratebypass%2Crequiressl%2Csource%2Cexpire&mv=u&ipbits=0&requiressl=yes&ms=au&ip=159.253.144.86&mm=31&mn=sn-q4fl6ne6&lmt=1507244073185437&ratebypass=yes&itag=22&mt=1507711878&ei=bd3dWeuPGJGH1gLC65GIDQ&key=yt6&mime=video%2Fmp4&signature=7D11A4E0F2C332E5EDAEF1AAEBFCC333AE6AA0E0.9B26F7368C4CDB55547924E9407F1B5FDD8D1551&title=Our+Story+in+6+Minutes.mp4");
-                    resolutionUrl.add("https://r2---sn-q4fl6ne6.googlevideo.com/videoplayback?id=o-AHDLj3j1y4yQ869UykWPgRQyEHx8EdhCwXJH29nlTDzc&dur=370.869&expire=1507733965&pl=24&source=youtube&sparams=dur%2Cei%2Cid%2Cip%2Cipbits%2Citag%2Clmt%2Cmime%2Cmm%2Cmn%2Cms%2Cmv%2Cpl%2Crequiressl%2Csource%2Cexpire&mv=u&ipbits=0&requiressl=yes&ms=au&ip=159.253.144.86&mm=31&mn=sn-q4fl6ne6&lmt=1500088043012092&itag=17&mt=1507711878&ei=bd3dWeuPGJGH1gLC65GIDQ&key=yt6&mime=video%2F3gpp&signature=97206D79287A269F7EFFB90296E8E5732A974DE7.0D42998BAC1DA42F59075BC41C5A911AF785A27E&title=Our+Story+in+6+Minutes&ratebypass=yes.3gp");
+                    resolutionUrl.add("https://r9---sn-5hne6nse.googlevideo.com/videoplayback?initcwndbps=1480000&dur=133.468&signature=A4D3C9487EF1AACDEB63267F8DED27977BCF6E41.090AE7C8A2C8BC86508BE086C9BF6401B18138D6&nh=IgpwcjA0LmFtczE1KgkxMjcuMC4wLjE&lmt=1472402751620546&sparams=dur%2Cei%2Cid%2Cinitcwndbps%2Cip%2Cipbits%2Citag%2Clmt%2Cmime%2Cmm%2Cmn%2Cms%2Cmv%2Cnh%2Cpl%2Cratebypass%2Crequiressl%2Csource%2Cexpire&ei=AHTkWfabNKGH1wKov6GwCg&requiressl=yes&mime=video%2Fmp4&ip=37.58.82.168&pl=20&mn=sn-5hne6nse&mm=31&source=youtube&ms=au&id=o-ALs2qA6Y1KS55GRPl1geAgXluh0w3qCk8jGupFVtHcvQ&mv=m&mt=1508144044&expire=1508165729&key=yt6&ratebypass=yes&ipbits=0&itag=22&title=Beautiful+Nature+Video+%26+Relaxing+Music+-+Call+From+The+Past+%28HD%29.mp4");
+                    resolutionUrl.add("https://r9---sn-5hne6nse.googlevideo.com/videoplayback?requiressl=yes&initcwndbps=1480000&mime=video%2F3gpp&ip=37.58.82.168&dur=133.561&pl=20&mn=sn-5hne6nse&mm=31&source=youtube&ms=au&id=o-ALs2qA6Y1KS55GRPl1geAgXluh0w3qCk8jGupFVtHcvQ&mv=m&nh=IgpwcjA0LmFtczE1KgkxMjcuMC4wLjE&mt=1508144044&expire=1508165729&signature=DEEBC717D98B3168CB621CEBE3E5B4F8EFC00001.048FBD47E336AC24755103A4971BC631B798ACB4&key=yt6&ipbits=0&lmt=1420740523637445&sparams=dur%2Cei%2Cid%2Cinitcwndbps%2Cip%2Cipbits%2Citag%2Clmt%2Cmime%2Cmm%2Cmn%2Cms%2Cmv%2Cnh%2Cpl%2Crequiressl%2Csource%2Cexpire&ei=AHTkWfabNKGH1wKov6GwCg&itag=17&title=Beautiful+Nature+Video+%26+Relaxing+Music+-+Call+From+The+Past+%28HD%29&ratebypass=yes.3gp");
 
                 } else {
                     resolutionFormat.clear();
@@ -240,9 +241,60 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+
+                    watermark_details.setVisibility(View.VISIBLE);
+                    ip.setChecked(true);
+                    date.setChecked(true);
+                    email.setChecked(true);
                     playerModel.setWaterMark(true);
                 } else {
+                    watermark_details.setVisibility(View.GONE);
+                    ip.setChecked(false);
+                    date.setChecked(false);
+                    email.setChecked(false);
                     playerModel.setWaterMark(false);
+                }
+            }
+        });
+
+        ip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(!isChecked){
+                    if(!email.isChecked() && !date.isChecked())
+                        watermark.setChecked(false);
+                }
+            }
+        });
+
+        email.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(!isChecked){
+                    if(!ip.isChecked() && !date.isChecked())
+                        watermark.setChecked(false);
+                }
+            }
+        });
+
+        date.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(!isChecked){
+                    if(!email.isChecked() && !ip.isChecked())
+                        watermark.setChecked(false);
+                }
+            }
+        });
+
+
+        offline.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    playerModel.canDownload(true);
+                } else {
+                    playerModel.canDownload(false);
                 }
             }
         });
@@ -273,12 +325,11 @@ public class MainActivity extends AppCompatActivity {
                     playerModel.setPlayPos(13);  // Insec
 
                     playerModel.setMpdVideoUrl("https://vimeoassets-singapore.s3-ap-southeast-1.amazonaws.com/4050/EncodedVideo/uploads/movie_stream/full_movie/91003/stream.mpd");
-                    playerModel.setLicenseUrl("https://wv.service.expressplay.com/hms/wv/rights/?ExpressPlayToken=AwAAABSMKakAAABg9I2nHc89lHeFCLMOcUXYQ6RDHa-YETSYTMoli3tYiuKOragthIzP9_puiRPSGPChIKFWndfwSB1RIfZd5pxnfmezQgLd4q7TLhV8dPQH_jKxTbU9kXBbfnqWWKytqF-ejBcZvgQni8EnORmgrRXoQ6utd2A");
+                    playerModel.setLicenseUrl("https://wv.service.expressplay.com/hms/wv/rights/?ExpressPlayToken=AwAAABSMKdwAAABgxzuIOjIrmOOVXhujA7YKU0bESAAi02zk266VkYImrkNzzXdpEFM1v6VFR-gAGNT6Nugs-G1Ef_m3n7go2KKiTrOVnzyGNqIfth0IPevI9ENxlYCBX5l_lHX6mBexN3tBXXfzYZfuczDZG95MvnQMRxWaknk");
 
 
                     if (live.isChecked())
                         playerModel.setContentTypesId(4);
-                    //add
 
                     if (Video_Name.contains("Test DRM")) {
 
@@ -287,10 +338,8 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                     if (Video_Name.contains("Test Multi-Bitrate")) {
-
                         playerModel.setStreamUniqueId("d10a4a2361493ef9de4fa1b295f4c5dd");
                         playerModel.setMovieUniqueId("4ebec86526cfdced230668703da0dd03");
-
                     }
 
                     if (Video_Name.contains("Dance plus")) {
@@ -309,6 +358,29 @@ public class MainActivity extends AppCompatActivity {
 
                         playerModel.setStreamUniqueId("2e2dbf71c6dfea51117b556befd4bdf3");
                         playerModel.setMovieUniqueId("a88175c63844102fca4ea2c68202f112");
+                    }
+
+
+                    if(drm.isChecked()){
+
+                    }
+                    else if(non_drm.isChecked()){
+                        ArrayList<String> nonDrmDownloadFormatList = new ArrayList<>();
+                        ArrayList<String> nonDrmDownloadUrlList = new ArrayList<>();
+
+                        nonDrmDownloadFormatList.add("144p");
+                        nonDrmDownloadFormatList.add("480p");
+
+                        nonDrmDownloadUrlList.add("https://r1---sn-q4flrney.googlevideo.com/videoplayback?sparams=dur%2Cei%2Cid%2Cip%2Cipbits%2Citag%2Clmt%2Cmime%2Cmm%2Cmn%2Cms%2Cmv%2Cpl%2Crequiressl%2Csource%2Cexpire&mn=sn-q4flrney&ip=159.253.144.86&source=youtube&mm=31&mv=u&mime=video%2F3gpp&expire=1508265052&ipbits=0&dur=238.794&id=o-APK7ljh-Gb86sKrU__atln_qmnvRtG8eBE0kPV4a5t61&mt=1508243387&key=yt6&lmt=1425404536869313&requiressl=yes&ms=au&ei=_PflWY26FpSd1gLCzpu4Dg&itag=17&pl=24&signature=109C0D4BC1DA0B6C50EC779C8F4B0C647B8F80DF.2FFA0576DEAD323329900CCF8A21B794DAB4E148&title=Beautiful+Nature+Video+%26+Relaxing+Music+-+Life+%28HD%29&ratebypass=yes.3gp");
+                        nonDrmDownloadUrlList.add("https://r1---sn-q4flrney.googlevideo.com/videoplayback?sparams=dur%2Cei%2Cid%2Cip%2Cipbits%2Citag%2Clmt%2Cmime%2Cmm%2Cmn%2Cms%2Cmv%2Cpl%2Cratebypass%2Crequiressl%2Csource%2Cexpire&mn=sn-q4flrney&ip=159.253.144.86&source=youtube&mm=31&mv=u&mime=video%2Fmp4&expire=1508265052&ipbits=0&dur=238.585&id=o-APK7ljh-Gb86sKrU__atln_qmnvRtG8eBE0kPV4a5t61&mt=1508243387&key=yt6&lmt=1428039470911574&requiressl=yes&ms=au&ei=_PflWY26FpSd1gLCzpu4Dg&itag=18&pl=24&signature=583D7B813585AF5E52B2DF2385A106311F2CBDC5.2BECE9D23458C5F481DB22AF878068E06AC6E7C8&ratebypass=yes&title=Beautiful+Nature+Video+%26+Relaxing+Music+-+Life+%28HD%29.mp4");
+
+
+                        playerModel.setNonDrmDownloadFormatList(nonDrmDownloadFormatList);
+                        playerModel.setNonDrmDownloadUrlList(nonDrmDownloadUrlList);
+
+                    }
+                    else {
+                        playerModel.canDownload(false);
                     }
 
                 }
@@ -337,6 +409,20 @@ public class MainActivity extends AppCompatActivity {
 
                     NavigateToPlayer();
                 }
+            }
+        });
+
+        my_fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                DownloadModel downloadModel = new DownloadModel();
+                downloadModel.setEmail("bb@gmail.com");
+                downloadModel.setRestrictionStatus(true);
+
+                Intent mydownload = new Intent(MainActivity.this, MyDownloads.class);
+                mydownload.putExtra("DownloadModel",downloadModel);
+                startActivity(mydownload);
             }
         });
 
@@ -457,6 +543,23 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Please Select A Video.", Toast.LENGTH_LONG).show();
             return;
         }
+
+        if(ip.isChecked())
+            playerModel.useIp(true);
+        else
+            playerModel.useIp(false);
+
+        if(email.isChecked())
+            playerModel.useEmail(true);
+        else
+            playerModel.useEmail(false);
+
+        if(date.isChecked())
+            playerModel.useDate(true);
+        else
+            playerModel.useDate(false);
+
+
 
         Intent playerIntent = new Intent(MainActivity.this, ExoPlayerActivity.class);
         playerIntent.putExtra("PlayerModel", playerModel);

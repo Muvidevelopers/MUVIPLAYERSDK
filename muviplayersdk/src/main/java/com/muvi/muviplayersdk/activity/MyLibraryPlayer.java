@@ -87,6 +87,7 @@ import com.intertrust.wasabi.media.PlaylistProxyListener;
 import com.muvi.muviplayersdk.adapter.DownloadOptionAdapter;
 import com.muvi.muviplayersdk.model.ContactModel1;
 import com.muvi.muviplayersdk.model.SubtitleModel;
+import com.muvi.muviplayersdk.service.DataConsumptionService;
 import com.muvi.muviplayersdk.service.PopUpService;
 import com.muvi.muviplayersdk.subtitle_support.Caption;
 import com.muvi.muviplayersdk.subtitle_support.FormatSRT;

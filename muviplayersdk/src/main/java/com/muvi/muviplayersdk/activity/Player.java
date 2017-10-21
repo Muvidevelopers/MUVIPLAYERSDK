@@ -44,6 +44,11 @@ public class Player implements Serializable{
     int ContentTypesId = 1;
     String  app_id = "";
     boolean chromecast_enable = false;
+    boolean can_Download = false;
+    boolean is_Content_Restricted = false;
+    boolean use_Email = true;
+    boolean use_Ip = true;
+    boolean use_Date = true;
 
 
 
@@ -61,11 +66,46 @@ public class Player implements Serializable{
 
     String downloadStatus = "0";
 
+    public void useEmail(boolean use_Email){
+        this.use_Email = use_Email;
+    }
+
+    public boolean getUseEmailStatus(){
+        return use_Email;
+    }
+
+    public void useIp(boolean use_Ip){
+        this.use_Ip = use_Ip;
+    }
+
+    public boolean getUseIpStatus(){
+        return use_Ip;
+    }
+
+
+    public void useDate(boolean use_Date){
+        this.use_Date = use_Date;
+    }
+
+    public boolean getUseDateStatus(){
+        return use_Date;
+    }
+
+
     public boolean getChromeCastEnable() {
         return chromecast_enable;
     }
     public void setChromeCastEnable(boolean chromecast_enable) {
         this.chromecast_enable = chromecast_enable;
+    }
+
+    public void isContentRestricted(boolean is_Content_Restricted)
+    {
+        this.is_Content_Restricted = is_Content_Restricted;
+    }
+
+    public boolean getDownloadContentRestrictionStatus(){
+        return is_Content_Restricted;
     }
 
     public String getAppId() {
@@ -146,6 +186,15 @@ public class Player implements Serializable{
 
 
     //********************** END ***************************//
+
+    boolean getDownloadStatus = false;
+    public void canDownload(boolean getDownloadStatus) {
+       this.getDownloadStatus = getDownloadStatus;
+    }
+
+    public boolean getGetDownloadStatus() {
+       return getDownloadStatus ;
+    }
 
     public static boolean checkNetwork(Context context){
         ConnectivityManager cm =
@@ -347,6 +396,26 @@ public class Player implements Serializable{
     ArrayList<String> FakeSubTitlePath = new ArrayList<>();
     ArrayList<String> ResolutionFormat = new ArrayList<>();
     ArrayList<String> ResolutionUrl = new ArrayList<>();
+
+    ArrayList<String> nonDrmDownloadUrlList = new ArrayList<>();
+    ArrayList<String> nonDrmDownloadFormatList = new ArrayList<>();
+
+    public ArrayList<String> getNonDrmDownloadUrlList() {
+        return nonDrmDownloadUrlList;
+    }
+
+    public void setNonDrmDownloadUrlList(ArrayList<String> nonDrmDownloadUrlList) {
+        this.nonDrmDownloadUrlList = nonDrmDownloadUrlList;
+    }
+
+
+    public ArrayList<String> getNonDrmDownloadFormatList() {
+        return nonDrmDownloadFormatList;
+    }
+
+    public void setNonDrmDownloadFormatList(ArrayList<String> nonDrmDownloadFormatList) {
+        this.nonDrmDownloadFormatList = nonDrmDownloadFormatList;
+    }
 
 
 
