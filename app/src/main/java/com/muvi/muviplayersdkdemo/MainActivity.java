@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                 url_name.add("Test Multi-Bitrate");
 
                 url.add("");
-                url.add("ms3://ms3.test.expressplay.com:8443/hms/ms3/rights/?b=ABMABAADERwACURSTTQtTXV2aWl_ABAFqinqe9nU3b2BcAEow8YbAIAedwfWzp2g70PdjZsFbi8NCUI-cLFI_F_-u7jYQa5h5OpxmjpSG_PjTP7a4Hh8oe6KE-s9190fTemiFgvKlj0kdmskl5Gt7h6_zQykVnvtGBayaVNmSZxUSjjGGF5cJHOQ2TlGFZ2NsYTTM9VykQsVPsyKiH6zsvnWOp5DjW73FwAAABRt0voMUAe_hyH_CDlM1yBTvfcVJA#https%3A%2F%2Fdt3ezvrjh60oo.cloudfront.net%2Fuploads%2Fmovie_stream%2Ffull_movie%2F48921%2Fstream.mpd");
+                url.add("ms3://ms3.test.expressplay.com:8443/hms/ms3/rights/?b=ABMABAADERwACURSTTQtTXV2aWk0ABAXqtqxZIeuiWUN9l9mbXB4AIDCbwk9Y-aGbq6OwM-9LMasc4yzQ8iuzJqVbdLipch4EQQUsaX1lHs-OYwgKBfsHnmIb0IME_Zh2bLw7mXvix5X2J3fIBvkmuIPbK-xIfEOBI34LOysPqEHnt3v1G6XETMziD81Yi29B5AKpsVIlpd_wzz4Kr6DtWZGE8bhnaoakgAAABQ4YkEXOKSeIspx0wDapcCGX3s9cw#https%3A%2F%2Fvimeoassets-singapore.s3-ap-southeast-1.amazonaws.com%2F4050%2FEncodedVideo%2Fuploads%2Fmovie_stream%2Ffull_movie%2F91003%2Fstream.mpd");
                 url.add("ms3://ms3.test.expressplay.com:8443/hms/ms3/rights/?b=ABMABAADERwACURSTTQtTXV2aWlVABCzoGQnnGqqVx8CU6MPdoiEAIALFM-xf8G3Y43a95Ol3GaIb5xOfxXJNJhDJYyiqtQs6uVityl2HeHRpLLJtTMkC7KrIBjjrJvkxZ_2klWKXfimeQ9gOuUwEq080u-QsBr77TRKn7T4MnkV_3PzAYtfIkAbDf2qHzNK5wDCRgMfOfZyG0hF1CDEAxiNtd653zgeGQAAABT7_rDnurt8p3R1jEd4u8IP_sfOoA#https%3A%2F%2Fvimeoassets-singapore.s3-ap-southeast-1.amazonaws.com%2F4050%2FEncodedVideo%2Fuploads%2Fmovie_stream%2Ffull_movie%2F93913%2Fstream.mpd");
 
                 adapter.notifyDataSetChanged();
