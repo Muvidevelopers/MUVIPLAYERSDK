@@ -247,6 +247,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
     String fileExtenstion;
     int lenghtOfFile;
     int lengthfile;
+    float file_size;
+
     /***** offline *****/
 
     Timer timer;
@@ -3868,6 +3870,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                 float size = (Float.parseFloat("" + execute.getEntity().getContentLength()) / 1024) / 1024;
                 DecimalFormat decimalFormat = new DecimalFormat("#.#");
                 size = Float.valueOf(decimalFormat.format(size));
+                file_size = size;
                 lengthfile = (int) size;
 
 
@@ -3891,7 +3894,23 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                 }
 
 
-                String lengh = String.valueOf(lengthfile);
+                String lengh = ""+file_size;
+
+                if(lengh.toString().equals("0.0")){
+                    AlertDialog.Builder dlgAlert = new AlertDialog.Builder(ExoPlayerActivity.this,R.style.MyAlertDialogStyle);
+                    dlgAlert.setMessage(Util.getTextofLanguage(ExoPlayerActivity.this,Util.SLOW_INTERNET_CONNECTION,Util.DEFAULT_SLOW_INTERNET_CONNECTION));
+                    dlgAlert.setTitle(Util.getTextofLanguage(ExoPlayerActivity.this,Util.SORRY,Util.DEFAULT_SORRY));
+                    dlgAlert.setPositiveButton(Util.getTextofLanguage(ExoPlayerActivity.this,Util.BUTTON_OK,Util.DEFAULT_BUTTON_OK), null);
+                    dlgAlert.setCancelable(false);
+                    dlgAlert.setPositiveButton(Util.getTextofLanguage(ExoPlayerActivity.this,Util.BUTTON_OK,Util.DEFAULT_BUTTON_OK),
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+                    dlgAlert.create().show();
+                    return;
+                }
 
                 AlertDialog.Builder dlgAlert = new AlertDialog.Builder(ExoPlayerActivity.this, R.style.MyAlertDialogStyle);
                 dlgAlert.setTitle(Util.getTextofLanguage(ExoPlayerActivity.this, Util.WANT_TO_DOWNLOAD, Util.DEFAULT_WANT_TO_DOWNLOAD));
@@ -5007,7 +5026,28 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                 }
 
                 // Show PopUp for Multiple Options for Download .
-                ShowDownloadOptionPopUp();
+
+                if(List_Of_Resolution_Format.size()>0 && List_Of_FileSize.size()>0 && (List_Of_FileSize.size() == List_Of_Resolution_Format.size()))
+                {
+                    // Show PopUp for Multiple Options for Download .
+                    ShowDownloadOptionPopUp();
+                }else {
+                    AlertDialog.Builder dlgAlert = new AlertDialog.Builder(ExoPlayerActivity.this,R.style.MyAlertDialogStyle);
+                    dlgAlert.setMessage(Util.getTextofLanguage(ExoPlayerActivity.this,Util.SLOW_INTERNET_CONNECTION,Util.DEFAULT_SLOW_INTERNET_CONNECTION));
+                    dlgAlert.setTitle(Util.getTextofLanguage(ExoPlayerActivity.this,Util.SORRY,Util.DEFAULT_SORRY));
+                    dlgAlert.setPositiveButton(Util.getTextofLanguage(ExoPlayerActivity.this,Util.BUTTON_OK,Util.DEFAULT_BUTTON_OK), null);
+                    dlgAlert.setCancelable(false);
+                    dlgAlert.setPositiveButton(Util.getTextofLanguage(ExoPlayerActivity.this,Util.BUTTON_OK,Util.DEFAULT_BUTTON_OK),
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+                    dlgAlert.create().show();
+                }
+
+
+
             }
 
         }
