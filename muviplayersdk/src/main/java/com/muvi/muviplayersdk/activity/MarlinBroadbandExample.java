@@ -302,7 +302,6 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
             @Override
             public void run() {
 
-
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -1596,6 +1595,10 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
             String Qry1 = "UPDATE " + DBHelper.RESUME_WATCH + " SET Flag = '0' , PlayedDuration = '" + emVideoView.getCurrentPosition() + "'" +
                     " WHERE UniqueId = '" + UniqueId + "'";
             DB.execSQL(Qry1);
+
+            Log.v("BIBHU3","===Database Upadted");
+            Log.v("BIBHU3","===Database unique id=="+UniqueId);
+
         }
 
         //==========================End============================//
@@ -2481,6 +2484,101 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
                             .build();
 
                     tracks.add(mediaTrack);
+                }
+            }
+
+
+            mediaInfo = new MediaInfo.Builder(MpdVideoUrl.trim())
+                    .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
+                    .setContentType(mediaContentType)
+                    .setMetadata(movieMetadata)
+                    .setCustomData(jsonObj)
+                    .setMediaTracks(tracks)
+                    .build();
+            mSelectedMedia = mediaInfo;
+
+
+            togglePlayback();
+
+        }else {
+            mediaContentType = "videos/mp4";
+            JSONObject jsonObj = null;
+            try {
+                jsonObj = new JSONObject();
+                jsonObj.put("description",title);
+                jsonObj.put("active_track_index",active_track_index);
+
+                //  This Code Is Added For Video Log By Bibhu..
+
+                jsonObj.put("authToken", Util.authTokenStr.trim());
+                jsonObj.put("user_id", pref.getString("PREFS_LOGGEDIN_ID_KEY", null));
+                jsonObj.put("ip_address", ipAddressStr.trim());
+                jsonObj.put("movie_id",muviid);
+                jsonObj.put("episode_id",streamId);
+
+                jsonObj.put("watch_status",watchStatus);
+                jsonObj.put("device_type", "2");
+                jsonObj.put("log_id", videoLogId);
+
+               /* if (Util.getTextofLanguage(MarlinBroadbandExample.this, Util.IS_STREAMING_RESTRICTION, Util.DEFAULT_IS_IS_STREAMING_RESTRICTION).equals("1")) {
+                    jsonObj.put("restrict_stream_id","0");
+                    jsonObj.put("is_streaming_restriction", "1");
+                    Log.v("BIBHU4","restrict_stream_id============1");
+                }else{
+                    jsonObj.put("restrict_stream_id","0");
+                    jsonObj.put("is_streaming_restriction", "0");
+                    Log.v("BIBHU4","restrict_stream_id============0");
+                }*/
+
+                jsonObj.put("domain_name",Util.rootUrl().trim().substring(0, Util.rootUrl().trim().length()-6));
+                jsonObj.put("is_log", "1");
+
+                // This code is changed according to new Video log //
+
+                jsonObj.put("played_length", "0");
+                jsonObj.put("log_temp_id", "0");
+                jsonObj.put("resume_time", ""+(playerPosition));
+                jsonObj.put("seek_status", "first_time");
+
+
+                //=====================End===================//
+
+
+                // This  Code Is Added For Drm BufferLog By Bibhu ...
+
+                jsonObj.put("resolution", "BEST");
+                jsonObj.put("start_time", String.valueOf(playerPosition));
+                jsonObj.put("end_time", String.valueOf(playerPosition));
+                jsonObj.put("log_unique_id", "0"); // hv 2 chk
+                jsonObj.put("bandwidth_log_id", "0"); // hv 2 chk
+                jsonObj.put("location", "0");
+                jsonObj.put("video_type", "");
+
+//                jsonObj.put("drm_bandwidth_by_sender",""+((DataUsedByChrmoeCast)*1024));
+                jsonObj.put("drm_bandwidth_by_sender","0");
+
+                //====================End=====================//
+
+            } catch (JSONException e) {
+            }
+
+            List tracks = new ArrayList();
+
+            Log.v("BIBHU","url size============"+Chromecast_Subtitle_Url.size());
+            if(Chromecast_Subtitle_Url.size()>0) {
+                for (int i = 0; i < Chromecast_Subtitle_Url.size() ; i++) {
+
+                    MediaTrack mediaTrack = new MediaTrack.Builder(i,
+                            MediaTrack.TYPE_TEXT)
+                            .setName(Chromecast_Subtitle_Language_Name.get(i))
+                            .setSubtype(MediaTrack.SUBTYPE_SUBTITLES)
+                            .setContentId(Chromecast_Subtitle_Url.get(i))
+                            .setLanguage(Chromecast_Subtitle_Code.get(i))
+                            .setContentType("text/vtt")
+                            .build();
+
+                    tracks.add(mediaTrack);
+
                 }
             }
 

@@ -4211,14 +4211,12 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                     "stream_unique_id = '" + playerModel.getStreamUniqueId() + "',initial_played_time = '0'," +
                     "updated_server_current_time = '0' WHERE email = '" + emailIdStr.trim() + "' AND stream_unique_id = '" + playerModel.getStreamUniqueId() + "'";
             DB.execSQL(query);
-
             Log.v("BIBHU1234", "update called");
 
         } else {
             String query = "INSERT INTO " + DBHelper.WATCH_ACCESS_INFO + " (download_id , stream_unique_id , initial_played_time , updated_server_current_time,email) VALUES" +
                     " ('" + enqueue + "','" + playerModel.getStreamUniqueId() + "','0','0','" + emailIdStr.trim() + "')";
             DB.execSQL(query);
-
             Log.v("BIBHU1234", "insert called");
 
         }
@@ -4227,6 +4225,24 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
         //=================================End=======================================================//
 
 
+        // This code is responsible for resume watch feature in downloeded content.
+
+        Cursor cursor1 = DB.rawQuery("SELECT * FROM "+DBHelper.RESUME_WATCH+" WHERE UniqueId = '"+playerModel.getStreamUniqueId()+ emailIdStr+"'", null);
+
+        if(cursor1.getCount()>0)
+        {
+            String query = "UPDATE " + DBHelper.RESUME_WATCH+ " SET Flag='0' , PlayedDuration = '0'  WHERE UniqueId = '"+playerModel.getStreamUniqueId()+ emailIdStr+"'";
+            DB.execSQL(query);
+            Log.v("BIBHU1234","resume watch update called");
+        }
+        else {
+            String query = "INSERT INTO " + DBHelper.RESUME_WATCH + " (UniqueId , PlayedDuration,Flag) VALUES" +
+                    " ('" + playerModel.getStreamUniqueId() + emailIdStr + "','0','0')";
+            DB.execSQL(query);
+            Log.v("BIBHU1234", "resume watch insert called");
+            //=====================================End=======================================//
+
+        }
     }
 
     private void requestStoragePermission() {

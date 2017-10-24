@@ -268,7 +268,7 @@ public class MyDownloads extends AppCompatActivity {
         SubTitleName.clear();
         SubTitlePath.clear();
 
-        SQLiteDatabase DB = MyDownloads.this.openOrCreateDatabase("DOWNLOADMANAGER_LUMERE.db", MODE_PRIVATE, null);
+        SQLiteDatabase DB = MyDownloads.this.openOrCreateDatabase(DBHelper.DATABASE_NAME, MODE_PRIVATE, null);
         Cursor cursor = DB.rawQuery("SELECT LANGUAGE,PATH FROM SUBTITLE_LUIMERE WHERE UID = '" + download.get(Position).getUniqueId() + "'", null);
         int count = cursor.getCount();
 
@@ -295,8 +295,11 @@ public class MyDownloads extends AppCompatActivity {
 
         //This is applicable for resume watch feature on downloaed content
 
+        Log.v("BIBHU3","===Database unique id at my download=="+download.get(Position).getUniqueId());
+
         Cursor cursor11 = DB.rawQuery("SELECT * FROM "+DBHelper.RESUME_WATCH+" WHERE UniqueId = '"+download.get(Position).getUniqueId()+"'", null);
         int count11 = cursor11.getCount();
+        Log.v("BIBHU3","===Database unique id at my download=size="+count11);
 
         if (count11 > 0) {
             if (cursor11.moveToFirst()) {
