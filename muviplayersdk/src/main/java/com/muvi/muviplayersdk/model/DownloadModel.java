@@ -8,8 +8,16 @@ import java.io.Serializable;
 public class DownloadModel implements Serializable{
 
     String email = "";
+    String user_id = "";
     boolean restriction_status = false;
 
+    public String getUserId() {
+        return user_id;
+    }
+
+    public void setUserId(String user_id) {
+        this.user_id = user_id;
+    }
 
     public String getEmail() {
         return email;

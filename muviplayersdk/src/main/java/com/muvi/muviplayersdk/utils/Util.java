@@ -63,6 +63,7 @@ public class Util {
     public static final String LANGUAGE_LIST_PREF = "VishwamLanguageListPref";
     public static String GENRE_ARRAY_PREF_KEY = "genreArray";
     public static String GENRE_VALUES_ARRAY_PREF_KEY = "genreValueArray";
+    public static String DOWNLOAD_INFO_PREF = "download_info_pref";
 
     public static final String loginUrl = "login";
     public static final String forgotpasswordUrl = "forgotPassword";
@@ -135,7 +136,6 @@ public class Util {
 
     public static String GOOGLE_FCM_TOKEN = "GOOGLE_FCM_TOKEN";
     public static String DEFAULT_GOOGLE_FCM_TOKEN = "0";
-
     public static int check_for_subscription = 0;
 
     public static String selected_season_id = "0";

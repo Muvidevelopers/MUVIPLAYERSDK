@@ -293,6 +293,18 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     playerModel.canDownload(true);
+                    ArrayList<String> offlineSubtitleUrl = new ArrayList<>();
+                    offlineSubtitleUrl.add("https://d2l74kwt1i1y33.cloudfront.net/4050/EncodedVideo/subtitle/3119/test.vtt?Expires=1508988656&Signature=UHOfYf3QDnPwFE1i21H3P76mEZxgAwddS0SRc6Xyo4vUiiZFyukp7-IoEARGurFwiAQHX4I0tFDvhBqK37pK-5DHrdn6L~FDoy6jNGKv9Inyzd2uKocrPiBoKuiN9GEoVy6ZMVijL0flSUpruhsRMEoqyiZjofV4Jdgcs~9upVMnD7z4K-p0OMYa54aG9zC4ZtCpiu1oPXd-8Y-KNFi8BVIyFcSVSMpDBpI4QfpRJXe7jqC4mj6k0yaCaCwKeOq41~1r3RC5Jid6OZ6ZNVsmPFDNZIgmiVYqqNVL8~0E22llb8e5CIS6u1if~quxW~enoV8Uao7h9t85NZVc5tngZw__&Key-Pair-Id=APKAJYIDWFG3D6CNOYVA");
+                    offlineSubtitleUrl.add("https://d2l74kwt1i1y33.cloudfront.net/4050/EncodedVideo/subtitle/3120/telugu.vtt?Expires=1508988656&Signature=eDeLkOH0ECBH4WiKR3dTpDHQ8O3AdJKnW7sUHC9uytvO~aH5948vJxz9YTCZXcL6hI9Hmi5~U8Ai9XQP-IDUJ-GefzFzwi385NUu~LGZ4XQrOfwyTb3gIbND4-MpV93gC1qHl~3chu4ppP4~pjt9Ey8zHBUAn2TMU3GTDpz09jTCpxGqR3N1dxu6DhHPZ35~O~Nue3-rS4MixmfZ3Il57zsn0rx0LgLxpWtibLT8Yha32Bx07~nLegaAB4LM6Se7fMv~40t4QAIBA3-NHWTPetu12DEK5ZfnRSbQYl69QApxYc8DhTKpHk5aGX1PItsbrDF6fvx3mEls0grRHbse9g__&Key-Pair-Id=APKAJYIDWFG3D6CNOYVA");
+
+                    ArrayList<String> offlineSubtitleLanguage = new ArrayList<>();
+                    offlineSubtitleLanguage.add("English");
+                    offlineSubtitleLanguage.add("Telgu");
+
+
+                    playerModel.setOfflineSubtitleUrl(offlineSubtitleUrl);
+                    playerModel.setOfflineSubtitleLanguage(offlineSubtitleLanguage);
+
                 } else {
                     playerModel.canDownload(false);
                 }
@@ -418,6 +430,7 @@ public class MainActivity extends AppCompatActivity {
 
                 DownloadModel downloadModel = new DownloadModel();
                 downloadModel.setEmail("bb@gmail.com");
+                downloadModel.setUserId("151404");
                 downloadModel.setRestrictionStatus(true);
 
                 Intent mydownload = new Intent(MainActivity.this, MyDownloads.class);

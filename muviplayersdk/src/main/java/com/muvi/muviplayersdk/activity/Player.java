@@ -129,19 +129,19 @@ public class Player implements Serializable{
         return downloadStatus;
     }
 
-    public void setOfflineUrl(ArrayList<String> offline_url) {
+    public void setOfflineSubtitleUrl(ArrayList<String> offline_url) {
         this.offline_url = offline_url;
     }
 
-    public ArrayList<String> getOfflineUrl() {
+    public ArrayList<String> getOfflineSubtitleUrl() {
         return offline_url;
     }
 
-    public void setOfflineLanguage(ArrayList<String> offline_language) {
+    public void setOfflineSubtitleLanguage(ArrayList<String> offline_language) {
         this.offline_language = offline_language;
     }
 
-    public ArrayList<String> getOfflineLanguage() {
+    public ArrayList<String> getOfflineSubtitleLanguage() {
         return offline_language;
     }
 

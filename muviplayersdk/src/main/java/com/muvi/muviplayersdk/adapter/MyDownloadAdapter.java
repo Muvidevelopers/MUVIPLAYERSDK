@@ -82,7 +82,8 @@ public class MyDownloadAdapter extends BaseAdapter {
                 .placeholder(R.drawable.logo)
                 .error(R.drawable.logo)
                 .into(image);
-        title.setText(downloadModel.get(position).getMUVIID());
+        String data[] = downloadModel.get(position).getMUVIID().trim().split("@@@");
+        title.setText(data[0]);
         realise_date.setText("");
         if(!downloadModel.get(position).getGenere().equals(""))
             genre.setText(downloadModel.get(position).getGenere());

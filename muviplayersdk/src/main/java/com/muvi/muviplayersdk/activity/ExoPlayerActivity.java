@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -229,6 +230,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
     public boolean downloading;
     //Handler mHandler;
     static String filename, path;
+    SharedPreferences downloadInfoPref;
 
     AsynWithdrm asynWithdrm;
     ContactModel1 audio, audio_1;
@@ -412,7 +414,6 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
     boolean change_resolution = false;
     boolean is_paused = false;
     Timer MovableTimer;
-
 
     @Override
     protected void onResume() {
@@ -641,6 +642,13 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
         if (playerModel != null && playerModel.getEmailId() != null && !playerModel.getEmailId().trim().matches("")) {
             emailIdStr = playerModel.getEmailId();
         }
+
+
+        downloadInfoPref = getSharedPreferences(Util.DOWNLOAD_INFO_PREF,0);
+        SharedPreferences.Editor editor = downloadInfoPref.edit();
+        editor.putString("email_id",emailIdStr);
+        editor.putString("user_id",userIdStr);
+        editor.commit();
 
         emVideoView = (EMVideoView) findViewById(R.id.emVideoView);
         subtitleText = (TextView) findViewById(R.id.offLine_subtitleText);
@@ -1547,8 +1555,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                     }
 
 
-                    if (playerModel.getOfflineUrl().size() > 0) {
-                        Download_SubTitle(playerModel.getOfflineUrl().get(0));
+                    if ((playerModel.getOfflineSubtitleUrl().size() > 0) && (playerModel.getOfflineSubtitleUrl().size() == playerModel.getOfflineSubtitleLanguage().size())) {
+                        Download_SubTitle(playerModel.getOfflineSubtitleUrl().get(0));
                     }
                 }
 
@@ -3036,7 +3044,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                     asynWithdrm = new AsynWithdrm();
                     asynWithdrm.executeOnExecutor(threadPoolExecutor);
 
-                    Log.v("BIBHU1111", "(playerModel.getOfflineUrl()=" + (playerModel.getOfflineUrl().size()));
+                    Log.v("BIBHU1111", "(playerModel.getOfflineUrl()=" + (playerModel.getOfflineSubtitleUrl().size()));
 
 
 
@@ -3047,7 +3055,6 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
                     {
                         // This is applicable for NON-DRM contnet.// have to change
-
 
                         List_Of_Resolution_Format.clear();
                         List_Of_FileSize.clear();
@@ -3074,10 +3081,9 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
             }
 
 
-            if (playerModel.getOfflineUrl().size() > 0) {
-                Download_SubTitle(playerModel.getOfflineUrl().get(0));
+            if ((playerModel.getOfflineSubtitleUrl().size() > 0) && (playerModel.getOfflineSubtitleUrl().size() == playerModel.getOfflineSubtitleLanguage().size())) {
+                Download_SubTitle(playerModel.getOfflineSubtitleUrl().get(0));
             }
-
         }
 
 
@@ -4141,7 +4147,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
         Progress.setProgress(0);
 
         ContactModel1 contactModel1 = new ContactModel1();
-        contactModel1.setMUVIID(playerModel.getVideoTitle());
+        contactModel1.setMUVIID(playerModel.getVideoTitle()+"@@@"+playerModel.getStreamUniqueId());
         contactModel1.setDOWNLOADID((int) enqueue);
         contactModel1.setProgress(0);
         contactModel1.setUSERNAME(emailIdStr);
@@ -4231,13 +4237,13 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
         if(cursor1.getCount()>0)
         {
-            String query = "UPDATE " + DBHelper.RESUME_WATCH+ " SET Flag='0' , PlayedDuration = '0'  WHERE UniqueId = '"+playerModel.getStreamUniqueId()+ emailIdStr+"'";
+            String query = "UPDATE " + DBHelper.RESUME_WATCH+ " SET Flag='0' , PlayedDuration = '0',LatestMpdUrl = '',LicenceUrl=''  WHERE UniqueId = '"+playerModel.getStreamUniqueId()+ emailIdStr+"'";
             DB.execSQL(query);
             Log.v("BIBHU1234","resume watch update called");
         }
         else {
-            String query = "INSERT INTO " + DBHelper.RESUME_WATCH + " (UniqueId , PlayedDuration,Flag) VALUES" +
-                    " ('" + playerModel.getStreamUniqueId() + emailIdStr + "','0','0')";
+            String query = "INSERT INTO " + DBHelper.RESUME_WATCH + " (UniqueId , PlayedDuration,Flag,LicenceUrl,LatestMpdUrl) VALUES" +
+                    " ('" + playerModel.getStreamUniqueId() + emailIdStr + "','0','0','','')";
             DB.execSQL(query);
             Log.v("BIBHU1234", "resume watch insert called");
             //=====================================End=======================================//
@@ -4319,7 +4325,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
                 SubtitleModel subtitleModel = new SubtitleModel();
                 subtitleModel.setUID(playerModel.getStreamUniqueId() + emailIdStr);
-                subtitleModel.setLanguage(playerModel.getOfflineLanguage().get(0));
+                subtitleModel.setLanguage(playerModel.getOfflineSubtitleLanguage().get(0));
                 String filename = mediaStorageDir1.getAbsolutePath() + "/" + System.currentTimeMillis() + ".vtt";
                 subtitleModel.setPath(filename);
 
@@ -4328,7 +4334,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                 long rowId = dbHelper.insertRecordSubtittel(subtitleModel);
                 Log.v("BIBHU3", "rowId============" + rowId + "sub id ::" + subtitleModel.getUID());
 
-                playerModel.getOfflineLanguage().remove(0);
+                playerModel.getOfflineSubtitleLanguage().remove(0);
 
 
                 OutputStream output = new FileOutputStream(filename);
@@ -4359,9 +4365,9 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
         @Override
         protected void onPostExecute(String file_url) {
 
-            playerModel.getOfflineUrl().remove(0);
-            if (playerModel.getOfflineUrl().size() > 0) {
-                Download_SubTitle(playerModel.getOfflineUrl().get(0).trim());
+            playerModel.getOfflineSubtitleUrl().remove(0);
+            if (playerModel.getOfflineSubtitleUrl().size() > 0) {
+                Download_SubTitle(playerModel.getOfflineSubtitleUrl().get(0).trim());
             }
 
         }

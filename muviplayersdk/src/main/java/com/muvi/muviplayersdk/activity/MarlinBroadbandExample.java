@@ -12,6 +12,7 @@ import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
@@ -369,6 +370,9 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
         Chromecast_Subtitle_Code = getIntent().getStringArrayListExtra("Chromecast_Subtitle_Code");
         download_content_type = getIntent().getStringExtra("download_content_type");
 
+        emailIdStr = getIntent().getStringExtra("user_id");
+        userIdStr = getIntent().getStringExtra("email");
+
         Log.v("BIBHU11","download content type="+download_content_type);
 
 
@@ -385,18 +389,6 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
         content_types_id = Integer.parseInt(contid);
         genreTextView = gen;
         movieId = muviid;
-
-        pref = getSharedPreferences(Util.LOGIN_PREF, 0);
-        if (pref != null) {
-            emailIdStr = pref.getString("PREFS_LOGIN_EMAIL_ID_KEY", null);
-            userIdStr = pref.getString("PREFS_LOGGEDIN_ID_KEY", null);
-
-        } else {
-            emailIdStr = "";
-            userIdStr = "";
-        }
-
-
         emVideoView = (EMVideoView) findViewById(R.id.emVideoView);
         subtitleText = (TextView) findViewById(R.id.offLine_subtitleText);
         subtitle_change_btn = (ImageView) findViewById(R.id.subtitle_change_btn);
@@ -507,8 +499,6 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
 
 
 
-
-
         //Call For Subtitle Loading // Added By Bibhu
 
         if (getIntent().getStringArrayListExtra("SubTitleName") != null) {
@@ -519,12 +509,14 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
 
         if (getIntent().getStringArrayListExtra("SubTitlePath") != null) {
             SubTitlePath = getIntent().getStringArrayListExtra("SubTitlePath");
+            subtitle_change_btn.setBackgroundResource(R.drawable.cc_button_radious);
+            subtitle_change_btn.setImageResource(R.drawable.subtitle_image_drm);
         } else {
             SubTitlePath.clear();
         }
 
         if (SubTitlePath.size() < 1) {
-            subtitle_change_btn.setVisibility(View.INVISIBLE);
+            subtitle_change_btn.setVisibility(View.GONE);
         }
 
         subtitle_change_btn.setOnClickListener(new View.OnClickListener() {
@@ -591,14 +583,12 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
                         mHandler.removeCallbacks(updateTimeTask);
                     }
 
-
                     if (center_pause_paly_timer_is_running) {
                         center_pause_paly_timer.cancel();
                         center_pause_paly_timer_is_running = false;
                         Log.v("BIBHU11", "CastAndCrewActivity End_Timer cancel called");
 
-
-                        subtitle_change_btn.setVisibility(View.INVISIBLE);
+                        subtitle_change_btn.setVisibility(View.GONE);
                         primary_ll.setVisibility(View.GONE);
                         last_ll.setVisibility(View.GONE);
                         center_play_pause.setVisibility(View.GONE);
@@ -742,7 +732,7 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
                     center_play_pause.setVisibility(View.GONE);
                     latest_center_play_pause.setVisibility(View.GONE);
                     current_time.setVisibility(View.GONE);
-                    subtitle_change_btn.setVisibility(View.INVISIBLE);
+                    subtitle_change_btn.setVisibility(View.GONE);
 
 
                 } else {
@@ -752,7 +742,7 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
                         center_play_pause.setVisibility(View.GONE);
                         latest_center_play_pause.setVisibility(View.GONE);
                         current_time.setVisibility(View.GONE);
-                        subtitle_change_btn.setVisibility(View.INVISIBLE);
+                        subtitle_change_btn.setVisibility(View.GONE);
 
                         End_Timer();
                     } else {
@@ -867,6 +857,10 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
             @Override
             public void onPrepared() {
 
+
+                if (SubTitlePath.size() > 0) {
+                    Util.DefaultSubtitle = SubTitleName.get(0).trim();
+                }
 
                 video_prepared  = true;
                 video_completed = false;
@@ -1008,8 +1002,7 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
                 String dash_url = path;
                 ContentTypes contentType = ContentTypes.DASH;
                 PlaylistProxy.MediaSourceParams params = new PlaylistProxy.MediaSourceParams();
-                params.sourceContentType = contentType
-                        .getMediaSourceParamsContentType();
+                params.sourceContentType = contentType.getMediaSourceParamsContentType();
 			/*
 			 * if the content has separate audio tracks (eg languages) you may
 			 * select one using MediaSourceParams, eg params.language="es";
@@ -1089,7 +1082,6 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
 
             Util.player_description = false;
             Util.landscape = false;
-
             compressed = false;
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -1228,7 +1220,7 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
                 center_play_pause.setVisibility(View.GONE);
                 latest_center_play_pause.setVisibility(View.GONE);
                 current_time.setVisibility(View.GONE);
-                subtitle_change_btn.setVisibility(View.INVISIBLE);
+                subtitle_change_btn.setVisibility(View.GONE);
 
                 previous_matching_time = current_matching_time;
             } else {
@@ -1405,7 +1397,7 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
             center_pause_paly_timer.cancel();
             center_pause_paly_timer_is_running = false;
 
-            subtitle_change_btn.setVisibility(View.INVISIBLE);
+            subtitle_change_btn.setVisibility(View.GONE);
             primary_ll.setVisibility(View.GONE);
             last_ll.setVisibility(View.GONE);
             center_play_pause.setVisibility(View.GONE);
@@ -1809,9 +1801,7 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
         public void onReceive(Context context, Intent intent) {
            // ToastmakeText(context,"Receiver Called",Toast.LENGTH_SHORT).show();
 
-          if(true){  // Have to cahnge.
-              return;
-          }
+            Log.v("BIBHU11","BroadcastReceiver Called");
 
             if(Util.checkNetwork(MarlinBroadbandExample.this))
             {
@@ -1924,7 +1914,7 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
                 httppost.addHeader("content_uniq_id", muviid);
                 httppost.addHeader("stream_uniq_id", streamId);
                 httppost.addHeader("internet_speed","10");
-                httppost.addHeader("user_id",pref.getString("PREFS_LOGGEDIN_ID_KEY", null));
+                httppost.addHeader("user_id",userIdStr);
                 httppost.addHeader("lang_code",Util.getTextofLanguage(MarlinBroadbandExample.this,Util.SELECTED_LANGUAGE_CODE,Util.DEFAULT_SELECTED_LANGUAGE_CODE));
 
 
@@ -1932,7 +1922,7 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
                 Log.v("SUBHA","authToken = "+Util.authTokenStr.trim());
                 Log.v("SUBHA","content_uniq_id = "+muviid);
                 Log.v("SUBHA","stream_uniq_id = "+streamId);
-                Log.v("SUBHA","user_id = "+pref.getString("PREFS_LOGGEDIN_ID_KEY",null));
+                Log.v("SUBHA","user_id = "+userIdStr);
 
                 // Execute HTTP Post Request
                 try {
@@ -1964,16 +1954,12 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
                         if ((myJson.has("videoUrl")) && myJson.getString("videoUrl").trim() != null && !myJson.getString("videoUrl").trim().isEmpty() && !myJson.getString("videoUrl").trim().equals("null") && !myJson.getString("videoUrl").trim().matches("")) {
                             MpdVideoUrl = myJson.getString("videoUrl").trim();
 
-                            if(MpdVideoUrl.equals(""))
-                                responseStr = "0";
-
 
                             if ((myJson.has("licenseUrl")) && myJson.getString("licenseUrl").trim() != null && !myJson.getString("licenseUrl").trim().isEmpty() && !myJson.getString("licenseUrl").trim().equals("null") && !myJson.getString("licenseUrl").trim().matches("")) {
                                 licenseUrl = myJson.optString("licenseUrl");
                             }
 
                             SQLiteDatabase DB = MarlinBroadbandExample.this.openOrCreateDatabase(DBHelper.DATABASE_NAME, MODE_PRIVATE, null);
-
                             String Qry1 = "UPDATE " + DBHelper.RESUME_WATCH + " SET LicenceUrl = '"+licenseUrl+"' , Flag = '1' ,LatestMpdUrl = '"+MpdVideoUrl+"'  WHERE UniqueId = '" + UniqueId + "'";
                             DB.execSQL(Qry1);
                         }
@@ -2141,6 +2127,7 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
                                     public void run() {
 
                                         stopcalling_onpause = true;
+                                        emVideoView.setEnabled(true);
 
                                             SQLiteDatabase DB = MarlinBroadbandExample.this.openOrCreateDatabase(DBHelper.DATABASE_NAME, MODE_PRIVATE, null);
                                             String Qry1 = "UPDATE " + DBHelper.RESUME_WATCH + " SET Flag = '0' , PlayedDuration = '0' " +
@@ -2148,7 +2135,6 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
                                             DB.execSQL(Qry1);
 
                                         finish();
-
                                     }
                                 });
                             }
@@ -2417,7 +2403,7 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
                 //  This Code Is Added For Video Log By Bibhu..
 
                 jsonObj.put("authToken", Util.authTokenStr.trim());
-                jsonObj.put("user_id", pref.getString("PREFS_LOGGEDIN_ID_KEY", null));
+                jsonObj.put("user_id", userIdStr);
                 jsonObj.put("ip_address", ipAddressStr.trim());
                 jsonObj.put("movie_id",muviid);
                 jsonObj.put("episode_id",streamId);
@@ -2511,7 +2497,7 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
                 //  This Code Is Added For Video Log By Bibhu..
 
                 jsonObj.put("authToken", Util.authTokenStr.trim());
-                jsonObj.put("user_id", pref.getString("PREFS_LOGGEDIN_ID_KEY", null));
+                jsonObj.put("user_id",userIdStr);
                 jsonObj.put("ip_address", ipAddressStr.trim());
                 jsonObj.put("movie_id",muviid);
                 jsonObj.put("episode_id",streamId);
@@ -2681,11 +2667,13 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
         @Override
         public void onClick() {
 
+            if (mCastSession != null && mCastSession.isConnected()) {
+                return;
+            }
+
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-
-
                     {
 
                         if (Util.hide_pause) {
@@ -2697,7 +2685,7 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
                             center_play_pause.setVisibility(View.GONE);
                             latest_center_play_pause.setVisibility(View.GONE);
                             current_time.setVisibility(View.GONE);
-                            subtitle_change_btn.setVisibility(View.INVISIBLE);
+                            subtitle_change_btn.setVisibility(View.GONE);
                             mediaRouteButton.setVisibility(View.INVISIBLE);
 
 
@@ -2708,7 +2696,7 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
                                 center_play_pause.setVisibility(View.GONE);
                                 latest_center_play_pause.setVisibility(View.GONE);
                                 current_time.setVisibility(View.GONE);
-                                subtitle_change_btn.setVisibility(View.INVISIBLE);
+                                subtitle_change_btn.setVisibility(View.GONE);
                                 mediaRouteButton.setVisibility(View.INVISIBLE);
 
                                 End_Timer();

@@ -1382,8 +1382,8 @@ public class MyLibraryPlayer extends AppCompatActivity implements SensorOrientat
                     }
 
 
-                    if (playerModel.getOfflineUrl().size() > 0) {
-                        Download_SubTitle(playerModel.getOfflineUrl().get(0));
+                    if (playerModel.getOfflineSubtitleUrl().size() > 0) {
+                        Download_SubTitle(playerModel.getOfflineSubtitleUrl().get(0));
                     }
                 }
 
@@ -2649,11 +2649,11 @@ public class MyLibraryPlayer extends AppCompatActivity implements SensorOrientat
                     asynWithdrm = new AsynWithdrm();
                     asynWithdrm.executeOnExecutor(threadPoolExecutor);
 
-                    Log.v("BIBHU1111", "(playerModel.getOfflineUrl()=" + (playerModel.getOfflineUrl().size()));
+                    Log.v("BIBHU1111", "(playerModel.getOfflineUrl()=" + (playerModel.getOfflineSubtitleUrl().size()));
 
 
-                    if (playerModel.getOfflineUrl().size() > 0) {
-                        Download_SubTitle(playerModel.getOfflineUrl().get(0));
+                    if (playerModel.getOfflineSubtitleUrl().size() > 0) {
+                        Download_SubTitle(playerModel.getOfflineSubtitleUrl().get(0));
                     }
                 }
             } else {
@@ -3878,7 +3878,7 @@ public class MyLibraryPlayer extends AppCompatActivity implements SensorOrientat
 
                 SubtitleModel subtitleModel = new SubtitleModel();
                 subtitleModel.setUID(playerModel.getStreamUniqueId() + emailIdStr);
-                subtitleModel.setLanguage(playerModel.getOfflineLanguage().get(0));
+                subtitleModel.setLanguage(playerModel.getOfflineSubtitleUrl().get(0));
                 String filename = mediaStorageDir1.getAbsolutePath() + "/" + System.currentTimeMillis() + ".vtt";
                 subtitleModel.setPath(filename);
 
@@ -3887,7 +3887,7 @@ public class MyLibraryPlayer extends AppCompatActivity implements SensorOrientat
                 long rowId = dbHelper.insertRecordSubtittel(subtitleModel);
                 Log.v("BIBHU3", "rowId============" + rowId + "sub id ::" + subtitleModel.getUID());
 
-                playerModel.getOfflineLanguage().remove(0);
+                playerModel.getOfflineSubtitleUrl().remove(0);
 
 
                 OutputStream output = new FileOutputStream(filename);
@@ -3918,9 +3918,9 @@ public class MyLibraryPlayer extends AppCompatActivity implements SensorOrientat
         @Override
         protected void onPostExecute(String file_url) {
 
-            playerModel.getOfflineUrl().remove(0);
-            if (playerModel.getOfflineUrl().size() > 0) {
-                Download_SubTitle(playerModel.getOfflineUrl().get(0).trim());
+            playerModel.getOfflineSubtitleUrl().remove(0);
+            if (playerModel.getOfflineSubtitleUrl().size() > 0) {
+                Download_SubTitle(playerModel.getOfflineSubtitleUrl().get(0).trim());
             }
 
         }

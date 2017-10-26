@@ -107,6 +107,7 @@ public class MyDownloads extends AppCompatActivity {
     String SubtitleUrl = "";
     String SubtitleLanguage = "";
     String SubtitleCode = "";
+    String user_Id = "";
 
     /*chromecast-------------------------------------*/
     View view;
@@ -155,6 +156,7 @@ public class MyDownloads extends AppCompatActivity {
         dbHelper=new DBHelper(MyDownloads.this);
         dbHelper.getWritableDatabase();
         downloadModel = (DownloadModel) getIntent().getSerializableExtra("DownloadModel");
+        user_Id = downloadModel.getUserId();
 
 
 
@@ -321,7 +323,9 @@ public class MyDownloads extends AppCompatActivity {
             public void run(){
 
                 final String pathh=download.get(Position).getPath();
-                final String titles=download.get(Position).getMUVIID();
+
+                final String data[] = download.get(Position).getMUVIID().trim().split("@@@");
+                final String titles=data[0];
                 final String gen=download.get(Position).getGenere();
                 final String tok=download.get(Position).getToken();
                 final String contentid=download.get(Position).getContentid();
@@ -359,8 +363,10 @@ public class MyDownloads extends AppCompatActivity {
                             in.putExtra("download_id_from_watch_access_table", download_id_from_watch_access_table);
                             in.putExtra("PlayedLength", PlayedLength);
                             in.putExtra("UniqueId",""+download.get(Position).getUniqueId());
-                            in.putExtra("streamId",""+download.get(Position).getStreamId());
+                            in.putExtra("streamId",data[1]);
                             in.putExtra("download_content_type",""+download.get(Position).getDownloadContentType());
+                            in.putExtra("user_id",user_Id);
+                            in.putExtra("email",emailIdStr);
 
 
 
