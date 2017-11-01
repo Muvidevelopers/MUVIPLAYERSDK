@@ -930,7 +930,8 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
         });
 
         path = getIntent().getStringExtra("FILE").trim();
-
+        token = getIntent().getStringExtra("TOK").trim();
+        title = getIntent().getStringExtra("Title").trim();
 
         if(download_content_type.trim().equals("1")){
 
@@ -969,9 +970,7 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
 
 
 
-            token = getIntent().getStringExtra("TOK").trim();
-            //movieid = getIntent().getStringExtra("url").trim();
-            title = getIntent().getStringExtra("Title").trim();
+
             Log.v("SUBHA", "path" + token);
             String licenseAcquisitionToken = getActionTokenFromStorage(token);
             if (licenseAcquisitionToken == null) {

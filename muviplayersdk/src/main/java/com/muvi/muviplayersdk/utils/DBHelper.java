@@ -377,22 +377,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
                 COLUMN_POSTER+","+COLUMN_MUVI_TOKEN+","+COLUMN_FILE_PATH+","+COLUMN_CONTENT_ID+","+COLUMN_GENERE+","+COLUMN_MUVIID+","+COLUMN_DURATION+","+COLUMN_STREAMID+","+COLUMN_DOWNLOAD_CONTENT_TYPE+" FROM "+TABLE_NAME+" WHERE "+COLUMN_DOWNLOAD_USERNAME+" = '"+id+"' AND "+COLUMN_DOWNLOAD_STATUS+" = "+downloadstatus;
         SQLiteDatabase db = this.getReadableDatabase();
-//
         Cursor cursor = db.rawQuery(query,null);
-       /* Cursor cursor = null;
 
-        cursor = db.query(TABLE_NAME, new String[]{COLUMN_ID,
-                        COLUMN_MUVI_ID,
-                        COLUMN_DOWNLOADID,
-                        COLUMN_DOWNLOAD_PROGRESS,COLUMN_DOWNLOAD_USERNAME,COLUMN_DOWNLOAD_UNIQUEID, COLUMN_DOWNLOAD_STATUS,
-
-                        COLUMN_POSTER,COLUMN_MUVI_TOKEN,COLUMN_FILE_PATH,COLUMN_CONTENT_ID,COLUMN_GENERE,COLUMN_MUVIID,COLUMN_DURATION,
-
-
-
-                }, COLUMN_DOWNLOAD_USERNAME + "=?",
-                new String[]{id}, null, null, null, null);
-*/
         ContactModel1 contactModel=null;
 
         ArrayList<ContactModel1> contacts = new ArrayList<ContactModel1>();
