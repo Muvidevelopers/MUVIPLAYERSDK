@@ -136,10 +136,7 @@ public class SdkMyDownloads extends AppCompatActivity {
                 finish();
             }
         });
-
-        if (getIntent().getExtras() == null) {
-            mActionBarToolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
-        }
+        mActionBarToolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
 
         list= (ListView)findViewById(R.id.listView);
         nodata= (RelativeLayout) findViewById(R.id.noData);
