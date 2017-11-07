@@ -50,7 +50,7 @@ public class DownloadOptionAdapter extends BaseAdapter {
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.activity_download_resolution_list, null);
+            view = inflater.inflate(R.layout.activity_sdk_download_resolution_list, null);
         } else {
             view = (View) convertView;
         }

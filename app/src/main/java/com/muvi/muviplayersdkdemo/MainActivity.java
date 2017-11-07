@@ -22,7 +22,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.muvi.muviplayersdk.activity.ExoPlayerActivity;
-import com.muvi.muviplayersdk.activity.MyDownloads;
+import com.muvi.muviplayersdk.activity.SdkMyDownloads;
 import com.muvi.muviplayersdk.activity.Player;
 import com.muvi.muviplayersdk.model.DownloadModel;
 
@@ -333,8 +333,9 @@ public class MainActivity extends AppCompatActivity {
                     playerModel.setVideoDuration("00:23:41");
                     playerModel.setVideoReleaseDate("");
                     playerModel.setCensorRating("");
-                    playerModel.setPlayPos(13);  // Insec
 
+
+                    playerModel.setPlayPos(13);
                     playerModel.setMpdVideoUrl("https://vimeoassets-singapore.s3-ap-southeast-1.amazonaws.com/4050/EncodedVideo/uploads/movie_stream/full_movie/91003/stream.mpd");
                     playerModel.setLicenseUrl("https://wv.service.expressplay.com/hms/wv/rights/?ExpressPlayToken=AwAAABSMKdwAAABgxzuIOjIrmOOVXhujA7YKU0bESAAi02zk266VkYImrkNzzXdpEFM1v6VFR-gAGNT6Nugs-G1Ef_m3n7go2KKiTrOVnzyGNqIfth0IPevI9ENxlYCBX5l_lHX6mBexN3tBXXfzYZfuczDZG95MvnQMRxWaknk");
 
@@ -431,7 +432,7 @@ public class MainActivity extends AppCompatActivity {
                 downloadModel.setUserId("151404");
                 downloadModel.setRestrictionStatus(true);
 
-                Intent mydownload = new Intent(MainActivity.this, MyDownloads.class);
+                Intent mydownload = new Intent(MainActivity.this, SdkMyDownloads.class);
                 mydownload.putExtra("DownloadModel",downloadModel);
                 startActivity(mydownload);
             }

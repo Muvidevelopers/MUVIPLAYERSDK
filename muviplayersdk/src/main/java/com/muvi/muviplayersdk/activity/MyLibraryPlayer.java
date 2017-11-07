@@ -393,7 +393,7 @@ public class MyLibraryPlayer extends AppCompatActivity implements SensorOrientat
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_final_exoplayer);
+        setContentView(R.layout.activity_sdk_exoplayer);
 
         playerModel = (Player) getIntent().getSerializableExtra("PlayerModel");
 
@@ -4611,7 +4611,7 @@ public class MyLibraryPlayer extends AppCompatActivity implements SensorOrientat
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MyLibraryPlayer.this, R.style.MyAlertDialogStyle);
         LayoutInflater inflater = (LayoutInflater) MyLibraryPlayer.this.getSystemService(MyLibraryPlayer.this.LAYOUT_INFLATER_SERVICE);
 
-        View convertView = (View) inflater.inflate(R.layout.activity_download_popup, null);
+        View convertView = (View) inflater.inflate(R.layout.activity_sdk_download_popup, null);
         alertDialog.setView(convertView);
         alertDialog.setTitle("");
 

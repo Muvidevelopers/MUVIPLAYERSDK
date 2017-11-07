@@ -3,7 +3,6 @@ package com.muvi.muviplayersdk.adapter;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -15,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.muviplayersdk.R;
-import com.muvi.muviplayersdk.activity.MyDownloads;
+import com.muvi.muviplayersdk.activity.SdkMyDownloads;
 import com.muvi.muviplayersdk.model.ContactModel1;
 import com.muvi.muviplayersdk.utils.DBHelper;
 import com.muvi.muviplayersdk.utils.Util;
@@ -23,7 +22,6 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
@@ -32,12 +30,12 @@ import static android.content.Context.MODE_PRIVATE;
  * Created by Muvi on 1/16/2017.
  */
 public class MyDownloadAdapter extends BaseAdapter {
-    MyDownloads activity;
+    SdkMyDownloads activity;
     ArrayList<ContactModel1> downloadModel;
     ContactModel1 audio;
     DBHelper dbHelper;
     DownloadManager downloadManager;
-    public MyDownloadAdapter(MyDownloads activity , ArrayList<ContactModel1> downloadModel) {
+    public MyDownloadAdapter(SdkMyDownloads activity , ArrayList<ContactModel1> downloadModel) {
         this.activity = activity;
         this.downloadModel = downloadModel;
         dbHelper = new DBHelper(activity);

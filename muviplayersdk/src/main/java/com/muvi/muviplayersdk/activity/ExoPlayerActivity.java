@@ -432,7 +432,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_final_exoplayer);
+        setContentView(R.layout.activity_sdk_exoplayer);
 
         player_layout = (RelativeLayout) findViewById(R.id.player_layout);
         player_layout_height = player_layout.getHeight();
@@ -765,7 +765,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
             }
 
             /**ad **/
-            if (playerModel.getResolutionFormat() != null) {
+         /*   if (playerModel.getResolutionFormat() != null) {
                 ResolutionFormat = playerModel.getResolutionFormat();
             } else {
                 ResolutionFormat.clear();
@@ -776,7 +776,30 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                 ResolutionUrl = playerModel.getResolutionUrl();
             } else {
                 ResolutionUrl.clear();
+            }*/
+
+            if (playerModel.getResolutionFormat() != null) {
+//                ResolutionFormat = playerModel.getResolutionFormat();
+
+                for(int i =0 ;i<playerModel.getResolutionFormat().size() ;i++){
+                    ResolutionFormat.add(playerModel.getResolutionFormat().get(i));
+                }
+
+            } else {
+                ResolutionFormat.clear();
+
             }
+
+            if (playerModel.getResolutionUrl() != null) {
+                for(int i =0 ;i<playerModel.getResolutionUrl().size() ;i++){
+                    ResolutionUrl.add(playerModel.getResolutionUrl().get(i));
+                }
+
+            } else {
+                ResolutionUrl.clear();
+            }
+
+
 
             if (ResolutionUrl.size() < 1) {
                 Log.v("SUBHA", "resolution image Invisible called");
@@ -1479,6 +1502,10 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                                 List_Of_Resolution_Url_Used_For_Download.add(playerModel.getNonDrmDownloadUrlList().get(i));
                                 List_Of_Resolution_Format.add(playerModel.getNonDrmDownloadFormatList().get(i));
                             }
+
+                            Collections.reverse(List_Of_Resolution_Format);
+                            Collections.reverse(List_Of_Resolution_Url);
+                            Collections.reverse(List_Of_Resolution_Url_Used_For_Download);
 
                             pDialog_for_gettig_filesize = new ProgressBarHandler(ExoPlayerActivity.this);
                             pDialog_for_gettig_filesize.show();
@@ -2968,6 +2995,10 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                                 List_Of_Resolution_Url_Used_For_Download.add(playerModel.getNonDrmDownloadUrlList().get(i));
                                 List_Of_Resolution_Format.add(playerModel.getNonDrmDownloadFormatList().get(i));
                             }
+
+                            Collections.reverse(List_Of_Resolution_Format);
+                            Collections.reverse(List_Of_Resolution_Url);
+                            Collections.reverse(List_Of_Resolution_Url_Used_For_Download);
 
                             pDialog_for_gettig_filesize = new ProgressBarHandler(ExoPlayerActivity.this);
                             pDialog_for_gettig_filesize.show();
@@ -4982,7 +5013,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(ExoPlayerActivity.this, R.style.MyAlertDialogStyle);
         LayoutInflater inflater = (LayoutInflater) ExoPlayerActivity.this.getSystemService(ExoPlayerActivity.this.LAYOUT_INFLATER_SERVICE);
 
-        View convertView = (View) inflater.inflate(R.layout.activity_download_popup, null);
+        View convertView = (View) inflater.inflate(R.layout.activity_sdk_download_popup, null);
         alertDialog.setView(convertView);
         alertDialog.setTitle("");
 

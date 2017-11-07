@@ -5,20 +5,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -28,15 +21,6 @@ import android.widget.TextView;
 import com.androidquery.AQuery;
 import com.example.muviplayersdk.R;
 import com.google.android.gms.cast.MediaInfo;
-import com.google.android.gms.cast.MediaMetadata;
-import com.google.android.gms.cast.MediaTrack;
-import com.google.android.gms.cast.framework.CastButtonFactory;
-import com.google.android.gms.cast.framework.CastContext;
-import com.google.android.gms.cast.framework.CastSession;
-import com.google.android.gms.cast.framework.SessionManagerListener;
-import com.google.android.gms.cast.framework.media.RemoteMediaClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.images.WebImage;
 import com.muvi.muviplayersdk.adapter.MyDownloadAdapter;
 import com.muvi.muviplayersdk.model.ContactModel1;
 import com.muvi.muviplayersdk.model.DownloadModel;
@@ -44,37 +28,17 @@ import com.muvi.muviplayersdk.utils.DBHelper;
 import com.muvi.muviplayersdk.utils.ProgressBarHandler;
 import com.muvi.muviplayersdk.utils.Util;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import javax.net.ssl.HttpsURLConnection;
-
 import static java.lang.Thread.sleep;
 
 
-public class MyDownloads extends AppCompatActivity {
+public class SdkMyDownloads extends AppCompatActivity {
 
 
     String download_id_from_watch_access_table = "";
@@ -152,8 +116,8 @@ public class MyDownloads extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mydownload);
-        dbHelper=new DBHelper(MyDownloads.this);
+        setContentView(R.layout.activity_sdk_mydownload);
+        dbHelper=new DBHelper(SdkMyDownloads.this);
         dbHelper.getWritableDatabase();
         downloadModel = (DownloadModel) getIntent().getSerializableExtra("DownloadModel");
         user_Id = downloadModel.getUserId();
@@ -163,7 +127,7 @@ public class MyDownloads extends AppCompatActivity {
         registerReceiver(UpadateDownloadList, new IntentFilter("NewVodeoAvailable"));
         Toolbar mActionBarToolbar= (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mActionBarToolbar);
-        mActionBarToolbar.setTitle(Util.getTextofLanguage(MyDownloads.this,Util.MY_DOWNLOAD,Util.DEFAULT_MY_DOWNLOAD));
+        mActionBarToolbar.setTitle(Util.getTextofLanguage(SdkMyDownloads.this,Util.MY_DOWNLOAD,Util.DEFAULT_MY_DOWNLOAD));
         mActionBarToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -187,11 +151,11 @@ public class MyDownloads extends AppCompatActivity {
 
         download=dbHelper.getContactt(emailIdStr,1);
         if(download.size()>0) {
-            adapter = new MyDownloadAdapter(MyDownloads.this , download);
+            adapter = new MyDownloadAdapter(SdkMyDownloads.this , download);
             list.setAdapter(adapter);
         }else {
             nodata.setVisibility(View.VISIBLE);
-            noDataTextView.setText(Util.getTextofLanguage(MyDownloads.this,Util.NO_CONTENT,Util.DEFAULT_NO_CONTENT));
+            noDataTextView.setText(Util.getTextofLanguage(SdkMyDownloads.this,Util.NO_CONTENT,Util.DEFAULT_NO_CONTENT));
         }
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -209,22 +173,22 @@ public class MyDownloads extends AppCompatActivity {
     public void visible(){
 
         if(download.size()>0) {
-            adapter = new MyDownloadAdapter(MyDownloads.this , download);
+            adapter = new MyDownloadAdapter(SdkMyDownloads.this , download);
             list.setAdapter(adapter);
 
         }else {
             nodata.setVisibility(View.VISIBLE);
-            noDataTextView.setText(Util.getTextofLanguage(MyDownloads.this,Util.NO_CONTENT,Util.DEFAULT_NO_CONTENT));
+            noDataTextView.setText(Util.getTextofLanguage(SdkMyDownloads.this,Util.NO_CONTENT,Util.DEFAULT_NO_CONTENT));
         }
     }
 
     public void ShowRestrictionMsg(String msg) {
-        AlertDialog.Builder dlgAlert = new AlertDialog.Builder(MyDownloads.this, R.style.MyAlertDialogStyle);
+        AlertDialog.Builder dlgAlert = new AlertDialog.Builder(SdkMyDownloads.this, R.style.MyAlertDialogStyle);
 
         dlgAlert.setMessage(msg);
-        dlgAlert.setTitle(Util.getTextofLanguage(MyDownloads.this, Util.SORRY, Util.DEFAULT_SORRY));
+        dlgAlert.setTitle(Util.getTextofLanguage(SdkMyDownloads.this, Util.SORRY, Util.DEFAULT_SORRY));
         dlgAlert.setCancelable(false);
-        dlgAlert.setPositiveButton(Util.getTextofLanguage(MyDownloads.this, Util.BUTTON_OK, Util.DEFAULT_BUTTON_OK),
+        dlgAlert.setPositiveButton(Util.getTextofLanguage(SdkMyDownloads.this, Util.BUTTON_OK, Util.DEFAULT_BUTTON_OK),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
@@ -258,7 +222,7 @@ public class MyDownloads extends AppCompatActivity {
 
             download=dbHelper.getContactt(emailIdStr,1);
             if(download.size()>0) {
-                adapter = new MyDownloadAdapter(MyDownloads.this,download);
+                adapter = new MyDownloadAdapter(SdkMyDownloads.this,download);
                 list.setAdapter(adapter);
                 nodata.setVisibility(View.GONE);
             }
@@ -270,7 +234,7 @@ public class MyDownloads extends AppCompatActivity {
         SubTitleName.clear();
         SubTitlePath.clear();
 
-        SQLiteDatabase DB = MyDownloads.this.openOrCreateDatabase(DBHelper.DATABASE_NAME, MODE_PRIVATE, null);
+        SQLiteDatabase DB = SdkMyDownloads.this.openOrCreateDatabase(DBHelper.DATABASE_NAME, MODE_PRIVATE, null);
         Cursor cursor = DB.rawQuery("SELECT LANGUAGE,PATH FROM SUBTITLE_LUIMERE WHERE UID = '" + download.get(Position).getUniqueId() + "'", null);
         int count = cursor.getCount();
 
@@ -316,7 +280,7 @@ public class MyDownloads extends AppCompatActivity {
 
 
 
-        pDialog = new ProgressBarHandler(MyDownloads.this);
+        pDialog = new ProgressBarHandler(SdkMyDownloads.this);
         pDialog.show();
 
         new Thread(new Runnable(){
@@ -343,7 +307,7 @@ public class MyDownloads extends AppCompatActivity {
                         @Override
                         public void run() {
 
-                            Intent in=new Intent(MyDownloads.this,MarlinBroadbandExample.class);
+                            Intent in=new Intent(SdkMyDownloads.this,MarlinBroadbandExample.class);
                             Log.v("SUBHA", "PATH" + pathh);
 
 
@@ -410,7 +374,7 @@ public class MyDownloads extends AppCompatActivity {
 
         // following block is responsible for restriction on download content .....
 
-        SQLiteDatabase DB = MyDownloads.this.openOrCreateDatabase(DBHelper.DATABASE_NAME, MODE_PRIVATE, null);
+        SQLiteDatabase DB = SdkMyDownloads.this.openOrCreateDatabase(DBHelper.DATABASE_NAME, MODE_PRIVATE, null);
 
         long server_current_time = 0;
         long watch_period = -1;

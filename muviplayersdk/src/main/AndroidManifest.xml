@@ -72,7 +72,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 
         <activity
-            android:name="com.muvi.muviplayersdk.activity.MyDownloads"
+            android:name="com.muvi.muviplayersdk.activity.SdkMyDownloads"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.muvi.muviplayersdk.activity.MarlinBroadbandExample"
