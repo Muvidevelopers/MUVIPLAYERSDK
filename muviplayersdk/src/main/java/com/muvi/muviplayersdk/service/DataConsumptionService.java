@@ -1,4 +1,4 @@
-package com.muvi.muviplayersdk.activity;
+package com.muvi.muviplayersdk.service;
 
 import android.annotation.TargetApi;
 import android.app.DownloadManager;
@@ -55,9 +55,10 @@ public class DataConsumptionService extends Service {
             // Extract data included in the Intent
             Log.v("BIBHU17", "Receiver called");
 
-            loginPref = getSharedPreferences(Util.LOGIN_PREF, 0);
+            loginPref = getSharedPreferences(Util.DOWNLOAD_INFO_PREF, 0);
             if (loginPref != null) {
-                Email_Id = loginPref.getString("PREFS_LOGIN_EMAIL_ID_KEY", null);
+                Email_Id = loginPref.getString("email_id", null);
+                Log.v("BIBHU17", "Receiver called email ="+Email_Id);
 
                 try
                 {

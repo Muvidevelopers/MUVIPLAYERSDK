@@ -15,7 +15,11 @@ import com.muvi.muviplayersdk.utils.Util;
 
 
 public class PopUpService extends Service {
-
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Log.v("BIBHU1","service oncreate called");
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {

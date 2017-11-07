@@ -87,6 +87,7 @@ import com.intertrust.wasabi.media.PlaylistProxyListener;
 import com.muvi.muviplayersdk.adapter.DownloadOptionAdapter;
 import com.muvi.muviplayersdk.model.ContactModel1;
 import com.muvi.muviplayersdk.model.SubtitleModel;
+import com.muvi.muviplayersdk.service.DataConsumptionService;
 import com.muvi.muviplayersdk.service.PopUpService;
 import com.muvi.muviplayersdk.subtitle_support.Caption;
 import com.muvi.muviplayersdk.subtitle_support.FormatSRT;
@@ -392,7 +393,7 @@ public class MyLibraryPlayer extends AppCompatActivity implements SensorOrientat
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_final_exoplayer);
+        setContentView(R.layout.activity_sdk_exoplayer);
 
         playerModel = (Player) getIntent().getSerializableExtra("PlayerModel");
 
@@ -1381,8 +1382,8 @@ public class MyLibraryPlayer extends AppCompatActivity implements SensorOrientat
                     }
 
 
-                    if (playerModel.getOfflineUrl().size() > 0) {
-                        Download_SubTitle(playerModel.getOfflineUrl().get(0));
+                    if (playerModel.getOfflineSubtitleUrl().size() > 0) {
+                        Download_SubTitle(playerModel.getOfflineSubtitleUrl().get(0));
                     }
                 }
 
@@ -2648,11 +2649,11 @@ public class MyLibraryPlayer extends AppCompatActivity implements SensorOrientat
                     asynWithdrm = new AsynWithdrm();
                     asynWithdrm.executeOnExecutor(threadPoolExecutor);
 
-                    Log.v("BIBHU1111", "(playerModel.getOfflineUrl()=" + (playerModel.getOfflineUrl().size()));
+                    Log.v("BIBHU1111", "(playerModel.getOfflineUrl()=" + (playerModel.getOfflineSubtitleUrl().size()));
 
 
-                    if (playerModel.getOfflineUrl().size() > 0) {
-                        Download_SubTitle(playerModel.getOfflineUrl().get(0));
+                    if (playerModel.getOfflineSubtitleUrl().size() > 0) {
+                        Download_SubTitle(playerModel.getOfflineSubtitleUrl().get(0));
                     }
                 }
             } else {
@@ -3877,7 +3878,7 @@ public class MyLibraryPlayer extends AppCompatActivity implements SensorOrientat
 
                 SubtitleModel subtitleModel = new SubtitleModel();
                 subtitleModel.setUID(playerModel.getStreamUniqueId() + emailIdStr);
-                subtitleModel.setLanguage(playerModel.getOfflineLanguage().get(0));
+                subtitleModel.setLanguage(playerModel.getOfflineSubtitleUrl().get(0));
                 String filename = mediaStorageDir1.getAbsolutePath() + "/" + System.currentTimeMillis() + ".vtt";
                 subtitleModel.setPath(filename);
 
@@ -3886,7 +3887,7 @@ public class MyLibraryPlayer extends AppCompatActivity implements SensorOrientat
                 long rowId = dbHelper.insertRecordSubtittel(subtitleModel);
                 Log.v("BIBHU3", "rowId============" + rowId + "sub id ::" + subtitleModel.getUID());
 
-                playerModel.getOfflineLanguage().remove(0);
+                playerModel.getOfflineSubtitleUrl().remove(0);
 
 
                 OutputStream output = new FileOutputStream(filename);
@@ -3917,9 +3918,9 @@ public class MyLibraryPlayer extends AppCompatActivity implements SensorOrientat
         @Override
         protected void onPostExecute(String file_url) {
 
-            playerModel.getOfflineUrl().remove(0);
-            if (playerModel.getOfflineUrl().size() > 0) {
-                Download_SubTitle(playerModel.getOfflineUrl().get(0).trim());
+            playerModel.getOfflineSubtitleUrl().remove(0);
+            if (playerModel.getOfflineSubtitleUrl().size() > 0) {
+                Download_SubTitle(playerModel.getOfflineSubtitleUrl().get(0).trim());
             }
 
         }
@@ -4610,7 +4611,7 @@ public class MyLibraryPlayer extends AppCompatActivity implements SensorOrientat
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MyLibraryPlayer.this, R.style.MyAlertDialogStyle);
         LayoutInflater inflater = (LayoutInflater) MyLibraryPlayer.this.getSystemService(MyLibraryPlayer.this.LAYOUT_INFLATER_SERVICE);
 
-        View convertView = (View) inflater.inflate(R.layout.activity_download_popup, null);
+        View convertView = (View) inflater.inflate(R.layout.activity_sdk_download_popup, null);
         alertDialog.setView(convertView);
         alertDialog.setTitle("");
 

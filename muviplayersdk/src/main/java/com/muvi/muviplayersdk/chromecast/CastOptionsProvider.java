@@ -17,6 +17,7 @@
 package com.muvi.muviplayersdk.chromecast;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.google.android.gms.cast.MediaMetadata;
 import com.google.android.gms.cast.framework.CastOptions;
@@ -37,8 +38,12 @@ import java.util.List;
  */
 public class CastOptionsProvider implements OptionsProvider {
 
+
+
     @Override
     public CastOptions getCastOptions(Context context) {
+
+
         NotificationOptions notificationOptions = new NotificationOptions.Builder()
                 .setActions(Arrays.asList(MediaIntentReceiver.ACTION_SKIP_NEXT,
                         MediaIntentReceiver.ACTION_TOGGLE_PLAYBACK,
@@ -50,8 +55,10 @@ public class CastOptionsProvider implements OptionsProvider {
                 .setNotificationOptions(notificationOptions)
                 .setExpandedControllerActivityClassName(ExpandedControlsActivity.class.getName())
                 .build();
+
+
         return new CastOptions.Builder()
-                .setReceiverApplicationId(Util.app_id)
+                .setReceiverApplicationId( ChromeCastApplicationId.chromeCastID)
                 .setCastMediaOptions(mediaOptions)
                 .build();
     }

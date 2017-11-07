@@ -11,12 +11,12 @@ import java.util.ArrayList;
  * Created by MUVI on 15-05-2017.
  */
 
-public class Player implements Serializable{
+public class Player implements Serializable {
 
     boolean isLiveStream = false;
     boolean isLandScape = false;
 
-    boolean isThirdPartyPlayer=false;
+    boolean isThirdPartyPlayer = false;
     public static boolean player_description = true;
     public static boolean landscape = true;
     public static boolean hide_pause = false;
@@ -25,28 +25,49 @@ public class Player implements Serializable{
     public static String VideoResolution = "Auto";
     public static final String loadIPUrl = "https://api.ipify.org/?format=json";
 
-    boolean waterMark=true;
+    boolean waterMark = false;
     int playPos = 0;
 
-    String movieUniqueId,streamUniqueId;
+    int postRoll = 0;
+    int preRoll = 0;
+
+    String adDetails = "";
+
+    int midRoll = 0;
+    private String videoTitle = "";
+    private String videoGenre = "";
+    private String videoDuration = "";
+    private String videoReleaseDate = "";
+    private String videoStory = "";
+    private boolean castCrew = false;
+    private String censorRating = "";
+    private String posterImageId = "https://d2gx0xinochgze.cloudfront.net/public/no-image-a.png";
+
+    String movieUniqueId, streamUniqueId;
     String videoUrl = "";
-    String rootUrl="";
-    String appName="";
+    String rootUrl = "";
+    String appName = "";
 
-    String authTokenStr;
-    String userId;
-    String emailId;
-    String movieId;
-    String Episode_id;
-    int isFreeContent;
-    String videoResolution;
-    String licenseUrl,mpdVideoUrl,isOffline="";
+    String authTokenStr = "";
+    String userId = "";
+    String emailId = "";
+    String movieId = "";
+    String Episode_id = "";
+    int isFreeContent = 0;
+    String videoResolution = "";
+    String licenseUrl, mpdVideoUrl = "", isOffline = "";
     int ContentTypesId = 1;
-    String  app_id = "49A4D3B2";
+    String app_id = "";
+    boolean chromecast_enable = false;
+    boolean can_Download = false;
+    boolean is_Content_Restricted = false;
+    boolean use_Email = true;
+    boolean use_Ip = true;
+    boolean use_Date = true;
+    String downloadStatus = "0";
+    int adNetworkId = 1;
+    String channel_id = "";
 
-
-
-    // This code is added by Bibhuprasad Jena //
 
     public ArrayList<String> offline_url = new ArrayList<>();
     public ArrayList<String> offline_language = new ArrayList<>();
@@ -58,11 +79,52 @@ public class Player implements Serializable{
     public ArrayList<String> chromecast_subtitle_language_code = new ArrayList<>();
 
 
-    String downloadStatus = "0";
+    public void useEmail(boolean use_Email) {
+        this.use_Email = use_Email;
+    }
+
+    public boolean getUseEmailStatus() {
+        return use_Email;
+    }
+
+    public void useIp(boolean use_Ip) {
+        this.use_Ip = use_Ip;
+    }
+
+    public boolean getUseIpStatus() {
+        return use_Ip;
+    }
+
+
+    public void useDate(boolean use_Date) {
+        this.use_Date = use_Date;
+    }
+
+    public boolean getUseDateStatus() {
+        return use_Date;
+    }
+
+
+    public boolean getChromeCastEnable() {
+        return chromecast_enable;
+    }
+
+    public void setChromeCastEnable(boolean chromecast_enable) {
+        this.chromecast_enable = chromecast_enable;
+    }
+
+    public void isContentRestricted(boolean is_Content_Restricted) {
+        this.is_Content_Restricted = is_Content_Restricted;
+    }
+
+    public boolean getDownloadContentRestrictionStatus() {
+        return is_Content_Restricted;
+    }
 
     public String getAppId() {
         return app_id;
     }
+
     public void setAppId(String appId) {
         this.app_id = app_id;
     }
@@ -70,9 +132,11 @@ public class Player implements Serializable{
     public String getAppName() {
         return appName;
     }
+
     public void setAppName(String appName) {
         this.appName = appName;
     }
+
     public void setDownloadStatus(String downloadStatus) {
         this.downloadStatus = downloadStatus;
     }
@@ -81,19 +145,19 @@ public class Player implements Serializable{
         return downloadStatus;
     }
 
-    public void setOfflineUrl(ArrayList<String> offline_url) {
+    public void setOfflineSubtitleUrl(ArrayList<String> offline_url) {
         this.offline_url = offline_url;
     }
 
-    public ArrayList<String> getOfflineUrl() {
+    public ArrayList<String> getOfflineSubtitleUrl() {
         return offline_url;
     }
 
-    public void setOfflineLanguage(ArrayList<String> offline_language) {
+    public void setOfflineSubtitleLanguage(ArrayList<String> offline_language) {
         this.offline_language = offline_language;
     }
 
-    public ArrayList<String> getOfflineLanguage() {
+    public ArrayList<String> getOfflineSubtitleLanguage() {
         return offline_language;
     }
 
@@ -106,9 +170,7 @@ public class Player implements Serializable{
         return offline_language_code;
     }
 
-
     // This is for subtitle support in chromecast
-
 
     public void setChromecsatSubtitleUrl(ArrayList<String> chromecast_subtitle_url) {
         this.chromecast_subtitle_url = chromecast_subtitle_url;
@@ -136,12 +198,21 @@ public class Player implements Serializable{
     }
 
 
-
     //********************** END ***************************//
 
-    public static boolean checkNetwork(Context context){
+    boolean getDownloadStatus = false;
+
+    public void canDownload(boolean getDownloadStatus) {
+        this.getDownloadStatus = getDownloadStatus;
+    }
+
+    public boolean getGetDownloadStatus() {
+        return getDownloadStatus;
+    }
+
+    public static boolean checkNetwork(Context context) {
         ConnectivityManager cm =
-                (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
@@ -156,7 +227,7 @@ public class Player implements Serializable{
         this.isstreaming_restricted = isstreaming_restricted;
     }
 
-    private boolean isstreaming_restricted=false;
+    private boolean isstreaming_restricted = false;
 
 
     public boolean isLandScape() {
@@ -176,8 +247,6 @@ public class Player implements Serializable{
     }
 
 
-
-
     public int getAdNetworkId() {
         return adNetworkId;
     }
@@ -185,9 +254,6 @@ public class Player implements Serializable{
     public void setAdNetworkId(int adNetworkId) {
         this.adNetworkId = adNetworkId;
     }
-
-    int adNetworkId = 1;
-    String channel_id;
 
 
     public String getChannel_id() {
@@ -206,9 +272,6 @@ public class Player implements Serializable{
         this.adDetails = adDetails;
     }
 
-    String adDetails="";
-
-    int midRoll = 0;
 
     public int getMidRoll() {
         return midRoll;
@@ -234,8 +297,6 @@ public class Player implements Serializable{
         this.preRoll = preRoll;
     }
 
-    int postRoll = 0;
-    int preRoll = 0;
 
     public int getContentTypesId() {
         return ContentTypesId;
@@ -335,11 +396,31 @@ public class Player implements Serializable{
     public void setResolutionUrl(ArrayList<String> resolutionUrl) {
         ResolutionUrl = resolutionUrl;
     }
+
     ArrayList<String> SubTitlePath = new ArrayList<>();
     ArrayList<String> FakeSubTitlePath = new ArrayList<>();
     ArrayList<String> ResolutionFormat = new ArrayList<>();
     ArrayList<String> ResolutionUrl = new ArrayList<>();
 
+    ArrayList<String> nonDrmDownloadUrlList = new ArrayList<>();
+    ArrayList<String> nonDrmDownloadFormatList = new ArrayList<>();
+
+    public ArrayList<String> getNonDrmDownloadUrlList() {
+        return nonDrmDownloadUrlList;
+    }
+
+    public void setNonDrmDownloadUrlList(ArrayList<String> nonDrmDownloadUrlList) {
+        this.nonDrmDownloadUrlList = nonDrmDownloadUrlList;
+    }
+
+
+    public ArrayList<String> getNonDrmDownloadFormatList() {
+        return nonDrmDownloadFormatList;
+    }
+
+    public void setNonDrmDownloadFormatList(ArrayList<String> nonDrmDownloadFormatList) {
+        this.nonDrmDownloadFormatList = nonDrmDownloadFormatList;
+    }
 
 
     public ArrayList<String> getSubTitleLanguage() {
@@ -361,16 +442,6 @@ public class Player implements Serializable{
         FakeSubTitlePath = fakeSubTitlePath;
     }
 
-    private String videoTitle = "";
-    private String videoGenre = "";
-    /* private String videoDuration = "00:00:00";
-     private String videoReleaseDate = "00/00/0000";*/
-    private String videoDuration = "";
-    private String videoReleaseDate = "";
-    private String videoStory = "";
-    private boolean castCrew = false;
-    private String censorRating = "";
-    private String posterImageId = "https://d2gx0xinochgze.cloudfront.net/public/no-image-a.png";
 
     public boolean isThirdPartyPlayer() {
         return isThirdPartyPlayer;
@@ -388,7 +459,6 @@ public class Player implements Serializable{
     public void setEmailId(String emailId) {
         this.emailId = emailId;
     }
-
 
 
     public String getUserId() {
@@ -425,7 +495,7 @@ public class Player implements Serializable{
         this.authTokenStr = authTokenStr;
     }
 
-    public boolean isWaterMark() {
+    public boolean getWaterMark() {
         return waterMark;
     }
 
@@ -551,8 +621,6 @@ public class Player implements Serializable{
     public void setStoryColor(String storyColor) {
         StoryColor = storyColor;
     }
-
-
 
 
 }

@@ -40,7 +40,12 @@ public class Util {
     public static String DEFAULT_WANT_TO_DOWNLOAD = "Want to Download";
     public static String DOWNLOAD_CANCELLED = "DOWNLOAD_CANCELLED";
     public static String DEFAULT_DOWNLOAD_CANCELLED = "Download Cancelled";
-
+    public static String MY_DOWNLOAD = "MY_DOWNLOAD";
+    public static String DEFAULT_MY_DOWNLOAD = "My Download";
+    public static String DEFAULT_WANT_TO_DELETE = "Want to Delete ?";
+    public static String WANT_TO_DELETE = "WANT_TO_DELETE";
+    public static String DEFAULT_DELETE_BTN = "Delete";
+    public static String DELETE_BTN = "DELETE_BTN";
 
 
 
@@ -58,6 +63,7 @@ public class Util {
     public static final String LANGUAGE_LIST_PREF = "VishwamLanguageListPref";
     public static String GENRE_ARRAY_PREF_KEY = "genreArray";
     public static String GENRE_VALUES_ARRAY_PREF_KEY = "genreValueArray";
+    public static String DOWNLOAD_INFO_PREF = "download_info_pref";
 
     public static final String loginUrl = "login";
     public static final String forgotpasswordUrl = "forgotPassword";
@@ -115,7 +121,8 @@ public class Util {
 
     //=========End========================//
 
-    public static final String app_id = "49A4D3B2";
+    public static String app_id = "";
+//    public static String app_id = "49A4D3B2";
 
     public static boolean drawer_line_visibility = true;
     /*public static PPVModel ppvModel = null;
@@ -129,7 +136,6 @@ public class Util {
 
     public static String GOOGLE_FCM_TOKEN = "GOOGLE_FCM_TOKEN";
     public static String DEFAULT_GOOGLE_FCM_TOKEN = "0";
-
     public static int check_for_subscription = 0;
 
     public static String selected_season_id = "0";
@@ -176,7 +182,7 @@ public class Util {
     public static String rootUrl(){
         //String rootUrl = "https://sonydadc.muvi.com/rest/";
 //        String rootUrl = "http://muvistudio.edocent.com/rest/";
-        String rootUrl = "http://www.muvi.com/rest/";
+        String rootUrl = "https://www.muvi.com/rest/";
         //String rootUrl = "https://www.idogic.com/rest/";
         return rootUrl;
 

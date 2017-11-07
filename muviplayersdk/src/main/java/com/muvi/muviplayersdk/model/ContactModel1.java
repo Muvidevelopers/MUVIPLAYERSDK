@@ -9,6 +9,24 @@ public class ContactModel1 {
     public boolean cast_crew;
     private String release_date;
     private String story;
+    private String SreamId="";
+    private String download_content_type="";
+
+    public String getDownloadContentType() {
+        return download_content_type;
+    }
+
+    public void setDownloadContentType(String download_content_type) {
+        this.download_content_type = download_content_type;
+    }
+
+    public String getStreamId() {
+        return SreamId;
+    }
+
+    public void setStreamId(String SreamId) {
+        this.SreamId = SreamId;
+    }
 
     public String getCensor_rating() {
         return censor_rating;
