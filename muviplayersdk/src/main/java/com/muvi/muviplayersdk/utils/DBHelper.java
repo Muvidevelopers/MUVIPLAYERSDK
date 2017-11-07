@@ -45,7 +45,9 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_PATH = "PATH";
     public static final String CONTENT_TYPE = "CONTENT_TYPE";
 
-    // This code is done for bandwidth log of download contnet separately.......
+    /**
+     *     This code is done for bandwidth log of download contnet separately.......
+     */
 
     public static final String DOWNLOAD_CONTENT_INFO = "DOWNLOAD_CONTENT_INFO";
 
@@ -53,39 +55,37 @@ public class DBHelper extends SQLiteOpenHelper {
             + " (download_contnet_id TEXT,log_id TEXT,authtoken TEXT,email TEXT,ipaddress TEXT,"+ "movie_id TEXT,"+"episode_id TEXT,"
             + "device_type TEXT," +"download_status TEXT," + "server_sending_final_status TEXT)";
 
-    //................................. END ......................................//
 
 
-    // This code is only responsible for Access period and Watch Period feature on Download Contnet
+    /**
+     * This code is only responsible for Access period and Watch Period feature on Download Contnet.
+     */
     public static final String WATCH_ACCESS_INFO = "WATCH_ACCESS_INFO";
 
     public static final String WATCH_ACCESS_INFO_TABLE = "CREATE TABLE IF NOT EXISTS " + WATCH_ACCESS_INFO
             + " (download_id TEXT,stream_unique_id TEXT,server_current_time INTEGER,watch_period INTEGER,access_period INTEGER," +
             "initial_played_time INTEGER,"+"updated_server_current_time INTEGER,email TEXT)";
-    //=================================End=======================================================//
 
 
-    // This code is only responsible for Resume Watch Feature
+
+    /**
+     * This code is only responsible for Resume Watch Feature
+     */
     public static final String RESUME_WATCH = "RESUME_WATCH";
 
     public static final String RESUME_WATCH_TABLE = "CREATE TABLE IF NOT EXISTS " + RESUME_WATCH
             + " (UniqueId TEXT,PlayedDuration TEXT,LatestMpdUrl TEXT,Flag TEXT,LicenceUrl TEXT)";
-    //=================================End=======================================================//
 
 
 
     private static final String CREATE_SOL =
             "CREATE TABLE " + TABLE_NAME + " (" + COLUMN_ID +
                     " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-
                     COLUMN_MUVI_ID + " VARCHAR, " +
-
                     COLUMN_DOWNLOADID + " INTEGER, " +
                     COLUMN_DOWNLOAD_PROGRESS + " INTEGER, " +
                     COLUMN_DOWNLOAD_USERNAME + " VARCHAR, " +
                     COLUMN_DOWNLOAD_UNIQUEID + " VARCHAR, " +
-
-
                     COLUMN_POSTER + " VARCHAR, " +
                     COLUMN_MUVI_TOKEN + " VARCHAR, " +
                     COLUMN_FILE_PATH + " VARCHAR, " +
@@ -100,13 +100,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
     private static final String CREATE_SOL_SUBTITLE_LUIMERE = "CREATE TABLE " + TABLE_NAME_SUBTITLE_LUIMERE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            COLUMN_UID + " VARCHAR, " +
-            COLUMN_LANGUAGE + " VARCHAR, " +
-
-            COLUMN_PATH + " VARCHAR)";
+            COLUMN_UID + " VARCHAR, " + COLUMN_LANGUAGE + " VARCHAR, " + COLUMN_PATH + " VARCHAR)";
 
     private SQLiteDatabase database;
-
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -167,43 +163,12 @@ public class DBHelper extends SQLiteOpenHelper {
         database.close();
         return status;
     }
-//    public void insertRecordAlternate(ContactModel contact) {
-//        database = this.getReadableDatabase();
-//        database.execSQL("INSERT INTO " + TABLE_NAME + "(" + COLUMN_FIRST_NAME + "," + COLUMN_LAST_NAME + ") VALUES('" + contact.getFirstName() + "','" + contact.getLastName() + "')");
-//        database.close();
-//    }
 
-//    public String getCotacts(String id) {
-//
-//        //hp = new HashMap();
-//        String resp = "";
-//        database = this.getReadableDatabase();
-//        Cursor res =  database.rawQuery( "select * from SOL where CUSTOMER_ID = '"+id+"'", null );
-//        res.moveToFirst();
-//
-//        while(res.isAfterLast() == false){
-//            resp = "Name:-"+  res.getString(res.getColumnIndex(COLUMN_FIRM_NAME))
-//                    +"\n"+"Email"+res.getString(res.getColumnIndex(COLUMN_LAST_NAME));
-//            res.moveToNext();
-//        }
-//        return resp;
-//    }
 
     public ContactModel1 getContact(String id) {
-/*
-        String query = "SELECT "+COLUMN_ID+","+
-                COLUMN_MUVI_ID+","+COLUMN_DOWNLOADID+","+
-                COLUMN_DOWNLOAD_PROGRESS+","+COLUMN_DOWNLOAD_USERNAME+","+COLUMN_DOWNLOAD_UNIQUEID+","+ COLUMN_DOWNLOAD_STATUS+","+
-               COLUMN_POSTER+","+COLUMN_MUVI_TOKEN+","+COLUMN_FILE_PATH+","+COLUMN_CONTENT_ID+","+COLUMN_GENERE+","+COLUMN_MUVIID+","+COLUMN_DURATION+" FROM "+TABLE_NAME+" WHERE "+COLUMN_DOWNLOAD_UNIQUEID+" = '"+id+"'";
 
-        */
         SQLiteDatabase db = this.getReadableDatabase();
-
         Cursor cursor = null;
-
-      /*  Log.d("DB QUERY ::",query);
-        cursor = db.rawQuery(query,null);*/
-
         cursor = db.query(TABLE_NAME, new String[]{COLUMN_ID,
                         COLUMN_MUVI_ID,
                         COLUMN_DOWNLOADID,
@@ -243,144 +208,18 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         return contactModel;
-        // return contact
-
     }
-
-
-
-    public String getCotacts(String id) {
-
-        //hp = new HashMap();
-        String resp = "";
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from Sanji where URL = '"+id+"'", null );
-        if (res != null && res.moveToFirst()) {
-
-            while (res.isAfterLast() == false) {
-                resp = "Name:-" + res.getString(res.getColumnIndex(COLUMN_MUVI_ID))
-                        + "\n" + "Email" + res.getString(res.getColumnIndex(COLUMN_DOWNLOADID));
-                res.moveToNext();
-            }
-        }
-        return resp;
-    }
-
-
-   /* public ContactModel getLastrowid() {
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        Cursor cursor = null;
-        String query = "SELECT ID from SOL order by ID DESC limit 1";
-
-        cursor = db.rawQuery(query,null);
-
-        ContactModel contactModel=null;
-
-        if (cursor != null && cursor.moveToFirst()) {
-
-
-            contactModel = new ContactModel();
-
-            contactModel.setID(cursor.getString(0));
-
-
-
-        }
-
-        return contactModel;
-        // return contact
-
-    }
-
-*/
-//    public ContactModel getContacts(String id) {
-//        SQLiteDatabase db = this.getReadableDatabase();
-//
-//        Cursor cursor = null;
-//
-//
-//        cursor = db.query(TABLE_NAME, new String[]{COLUMN_ID, COLUMN_USERR_ID, COLUMN_CONTENTTYPE_ID,
-//                        COLUMN_FILE_NAME, COLUMN_FILE_PATH, COLUMN_POSTER, COLUMN_GENERE, COLUMN_VIDEO_TITLE,
-//                        COLUMN_VIDEO_DURATION,
-//
-//
-////
-////
-//
-//
-//                }, COLUMN_USERR_ID + "=?",
-//                new String[]{id}, null, null, null, null);
-//
-//        ContactModel contactModel=null;
-//
-//        if (cursor != null && cursor.moveToFirst()) {
-//
-//
-//            contactModel = new ContactModel();
-//
-//            contactModel.setID(cursor.getString(0));
-//            contactModel.setContenttypeid(cursor.getString(1));
-//            contactModel.setFilename(cursor.getString(2));
-//            contactModel.setFilepath(cursor.getString(3));
-//            contactModel.setToken(cursor.getString(4));
-//            contactModel.setPoster(cursor.getString(5));
-//            contactModel.setGenere(cursor.getString(6));
-//            contactModel.setVideotitle(cursor.getString(7));
-//            contactModel.setVideoduration(cursor.getString(8));
-//
-//
-//
-//        }
-//
-//        return contactModel;
-//        // return contact
-//
-//    }
-
-
-
-
-//    public String[] getAllCountries()
-//    {
-//
-//        database = this.getReadableDatabase();
-//        Cursor cursor = this.database.query(TABLE_NAME, new String[] {COLUMN_REQUEST_ID}, null, null, null, null, null);
-//
-//        if(cursor.getCount() >0)
-//        {
-//            String[] str = new String[cursor.getCount()];
-//            int i = 0;
-//
-//            while (cursor.moveToNext())
-//            {
-//                str[i] = cursor.getString(cursor.getColumnIndex(COLUMN_REQUEST_ID));
-//
-//                i++;
-//            }
-//            return str;
-//        }
-//        else
-//        {
-//            return new String[] {};
-//        }
-//    }
-
-
-
 
     public ArrayList<ContactModel1> getContactt(String id , int downloadstatus) {
 
 
         String query = "SELECT "+COLUMN_ID+","+COLUMN_MUVI_ID+","+COLUMN_DOWNLOADID+","+COLUMN_DOWNLOAD_PROGRESS+","+
                 COLUMN_DOWNLOAD_USERNAME+","+COLUMN_DOWNLOAD_UNIQUEID+","+ COLUMN_DOWNLOAD_STATUS+","+
-
                 COLUMN_POSTER+","+COLUMN_MUVI_TOKEN+","+COLUMN_FILE_PATH+","+COLUMN_CONTENT_ID+","+COLUMN_GENERE+","+COLUMN_MUVIID+","+COLUMN_DURATION+","+COLUMN_STREAMID+","+COLUMN_DOWNLOAD_CONTENT_TYPE+" FROM "+TABLE_NAME+" WHERE "+COLUMN_DOWNLOAD_USERNAME+" = '"+id+"' AND "+COLUMN_DOWNLOAD_STATUS+" = "+downloadstatus;
+
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query,null);
-
         ContactModel1 contactModel=null;
-
         ArrayList<ContactModel1> contacts = new ArrayList<ContactModel1>();
 
         if (cursor.getCount() > 0) {
@@ -406,113 +245,17 @@ public class DBHelper extends SQLiteOpenHelper {
                 contactModel.setDuration(cursor.getString(13));
                 contactModel.setStreamId(cursor.getString(14));
                 contactModel.setDownloadContentType(cursor.getString(15));
-
-
-
-
                 contacts.add(contactModel);
             }
         }
         cursor.close();
-//        database.close();
-
         return contacts;
     }
-
-
-    public HashMap<String,ArrayList<String>> getOfflineSubtitel(String id) {
-
-        ArrayList<String> path = new ArrayList<>();
-        ArrayList<String> lang = new ArrayList<>();
-        HashMap<String,ArrayList<String>> result = new HashMap<>();
-        Log.d("DB offlineSubti id :: ",id);
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = null;
-        cursor = db.query(TABLE_NAME_SUBTITLE_LUIMERE, new String[]{COLUMN_LANGUAGE,COLUMN_PATH,
-                }, COLUMN_UID + "=?",
-                new String[]{id}, null, null, null, null);
-
-        SubtitleModel contactModel=null;
-
-        if (cursor != null && cursor.moveToFirst()) {
-            while (cursor.moveToNext())
-            {
-                lang.add(cursor.getString(0));
-                path.add(cursor.getString(1));
-
-            }
-            result.put("path",path);
-            result.put("lang",lang);
-        }
-
-        return result;
-        // return contact
-
-    }
-
-    public ArrayList<ContactModel1> getAllRecords() {
-        database = this.getReadableDatabase();
-        Cursor cursor = database.query(TABLE_NAME, null, null, null, null, null, null);
-
-        ArrayList<ContactModel1> contacts = new ArrayList<ContactModel1>();
-        ContactModel1 contactModel;
-        if (cursor.getCount() > 0) {
-            for (int i = 0; i < cursor.getCount(); i++) {
-                cursor.moveToNext();
-
-                contactModel = new ContactModel1();
-
-                contactModel.setID(cursor.getString(0));
-                contactModel.setMUVIID(cursor.getString(1));
-                contactModel.setDOWNLOADID(cursor.getInt(2));
-                contactModel.setProgress(cursor.getInt(3));
-                contactModel.setDSTATUS(cursor.getInt(4));
-
-
-
-
-
-                contacts.add(contactModel);
-            }
-        }
-        cursor.close();
-        database.close();
-
-        return contacts;
-    }
-
-//    public ArrayList<ContactModel> getAllRecordsAlternate() {
-//        database = this.getReadableDatabase();
-//        Cursor cursor = database.rawQuery("SELECT * FROM " + TABLE_NAME, null);
-//
-//        ArrayList<ContactModel> contacts = new ArrayList<ContactModel>();
-//        ContactModel contactModel;
-//        if (cursor.getCount() > 0) {
-//            for (int i = 0; i < cursor.getCount(); i++) {
-//                cursor.moveToNext();
-//
-//                contactModel = new ContactModel();
-//                contactModel.setID(cursor.getString(0));
-//                contactModel.setRequestid(cursor.getString(1));
-//                contactModel.setFirstName(cursor.getString(2));
-//                contactModel.setLastName(cursor.getString(3));
-//
-//                contacts.add(contactModel);
-//            }
-//        }
-//        cursor.close();
-//        database.close();
-//
-//        return contacts;
-//    }
 
 
     public void updateRecord(ContactModel1 contact) {
         database = this.getReadableDatabase();
         ContentValues contentValues = new ContentValues();
-
-
-
         contentValues.put(COLUMN_ID, contact.getID());
         contentValues.put(COLUMN_MUVI_ID, contact.getMUVIID());
         contentValues.put(COLUMN_DOWNLOADID, contact.getDOWNLOADID());
@@ -532,62 +275,16 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_DURATION, contact.getDuration());
         contentValues.put(COLUMN_STREAMID, contact.getStreamId());
 
-
-
-
         database.update(TABLE_NAME, contentValues, COLUMN_ID + " = ?", new String[]{contact.getID()});
         database.close();
     }
 
-//    public void updateRecordAlternate(ContactModel contact) {
-//        database = this.getReadableDatabase();
-//        database.execSQL("update " + TABLE_NAME + " set " + COLUMN_FIRST_NAME + " = '" + contact.getFirstName() + "', " + COLUMN_LAST_NAME + " = '" + contact.getLastName() + "' where " + COLUMN_ID + " = '" + contact.getID() + "'");
-//        database.close();
-//    }
 
-    public void deleteAllRecords() {
-        database = this.getReadableDatabase();
-        database.delete(TABLE_NAME, null, null);
-        database.close();
-    }
-
-    public void deleteAllRecordsAlternate() {
-        database = this.getReadableDatabase();
-        database.execSQL("delete from " + TABLE_NAME);
-        database.close();
-    }
 
     public void deleteRecord(ContactModel1 contact) {
         database = this.getReadableDatabase();
         database.delete(TABLE_NAME, COLUMN_ID + " = ?", new String[]{contact.getID()});
         database.close();
     }
-
-   /* public void deleteRecordAlternate(ContactModel contact) {
-        database = this.getReadableDatabase();
-        database.execSQL("delete from " + TABLE_NAME + " where " + COLUMN_ID + " = '" + contact.getID() + "'");
-        database.close();
-    }*/
-
-    public ArrayList<String> getAllTableName()
-    {
-        database = this.getReadableDatabase();
-        ArrayList<String> allTableNames=new ArrayList<String>();
-        Cursor cursor=database.rawQuery("SELECT name FROM sqlite_master WHERE type='table'",null);
-        if(cursor.getCount()>0)
-        {
-            for(int i=0;i<cursor.getCount();i++)
-            {
-                cursor.moveToNext();
-                allTableNames.add(cursor.getString(cursor.getColumnIndex("name")));
-            }
-        }
-        cursor.close();
-        database.close();
-        return allTableNames;
-    }
-
-
-
 
 }
