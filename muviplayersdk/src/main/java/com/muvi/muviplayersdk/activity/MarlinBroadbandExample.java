@@ -1387,7 +1387,7 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
 
                         active_track_index = "";
 
-                        Log.v("BIBHU", "selected trackid===========**" + active_track_index);
+                        Log.v(TAG, "selected trackid===========**" + active_track_index);
 
                         // check chromecast is connected or not , if connected then remove the active track id
 
@@ -1418,7 +1418,7 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
                             active_track_index = (Integer.parseInt(data.getStringExtra("position")) - 1) + "";
                             int id = Integer.parseInt(active_track_index);
 
-                            Log.v("BIBHU", " trackid===========" + id);
+                            Log.v(TAG, " trackid===========" + id);
 
                             // check chromecast is connected or not , if connected then remove the active track id
 
@@ -1856,9 +1856,9 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
                                 Chromecast_Subtitle_Code.clear();
 
                                 for (int i = 0; i < SubtitleJosnArray.length(); i++) {
-                                    Log.v("BIBHU", "Sutitle name = " + SubtitleJosnArray.getJSONObject(i).optString("language").trim());
-                                    Log.v("BIBHU", "Sutitle path = " + SubtitleJosnArray.getJSONObject(i).optString("url").trim());
-                                    Log.v("BIBHU", "Sutitle code = " + SubtitleJosnArray.getJSONObject(i).optString("code").trim());
+                                    Log.v(TAG, "Sutitle name = " + SubtitleJosnArray.getJSONObject(i).optString("language").trim());
+                                    Log.v(TAG, "Sutitle path = " + SubtitleJosnArray.getJSONObject(i).optString("url").trim());
+                                    Log.v(TAG, "Sutitle code = " + SubtitleJosnArray.getJSONObject(i).optString("code").trim());
 
                                     Chromecast_Subtitle_Url.add(SubtitleJosnArray.getJSONObject(i).optString("url").trim());
                                     Chromecast_Subtitle_Language_Name.add(SubtitleJosnArray.getJSONObject(i).optString("language").trim());
@@ -1998,11 +1998,11 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
                     castSession.setMessageReceivedCallbacks("urn:x-cast:muvi.mcrt.final", new Cast.MessageReceivedCallback() {
                         @Override
                         public void onMessageReceived(CastDevice castDevice, String s, String s1) {
-                            Log.v("bibhu", "onMessageReceived Message from receiver=" + s1);
+                            Log.v(TAG, "onMessageReceived Message from receiver=" + s1);
 
 
                             if (s1.contains("completed")) {
-                                Log.v("bibhu", "video completed at chromecast");
+                                Log.v(TAG, "video completed at chromecast");
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -2326,7 +2326,7 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
 
             List tracks = new ArrayList();
 
-            Log.v("BIBHU", "url size============" + Chromecast_Subtitle_Url.size());
+            Log.v(TAG, "url size============" + Chromecast_Subtitle_Url.size());
             if (Chromecast_Subtitle_Url.size() > 0) {
                 for (int i = 0; i < Chromecast_Subtitle_Url.size(); i++) {
 
@@ -2417,7 +2417,7 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
 
             List tracks = new ArrayList();
 
-            Log.v("BIBHU", "url size============" + Chromecast_Subtitle_Url.size());
+            Log.v(TAG, "url size============" + Chromecast_Subtitle_Url.size());
             if (Chromecast_Subtitle_Url.size() > 0) {
                 for (int i = 0; i < Chromecast_Subtitle_Url.size(); i++) {
 

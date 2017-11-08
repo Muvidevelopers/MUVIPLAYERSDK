@@ -98,7 +98,7 @@ public class ResumePopupActivity extends Activity implements SensorOrientationCh
 
     @Override
     public void onOrientationChange(int orientation) {
-        Log.v("BIBHU","value================"+ Util.player_description);
+        Log.v(TAG,"value================"+ Util.player_description);
 
 
         if(Util.player_description)

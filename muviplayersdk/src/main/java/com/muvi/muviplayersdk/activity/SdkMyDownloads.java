@@ -23,7 +23,7 @@ import com.androidquery.AQuery;
 import com.example.muviplayersdk.R;
 import com.google.android.gms.cast.MediaInfo;
 import com.muvi.muviplayersdk.adapter.MyDownloadAdapter;
-import com.muvi.muviplayersdk.model.ContactModel1;
+import com.muvi.muviplayersdk.model.DownloadContentModel;
 import com.muvi.muviplayersdk.model.DownloadModel;
 import com.muvi.muviplayersdk.utils.DBHelper;
 import com.muvi.muviplayersdk.utils.ProgressBarHandler;
@@ -54,7 +54,7 @@ public class SdkMyDownloads extends AppCompatActivity {
     MyDownloadAdapter adapter;
     String emailIdStr = "";
     DBHelper dbHelper;
-    ArrayList<ContactModel1> download;
+    ArrayList<DownloadContentModel> download;
     ProgressBarHandler pDialog;
     ArrayList<String> SubTitleName = new ArrayList<>();
     ArrayList<String> SubTitlePath = new ArrayList<>();

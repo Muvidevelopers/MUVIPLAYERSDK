@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.example.muviplayersdk.R;
 import com.muvi.muviplayersdk.activity.SdkMyDownloads;
-import com.muvi.muviplayersdk.model.ContactModel1;
+import com.muvi.muviplayersdk.model.DownloadContentModel;
 import com.muvi.muviplayersdk.utils.DBHelper;
 import com.muvi.muviplayersdk.utils.Util;
 import com.squareup.picasso.Picasso;
@@ -31,11 +31,11 @@ import static android.content.Context.MODE_PRIVATE;
  */
 public class MyDownloadAdapter extends BaseAdapter {
     SdkMyDownloads activity;
-    ArrayList<ContactModel1> downloadModel;
-    ContactModel1 audio;
+    ArrayList<DownloadContentModel> downloadModel;
+    DownloadContentModel audio;
     DBHelper dbHelper;
     DownloadManager downloadManager;
-    public MyDownloadAdapter(SdkMyDownloads activity , ArrayList<ContactModel1> downloadModel) {
+    public MyDownloadAdapter(SdkMyDownloads activity , ArrayList<DownloadContentModel> downloadModel) {
         this.activity = activity;
         this.downloadModel = downloadModel;
         dbHelper = new DBHelper(activity);

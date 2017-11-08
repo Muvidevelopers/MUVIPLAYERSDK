@@ -54,7 +54,7 @@ public class WebApiController extends AsyncTask<String, Void, String> {
             for(int i=1;i<inputKeys.length;i++)
             {
                 httppost.addHeader(inputKeys[i].trim(),inputValues[i].trim());
-                Log.v("BIBHU", "key============" + inputKeys[i]+" ,   value================"+inputValues[i]);
+                Log.v(TAG, "key============" + inputKeys[i]+" ,   value================"+inputValues[i]);
             }
 
             // Execute HTTP Post Request
@@ -62,7 +62,7 @@ public class WebApiController extends AsyncTask<String, Void, String> {
                 HttpResponse response = httpclient.execute(httppost);
                 this.response = EntityUtils.toString(response.getEntity());
 
-                Log.v("BIBHU", "responseStr of videolog============" + this.response);
+                Log.v(TAG, "responseStr of videolog============" + this.response);
 
 
             } catch (Exception e) {

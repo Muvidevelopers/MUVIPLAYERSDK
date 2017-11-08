@@ -1,6 +1,6 @@
 package com.muvi.muviplayersdk.model;
 
-public class ContactModel1 {
+public class DownloadContentModel {
 
 
     private String ID;

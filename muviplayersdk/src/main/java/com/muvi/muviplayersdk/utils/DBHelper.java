@@ -5,13 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
-import com.muvi.muviplayersdk.model.ContactModel1;
+import com.muvi.muviplayersdk.model.DownloadContentModel;
 import com.muvi.muviplayersdk.model.SubtitleModel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by Nikunj on 27-08-2015.
@@ -123,7 +121,7 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertRecord(ContactModel1 contact) {
+    public boolean insertRecord(DownloadContentModel contact) {
         database = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_MUVI_ID, contact.getMUVIID());
@@ -165,7 +163,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    public ContactModel1 getContact(String id) {
+    public DownloadContentModel getContact(String id) {
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
@@ -180,12 +178,12 @@ public class DBHelper extends SQLiteOpenHelper {
                 }, COLUMN_DOWNLOAD_UNIQUEID + "=?",
                 new String[]{id}, null, null, null, null);
 
-        ContactModel1 contactModel=null;
+        DownloadContentModel contactModel=null;
 
         if (cursor != null && cursor.moveToFirst()) {
 
 
-            contactModel = new ContactModel1();
+            contactModel = new DownloadContentModel();
             contactModel.setID(cursor.getString(0));
             contactModel.setMUVIID(cursor.getString(1));
             contactModel.setDOWNLOADID(cursor.getInt(2));
@@ -210,7 +208,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return contactModel;
     }
 
-    public ArrayList<ContactModel1> getContactt(String id , int downloadstatus) {
+    public ArrayList<DownloadContentModel> getContactt(String id , int downloadstatus) {
 
 
         String query = "SELECT "+COLUMN_ID+","+COLUMN_MUVI_ID+","+COLUMN_DOWNLOADID+","+COLUMN_DOWNLOAD_PROGRESS+","+
@@ -219,14 +217,14 @@ public class DBHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query,null);
-        ContactModel1 contactModel=null;
-        ArrayList<ContactModel1> contacts = new ArrayList<ContactModel1>();
+        DownloadContentModel contactModel=null;
+        ArrayList<DownloadContentModel> contacts = new ArrayList<DownloadContentModel>();
 
         if (cursor.getCount() > 0) {
             for (int i = 0; i < cursor.getCount(); i++) {
                 cursor.moveToNext();
 
-                contactModel = new ContactModel1();
+                contactModel = new DownloadContentModel();
                 contactModel.setID(cursor.getString(0));
                 contactModel.setMUVIID(cursor.getString(1));
                 contactModel.setDOWNLOADID(cursor.getInt(2));
@@ -253,7 +251,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    public void updateRecord(ContactModel1 contact) {
+    public void updateRecord(DownloadContentModel contact) {
         database = this.getReadableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_ID, contact.getID());
@@ -281,7 +279,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
 
-    public void deleteRecord(ContactModel1 contact) {
+    public void deleteRecord(DownloadContentModel contact) {
         database = this.getReadableDatabase();
         database.delete(TABLE_NAME, COLUMN_ID + " = ?", new String[]{contact.getID()});
         database.close();
