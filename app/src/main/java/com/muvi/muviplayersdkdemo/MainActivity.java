@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
                 url_name.add("FRIENDS");
 
                 url.add("");
-                url.add("https://d2l74kwt1i1y33.cloudfront.net/4050/EncodedVideo/uploads/movie_stream/full_movie/103462/Dance_plus_242.mp4?Expires=1509403270&Signature=YBUcwuBUVYrqnqOJpO7cbNmCR3N2eE7-m1jVa~YSMEqxfhMixJulLiwoHDbEKU55Qj2VKG0JuxA6SzZkM-lxaKriEsDiUaOsulB0dUjLZOSf9qHIdArDTq6aj6SaHzD06dvhv7XRO9n2BVm-Hz3TsvGDihWLJSBjSHWeCJuOzwChGjCIZdtQ1dStrp1Z5QFUfIHVCx0l9BmCLqBmkI1ALDBn4SYw6aJLx0lcckZFWF5mAp~LbeycJKrfxCLtuxtn-p13wsA7e1LWvgCfeTtM0esmwvP6zOoLIiXld~L7diK50cBZ4F9up35ww1zfcsomDCFeuw-lqCSyuIC4wM8NkA__&Key-Pair-Id=APKAJYIDWFG3D6CNOYVA");
+                url.add("https://d2l74kwt1i1y33.cloudfront.net/4050/EncodedVideo/uploads/movie_stream/full_movie/103462/Dance_plus_242.mp4?Expires=1510140987&Signature=HSxiQ1U5ql9m3ncfmxqL8S2PNciTI2bTrz39rtFb~xGRZ-CfgJWYhR78sCDeYIezEg2rm2QfQ2l6WsiwyH6QCba34Xxr6ka4xI83QDYOIvzaUpmtGdOOHw~qvuyvEf8nb-nafkJb7u9BhYlirwvWnSIt1VcfFvk2GvkKs9Sfwkj3FiSP-cNHfwe1x6P1wPWMwtqSob6Y7XurkBCmeF9OHfLgYH1IShkrYLwBj7FzCkZZnJnzMdxvvBR0NnOy8plTmLsAiHL7KBfnR-s8QM-DTQnsXqp4qFW4Z4X8oHeI5EXJydf9tpoPu19KqqpoY4JqKYyxuRsaM0luSTf~JUDfvQ__&Key-Pair-Id=APKAJYIDWFG3D6CNOYVA");
                 url.add("https://d2l74kwt1i1y33.cloudfront.net/4050/EncodedVideo/uploads/movie_stream/full_movie/103461/Friends___Ross___Rachel___We_never_had_bonus_night__480.mp4?Expires=1509403094&Signature=NdbuCFHo5Ei5ZYXY4aF3oDha7qZWFmyOI6JGmz~YJaV7uABw9sJLD1aJB7aGo1AJkoOjoyWPBkmnAczppt7IOnqYCMfdEbRuwm05HgOk2lyijb2aYHSRXOPtCpyOX47hVr6KrXTc4qt3IjRJgJ7JF88AlP-Q2gyW34m5LvgnJCcyQw-RLUmJtWzE5xSzBaylJHGRxJhjdYWKJYoOtQYGP0vRdrVbgW32NvwuuXsSnVkiYah3t7iA-BLK3HQP3tHYJIpdC8fuJeF1SmskRcsUqMTbC-SKf66rsmat00LA9nEK1gHQOX6uF1vWMWem8sP4ITcTMlWWRwP61sqluUhMHw__&Key-Pair-Id=APKAJYIDWFG3D6CNOYVA");
 
                 adapter.notifyDataSetChanged();
@@ -323,6 +323,7 @@ public class MainActivity extends AppCompatActivity {
                     playerModel.setEmailId("bb@gmail.com");
                     playerModel.setAuthTokenStr("25e74a5c88d19c4b57c8138bf47abdf7");
                     playerModel.setAppName(getResources().getString(com.example.muviplayersdk.R.string.app_name));
+                    playerModel.setDomainName("https://www.muvi.com/rest/");
 
                     playerModel.setEpisode_id("0"); // Single part
 //                  playerModel.setEpisode_id("set stream id here"); // multi part
@@ -333,6 +334,7 @@ public class MainActivity extends AppCompatActivity {
                     playerModel.setVideoDuration("00:23:41");
                     playerModel.setVideoReleaseDate("");
                     playerModel.setCensorRating("");
+                    playerModel.setAuthToken("25e74a5c88d19c4b57c8138bf47abdf7");
 
 
                     playerModel.setPlayPos(13);
@@ -383,8 +385,8 @@ public class MainActivity extends AppCompatActivity {
                         nonDrmDownloadFormatList.add("144p");
                         nonDrmDownloadFormatList.add("480p");
 
-                        nonDrmDownloadUrlList.add("https://d2l74kwt1i1y33.cloudfront.net/4050/EncodedVideo/uploads/movie_stream/full_movie/103462/Dance_plus_242.mp4?Expires=1509403270&Signature=YBUcwuBUVYrqnqOJpO7cbNmCR3N2eE7-m1jVa~YSMEqxfhMixJulLiwoHDbEKU55Qj2VKG0JuxA6SzZkM-lxaKriEsDiUaOsulB0dUjLZOSf9qHIdArDTq6aj6SaHzD06dvhv7XRO9n2BVm-Hz3TsvGDihWLJSBjSHWeCJuOzwChGjCIZdtQ1dStrp1Z5QFUfIHVCx0l9BmCLqBmkI1ALDBn4SYw6aJLx0lcckZFWF5mAp~LbeycJKrfxCLtuxtn-p13wsA7e1LWvgCfeTtM0esmwvP6zOoLIiXld~L7diK50cBZ4F9up35ww1zfcsomDCFeuw-lqCSyuIC4wM8NkA__&Key-Pair-Id=APKAJYIDWFG3D6CNOYVA");
-                        nonDrmDownloadUrlList.add("https://d2l74kwt1i1y33.cloudfront.net/4050/EncodedVideo/uploads/movie_stream/full_movie/103461/Friends___Ross___Rachel___We_never_had_bonus_night__480.mp4?Expires=1509403094&Signature=NdbuCFHo5Ei5ZYXY4aF3oDha7qZWFmyOI6JGmz~YJaV7uABw9sJLD1aJB7aGo1AJkoOjoyWPBkmnAczppt7IOnqYCMfdEbRuwm05HgOk2lyijb2aYHSRXOPtCpyOX47hVr6KrXTc4qt3IjRJgJ7JF88AlP-Q2gyW34m5LvgnJCcyQw-RLUmJtWzE5xSzBaylJHGRxJhjdYWKJYoOtQYGP0vRdrVbgW32NvwuuXsSnVkiYah3t7iA-BLK3HQP3tHYJIpdC8fuJeF1SmskRcsUqMTbC-SKf66rsmat00LA9nEK1gHQOX6uF1vWMWem8sP4ITcTMlWWRwP61sqluUhMHw__&Key-Pair-Id=APKAJYIDWFG3D6CNOYVA");
+                        nonDrmDownloadUrlList.add("https://d2l74kwt1i1y33.cloudfront.net/4050/EncodedVideo/uploads/movie_stream/full_movie/103462/Dance_plus_242.mp4?Expires=1510140987&Signature=HSxiQ1U5ql9m3ncfmxqL8S2PNciTI2bTrz39rtFb~xGRZ-CfgJWYhR78sCDeYIezEg2rm2QfQ2l6WsiwyH6QCba34Xxr6ka4xI83QDYOIvzaUpmtGdOOHw~qvuyvEf8nb-nafkJb7u9BhYlirwvWnSIt1VcfFvk2GvkKs9Sfwkj3FiSP-cNHfwe1x6P1wPWMwtqSob6Y7XurkBCmeF9OHfLgYH1IShkrYLwBj7FzCkZZnJnzMdxvvBR0NnOy8plTmLsAiHL7KBfnR-s8QM-DTQnsXqp4qFW4Z4X8oHeI5EXJydf9tpoPu19KqqpoY4JqKYyxuRsaM0luSTf~JUDfvQ__&Key-Pair-Id=APKAJYIDWFG3D6CNOYVA");
+                        nonDrmDownloadUrlList.add("https://d2l74kwt1i1y33.cloudfront.net/4050/EncodedVideo/uploads/movie_stream/full_movie/103462/Dance_plus_242.mp4?Expires=1510140987&Signature=HSxiQ1U5ql9m3ncfmxqL8S2PNciTI2bTrz39rtFb~xGRZ-CfgJWYhR78sCDeYIezEg2rm2QfQ2l6WsiwyH6QCba34Xxr6ka4xI83QDYOIvzaUpmtGdOOHw~qvuyvEf8nb-nafkJb7u9BhYlirwvWnSIt1VcfFvk2GvkKs9Sfwkj3FiSP-cNHfwe1x6P1wPWMwtqSob6Y7XurkBCmeF9OHfLgYH1IShkrYLwBj7FzCkZZnJnzMdxvvBR0NnOy8plTmLsAiHL7KBfnR-s8QM-DTQnsXqp4qFW4Z4X8oHeI5EXJydf9tpoPu19KqqpoY4JqKYyxuRsaM0luSTf~JUDfvQ__&Key-Pair-Id=APKAJYIDWFG3D6CNOYVA");
 
                         playerModel.setNonDrmDownloadFormatList(nonDrmDownloadFormatList);
                         playerModel.setNonDrmDownloadUrlList(nonDrmDownloadUrlList);
@@ -430,6 +432,8 @@ public class MainActivity extends AppCompatActivity {
                 DownloadModel downloadModel = new DownloadModel();
                 downloadModel.setEmail("bb@gmail.com");
                 downloadModel.setUserId("151404");
+                downloadModel.setAuthToken("25e74a5c88d19c4b57c8138bf47abdf7");
+                downloadModel.setDomainName("https://www.muvi.com/rest/");
                 downloadModel.setRestrictionStatus(true);
 
                 Intent mydownload = new Intent(MainActivity.this, SdkMyDownloads.class);

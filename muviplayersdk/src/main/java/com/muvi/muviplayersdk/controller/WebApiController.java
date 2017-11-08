@@ -29,12 +29,14 @@ public class WebApiController extends AsyncTask<String, Void, String> {
     String keyList="";
     String valueList="";
     String requestData = "";
+    String rootUrl = "";
 
-    public WebApiController(TaskCompleteListener listener, String keyList , String valueList , String requestData) {
+    public WebApiController(TaskCompleteListener listener, String keyList , String valueList , String requestData ,String rootUrl) {
         this.listener = listener;
         this.keyList = keyList;
         this.valueList = valueList;
         this.requestData = requestData;
+        this.rootUrl = rootUrl;
     }
 
     @Override
@@ -43,7 +45,7 @@ public class WebApiController extends AsyncTask<String, Void, String> {
         String inputKeys[] = keyList.split(",");
         String inputValues[] = valueList.split(",");
 
-        String urlRouteList = Util.rootUrl().trim() + inputValues[0].trim();
+        String urlRouteList = rootUrl.trim() + inputValues[0].trim();
         try {
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(urlRouteList);

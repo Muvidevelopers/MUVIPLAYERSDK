@@ -32,6 +32,9 @@ import java.util.TimerTask;
 public class DataConsumptionService extends Service {
 
     String Email_Id = "";
+    String authToken = "";
+    String user_id = "";
+    String rootUrl = "";
     SharedPreferences loginPref;
 
     @Override
@@ -57,16 +60,15 @@ public class DataConsumptionService extends Service {
 
             loginPref = getSharedPreferences(Util.DOWNLOAD_INFO_PREF, 0);
             if (loginPref != null) {
-                Email_Id = loginPref.getString("email_id", null);
-                Log.v("BIBHU17", "Receiver called email ="+Email_Id);
+                Email_Id = loginPref.getString("email_id", "");
+                authToken = loginPref.getString("authToken", "");
+                user_id = loginPref.getString("user_id", "");
+                rootUrl = loginPref.getString("rootUrl", "");
 
-                try
-                {
+                try {
                     Util.timer.cancel();
                     StartNewTimer();
-                }
-                catch(Exception e)
-                {
+                } catch (Exception e) {
                     StartNewTimer();
                 }
             }
@@ -75,22 +77,20 @@ public class DataConsumptionService extends Service {
         }
     };
 
-    public void StartNewTimer(){
+    public void StartNewTimer() {
         Util.timer = new Timer();
         Util.timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 GetTotalUsedData(Email_Id);
-                Log.v("BIBHU17", "*****************************************************==============Timer Called");
             }
-        },0,60000);
+        }, 0, 60000);
     }
 
-    public void GetTotalUsedData(String emailIdStr)
-    {
+    public void GetTotalUsedData(String emailIdStr) {
 
         SQLiteDatabase DB = DataConsumptionService.this.openOrCreateDatabase(DBHelper.DATABASE_NAME, MODE_PRIVATE, null);
-        Cursor cursor = DB.rawQuery("SELECT * FROM "+ DBHelper.DOWNLOAD_CONTENT_INFO+" WHERE email = '"+emailIdStr+"' AND  server_sending_final_status = '0'", null);
+        Cursor cursor = DB.rawQuery("SELECT * FROM " + DBHelper.DOWNLOAD_CONTENT_INFO + " WHERE email = '" + emailIdStr + "' AND  server_sending_final_status = '0'", null);
         int count = cursor.getCount();
 
         if (count > 0) {
@@ -116,8 +116,8 @@ public class DataConsumptionService extends Service {
                             long size = id_cursor.getInt(sizeIndex);
                             long downloaded = id_cursor.getInt(downloadedIndex);
 
-                            TotalUsedData = downloaded/1024;
-                            Log.v("BIBHU17","TotalUsedData Download size============"+TotalUsedData);
+                            TotalUsedData = downloaded / 1024;
+                            Log.v("BIBHU17", "TotalUsedData Download size============" + TotalUsedData);
 
                         }
                     }
@@ -135,29 +135,27 @@ public class DataConsumptionService extends Service {
                     String download_status = cursor.getString(8).trim();
                     String server_sending_final_status = cursor.getString(9).trim();
 
-                    if(download_status.trim().equals("1"))
-                    {
-                        String query1 = "UPDATE "+ DBHelper.DOWNLOAD_CONTENT_INFO+" SET server_sending_final_status = '1'" +
-                                " WHERE email = '"+emailIdStr+"' AND download_contnet_id = '"+download_contnet_id+"'";
+                    if (download_status.trim().equals("1")) {
+                        String query1 = "UPDATE " + DBHelper.DOWNLOAD_CONTENT_INFO + " SET server_sending_final_status = '1'" +
+                                " WHERE email = '" + emailIdStr + "' AND download_contnet_id = '" + download_contnet_id + "'";
                         DB.execSQL(query1);
                     }
 
-                    // Start API call for bandwith log of downloading content.
+                    /**
+                     *  Start API call for bandwith log of downloading content.
+                     */
 
-                    SendConsumedDataToServer(ipaddress+","+movie_id+","+episode_id+","+log_id+","+TotalUsedData+","+download_contnet_id);
-
-
+                    SendConsumedDataToServer(ipaddress + "," + movie_id + "," + episode_id + "," + log_id + "," + TotalUsedData + "," + download_contnet_id);
                 } while (cursor.moveToNext());
             }
-        }
-        else
-        {
-            try{
-            Util.timer.cancel();
-            }catch (Exception e){};
+        } else {
+            try {
+                Util.timer.cancel();
+            } catch (Exception e) {
+            }
+            ;
         }
     }
-
 
 
     public void SendConsumedDataToServer(String Data) {
@@ -180,24 +178,23 @@ public class DataConsumptionService extends Service {
         @Override
         protected String doInBackground(String... f_url) {
 
-            Log.v("BIBHU17","f_url[0]======="+f_url[0]);
+            Log.v("BIBHU17", "f_url[0]=======" + f_url[0]);
 
-            String Data[]= f_url[0].split(",");
+            String Data[] = f_url[0].split(",");
 
-            String urlRouteList = Util.rootUrl().trim()+ Util.bufferLogUrl.trim();
+            String urlRouteList = rootUrl.trim() + Util.bufferLogUrl.trim();
             try {
                 HttpClient httpclient = new DefaultHttpClient();
                 HttpPost httppost = new HttpPost(urlRouteList);
                 httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
-                httppost.addHeader("authToken", Util.authTokenStr.trim());
+                httppost.addHeader("authToken", authToken.trim());
                 httppost.addHeader("ip_address", Data[0]);
                 httppost.addHeader("movie_id", Data[1]);
-                httppost.addHeader("episode_id",Data[2]);
+                httppost.addHeader("episode_id", Data[2]);
                 httppost.addHeader("device_type", "2");
                 httppost.addHeader("log_id", Data[3]);
-                httppost.addHeader("downloaded_bandwidth",Data[4]);
-                httppost.addHeader("request_data",Data[5]);
-
+                httppost.addHeader("downloaded_bandwidth", Data[4]);
+                httppost.addHeader("request_data", Data[5]);
 
 
                 // Execute HTTP Post Request
@@ -211,47 +208,35 @@ public class DataConsumptionService extends Service {
                 }
 
 
-                Log.v("BIBHU17","f_url[0]responseStr======="+responseStr);
+                Log.v("BIBHU17", "f_url[0]responseStr=======" + responseStr);
 
                 JSONObject myJson = null;
-                if(responseStr!=null) {
+                if (responseStr != null) {
                     myJson = new JSONObject(responseStr);
                     statusCode = Integer.parseInt(myJson.optString("code"));
                     request_data = myJson.optString("request_data");
                     log_id = myJson.optString("log_id");
 
-                    if(statusCode == 200)
-                    {
+                    if (statusCode == 200) {
                         SQLiteDatabase DB = DataConsumptionService.this.openOrCreateDatabase(DBHelper.DATABASE_NAME, MODE_PRIVATE, null);
-                        String query1 = "UPDATE "+ DBHelper.DOWNLOAD_CONTENT_INFO+" SET log_id = '"+log_id+"'" +
-                                " WHERE download_contnet_id = '"+request_data+"'";
+                        String query1 = "UPDATE " + DBHelper.DOWNLOAD_CONTENT_INFO + " SET log_id = '" + log_id + "'" +
+                                " WHERE download_contnet_id = '" + request_data + "'";
                         DB.execSQL(query1);
 
-                        String query = "DELETE FROM "+ DBHelper.DOWNLOAD_CONTENT_INFO+"  WHERE server_sending_final_status = '1'";
+                        String query = "DELETE FROM " + DBHelper.DOWNLOAD_CONTENT_INFO + "  WHERE server_sending_final_status = '1'";
                         DB.execSQL(query);
 
-                    }else
-                    {
+                    } else {
                         SQLiteDatabase DB = DataConsumptionService.this.openOrCreateDatabase(DBHelper.DATABASE_NAME, MODE_PRIVATE, null);
-                        String query1 = "UPDATE "+ DBHelper.DOWNLOAD_CONTENT_INFO+" SET server_sending_final_status = '0'" +
-                                " WHERE download_contnet_id = '"+request_data+"'";
+                        String query1 = "UPDATE " + DBHelper.DOWNLOAD_CONTENT_INFO + " SET server_sending_final_status = '0'" +
+                                " WHERE download_contnet_id = '" + request_data + "'";
                         DB.execSQL(query1);
                     }
-
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 statusCode = 0;
             }
-
             return null;
-        }
-
-
-        @Override
-        protected void onPostExecute(String file_url) {
-
-
         }
     }
 

@@ -32,7 +32,7 @@ public class Player implements Serializable {
     int preRoll = 0;
 
     String adDetails = "";
-
+    String authToken = "";
     int midRoll = 0;
     private String videoTitle = "";
     private String videoGenre = "";
@@ -67,6 +67,7 @@ public class Player implements Serializable {
     String downloadStatus = "0";
     int adNetworkId = 1;
     String channel_id = "";
+    String domainName = "";
 
 
     public ArrayList<String> offline_url = new ArrayList<>();
@@ -78,6 +79,14 @@ public class Player implements Serializable {
     public ArrayList<String> chromecast_subtitle_language = new ArrayList<>();
     public ArrayList<String> chromecast_subtitle_language_code = new ArrayList<>();
 
+
+    public String getDomainName() {
+        return domainName;
+    }
+
+    public void setDomainName(String domainName) {
+        this.domainName = domainName;
+    }
 
     public void useEmail(boolean use_Email) {
         this.use_Email = use_Email;
@@ -115,6 +124,14 @@ public class Player implements Serializable {
 
     public void isContentRestricted(boolean is_Content_Restricted) {
         this.is_Content_Restricted = is_Content_Restricted;
+    }
+
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
     }
 
     public boolean getDownloadContentRestrictionStatus() {
