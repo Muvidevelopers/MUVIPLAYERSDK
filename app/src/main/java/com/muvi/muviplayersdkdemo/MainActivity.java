@@ -335,6 +335,7 @@ public class MainActivity extends AppCompatActivity {
                     playerModel.setVideoReleaseDate("");
                     playerModel.setCensorRating("");
                     playerModel.setAuthToken("25e74a5c88d19c4b57c8138bf47abdf7");
+                    playerModel.setCastCrew(true);
 
 
                     playerModel.setPlayPos(13);

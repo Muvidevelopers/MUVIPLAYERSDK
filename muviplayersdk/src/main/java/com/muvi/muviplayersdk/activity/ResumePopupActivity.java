@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.example.muviplayersdk.R;
 import com.muvi.muviplayersdk.utils.SensorOrientationChangeNotifier;
 import com.muvi.muviplayersdk.utils.Util;
+import static com.muvi.muviplayersdk.utils.Constants.TAG;
 
 
 public class ResumePopupActivity extends Activity implements SensorOrientationChangeNotifier.Listener {
@@ -81,10 +82,7 @@ public class ResumePopupActivity extends Activity implements SensorOrientationCh
         mainLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-               /* Intent playerIntent = new Intent();
-                playerIntent.putExtra("yes", "1003");
-                setResult(RESULT_OK, playerIntent);
-                finish();*/
+
                 return false;
             }
         });

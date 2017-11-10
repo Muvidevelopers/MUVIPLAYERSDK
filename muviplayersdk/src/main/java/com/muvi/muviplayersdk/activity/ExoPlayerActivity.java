@@ -135,6 +135,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -142,6 +143,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -189,7 +191,7 @@ enum ContentTypes2 {
     }
 }
 
-public class ExoPlayerActivity extends AppCompatActivity implements SensorOrientationChangeNotifier.Listener, PlaylistProxyListener, AdEvent.AdEventListener, AdErrorEvent.AdErrorListener ,WebApiController.TaskCompleteListener {
+public class ExoPlayerActivity extends AppCompatActivity implements SensorOrientationChangeNotifier.Listener, PlaylistProxyListener, AdEvent.AdEventListener, AdErrorEvent.AdErrorListener ,WebApiController.TaskCompleteListener,CastCrew.AppInterface {
 
 
     private static final int REQUEST_STORAGE = 1;
@@ -264,6 +266,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
     boolean mIsAdDisplayed;
     boolean downloading;
     boolean isFastForward = false;
+    boolean castButtonClicked = false;
 
 
     Timer MovableTimer;
@@ -366,6 +369,11 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
     public TimedTextObject srt;
     private EMVideoView emVideoView;
 
+    @Override
+    public void getCastCrewDetails(String movieId) {
+        // Notthing to do.
+    }
+
 
     public enum PlaybackLocation { LOCAL,REMOTE }
     public enum PlaybackState { PLAYING, PAUSED, BUFFERING, IDLE}
@@ -378,6 +386,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
     @Override
     protected void onResume() {
         super.onResume();
+
+        Util.call_finish_at_onUserLeaveHint = true;
 
         /*
             This API is used to get IP Address .
@@ -998,6 +1008,16 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
         videoCastCrewTitleTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                castButtonClicked = true;
+                Util.call_finish_at_onUserLeaveHint = false;
+                CastCrew.startCastCrewActivity(movieId);
+            }
+        });
+
+
+  /*      videoCastCrewTitleTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 if (Util.checkNetwork(ExoPlayerActivity.this)) {
                     //Will Add Some Data to send
                     Util.call_finish_at_onUserLeaveHint = false;
@@ -1033,7 +1053,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                     Toast.makeText(getApplicationContext(), Util.getTextofLanguage(ExoPlayerActivity.this, Util.NO_INTERNET_CONNECTION, Util.DEFAULT_NO_INTERNET_CONNECTION), Toast.LENGTH_LONG).show();
                 }
             }
-        });
+        });*/
 
 
 
@@ -2721,7 +2741,26 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
     }
 
+
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        castButtonClicked = false;
+    }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (castButtonClicked) {
+            handleCastAndCrew();
+            castButtonClicked = false;
+        }
+    }
+
+
+
+        @Override
     protected void onPause() {
 
         if(CheckAvailabilityOfChromecast!=null)
@@ -3141,9 +3180,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                 DefaultHttpClient client = new DefaultHttpClient();
                 HttpGet httpGet = new HttpGet(f_url[0]);
                 HttpResponse execute = client.execute(httpGet);
-                float size = (Float.parseFloat("" + execute.getEntity().getContentLength()) / 1024) / 1024;
-                DecimalFormat decimalFormat = new DecimalFormat("#.#");
-                size = Float.valueOf(decimalFormat.format(size));
+                float size = calculateDownloadFileSize(execute);
                 file_size = size;
                 lengthfile = (int) size;
 
@@ -4286,11 +4323,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                 DefaultHttpClient client = new DefaultHttpClient();
                 HttpGet httpGet = new HttpGet(List_Of_Resolution_Url.get(0));
                 HttpResponse execute = client.execute(httpGet);
-//                int contentLength = (int)execute.getEntity().getContentLength();
 
-                float size = (Float.parseFloat("" + execute.getEntity().getContentLength()) / 1024) / 1024;
-                DecimalFormat decimalFormat = new DecimalFormat("#.#");
-                size = Float.valueOf(decimalFormat.format(size));
+               float size = calculateDownloadFileSize(execute);
                 List_Of_FileSize.add("(" + size + " MB)");
 
 
@@ -4734,12 +4768,28 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
             stopLogTimer = true;
         }
 
-        if(playerModel.isstreaming_restricted()){
+       /* if(playerModel.isstreaming_restricted()){
             keyList = "apiname,authToken,user_id,ip_address,movie_id,episode_id,watch_status,device_type,log_id,played_length,log_temp_id,resume_time,is_streaming_restriction,restrict_stream_id";
             valueList = Util.videoLogUrl.trim()+","+authToken+","+userIdStr+","+ipAddressStr+","+movieId.trim()+","+episodeId.trim()+","+watchStatus+","+"2"+","+videoLogId+","+(playerPosition - player_start_time)+","+log_temp_id+","+playerPosition+","+"1"+","+restrict_stream_id ;
         }else {
             keyList = "apiname,authToken,user_id,ip_address,movie_id,episode_id,watch_status,device_type,log_id,played_length,log_temp_id,resume_time";
             valueList = Util.videoLogUrl.trim()+","+authToken+","+userIdStr+","+ipAddressStr+","+movieId.trim()+","+episodeId.trim()+","+watchStatus+","+"2"+","+videoLogId+","+(playerPosition - player_start_time)+","+log_temp_id+","+playerPosition ;
+        }
+*/
+
+
+        if (playerModel.isstreaming_restricted()) {
+
+            if (logType == ASYNC_RESUME_VODEOLOG_DETAILS || logType == ASYNC_RESUME_VODEOLOG_DETAILS_HOME_CLICKED) {
+                keyList = "apiname,authToken,user_id,ip_address,movie_id,episode_id,watch_status,device_type,log_id,played_length,log_temp_id,resume_time,is_streaming_restriction,restrict_stream_id,is_active_stream_closed";
+                valueList = Util.videoLogUrl.trim() + "," + authToken.trim() + "," + userIdStr + "," + ipAddressStr + "," + movieId.trim() + "," + episodeId.trim() + "," + watchStatus + "," + "2" + "," + videoLogId + "," + (playerPosition - player_start_time) + "," + log_temp_id + "," + playerPosition + "," + "1" + "," + restrict_stream_id+","+"1";
+            } else {
+                keyList = "apiname,authToken,user_id,ip_address,movie_id,episode_id,watch_status,device_type,log_id,played_length,log_temp_id,resume_time,is_streaming_restriction,restrict_stream_id";
+                valueList = Util.videoLogUrl.trim() + "," + authToken.trim() + "," + userIdStr + "," + ipAddressStr + "," + movieId.trim() + "," + episodeId.trim() + "," + watchStatus + "," + "2" + "," + videoLogId + "," + (playerPosition - player_start_time) + "," + log_temp_id + "," + playerPosition + "," + "1" + "," + restrict_stream_id;
+            }
+        } else {
+            keyList = "apiname,authToken,user_id,ip_address,movie_id,episode_id,watch_status,device_type,log_id,played_length,log_temp_id,resume_time";
+            valueList = Util.videoLogUrl.trim() + "," + authToken.trim() + "," + userIdStr + "," + ipAddressStr + "," + movieId.trim() + "," + episodeId.trim() + "," + watchStatus + "," + "2" + "," + videoLogId + "," + (playerPosition - player_start_time) + "," + log_temp_id + "," + playerPosition;
         }
 
         new WebApiController(ExoPlayerActivity.this,keyList,valueList,""+logType,rootUrl).execute();
@@ -5146,6 +5196,55 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
 
         }
+    }
+
+
+    /**
+     * This method is applicable to handle cast and crew click
+     */
+    public void handleCastAndCrew(){
+        if (Util.checkNetwork(ExoPlayerActivity.this)) {
+
+            Util.hide_pause = true;
+            ((ProgressBar) findViewById(R.id.progress_view)).setVisibility(View.GONE);
+            latest_center_play_pause.setVisibility(View.VISIBLE);
+
+            if (emVideoView.isPlaying()) {
+                emVideoView.pause();
+                latest_center_play_pause.setImageResource(R.drawable.center_ic_media_play);
+                center_play_pause.setImageResource(R.drawable.ic_media_play);
+                mHandler.removeCallbacks(updateTimeTask);
+            }
+
+
+            if (center_pause_paly_timer_is_running) {
+                center_pause_paly_timer.cancel();
+                center_pause_paly_timer_is_running = false;
+
+                subtitle_change_btn.setVisibility(View.GONE);
+                primary_ll.setVisibility(View.GONE);
+                last_ll.setVisibility(View.GONE);
+                center_play_pause.setVisibility(View.GONE);
+                current_time.setVisibility(View.GONE);
+            }
+
+        } else {
+            Toast.makeText(getApplicationContext(), Util.getTextofLanguage(ExoPlayerActivity.this, Util.NO_INTERNET_CONNECTION, Util.DEFAULT_NO_INTERNET_CONNECTION), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private float calculateDownloadFileSize( HttpResponse execute){
+
+        float size = 0.0f;
+        try{
+            size = (Float.parseFloat("" + execute.getEntity().getContentLength()) / 1024) / 1024;
+            DecimalFormat decimalFormat = new DecimalFormat("#.#", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+            String formatString = decimalFormat.format(size);
+            size = Float.valueOf(formatString);
+
+        }catch (Exception e ){}
+
+        return size;
     }
 
 }

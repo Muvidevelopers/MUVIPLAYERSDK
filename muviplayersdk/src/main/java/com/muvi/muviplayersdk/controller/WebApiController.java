@@ -15,6 +15,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import static com.muvi.muviplayersdk.utils.Constants.TAG;
 
 public class WebApiController extends AsyncTask<String, Void, String> {
 
