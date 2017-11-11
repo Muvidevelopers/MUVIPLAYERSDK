@@ -32,7 +32,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.muvi.muviplayersdk.activity.ExoPlayerActivity"
+        <activity android:name="com.muvi.muviplayersdk.activity.PlayerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label=""
             android:screenOrientation="portrait"

@@ -21,7 +21,7 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.muvi.muviplayersdk.activity.ExoPlayerActivity;
+import com.muvi.muviplayersdk.activity.PlayerActivity;
 import com.muvi.muviplayersdk.activity.SdkMyDownloads;
 import com.muvi.muviplayersdk.activity.Player;
 import com.muvi.muviplayersdk.model.DownloadModel;
@@ -334,7 +334,7 @@ public class MainActivity extends AppCompatActivity {
                     playerModel.setVideoDuration("00:23:41");
                     playerModel.setVideoReleaseDate("");
                     playerModel.setCensorRating("");
-                    playerModel.setAuthToken("25e74a5c88d19c4b57c8138bf47abdf7");
+
                     playerModel.setCastCrew(true);
 
 
@@ -550,7 +550,7 @@ public class MainActivity extends AppCompatActivity {
         /*//********** END *****************//*/
 
 
-        Intent playerIntent=new Intent(MainActivity.this,ExoPlayerActivity.class);
+        Intent playerIntent=new Intent(MainActivity.this,PlayerActivity.class);
         playerIntent.putExtra("PlayerModel",playerModel);
         startActivity(playerIntent);*/
     }
@@ -578,7 +578,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        Intent playerIntent = new Intent(MainActivity.this, ExoPlayerActivity.class);
+        Intent playerIntent = new Intent(MainActivity.this, PlayerActivity.class);
         playerIntent.putExtra("PlayerModel", playerModel);
         startActivity(playerIntent);
     }

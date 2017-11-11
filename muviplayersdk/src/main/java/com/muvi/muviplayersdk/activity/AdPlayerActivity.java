@@ -96,7 +96,7 @@ public class AdPlayerActivity extends AppCompatActivity implements AdLoader.Call
                 setResult(RESULT_OK, in);
                 finish();
             } else {
-                Intent playVideoIntent = new Intent(AdPlayerActivity.this, ExoPlayerActivity.class);
+                Intent playVideoIntent = new Intent(AdPlayerActivity.this, PlayerActivity.class);
                 playVideoIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 //                playVideoIntent.putExtra("SubTitleName", getIntent().getStringArrayListExtra("SubTitleName"));
 //                playVideoIntent.putExtra("SubTitlePath", getIntent().getStringArrayListExtra("SubTitlePath"));
@@ -144,7 +144,7 @@ public class AdPlayerActivity extends AppCompatActivity implements AdLoader.Call
                 setResult(RESULT_OK, in);
                 finish();
             } else {
-                Intent playVideoIntent = new Intent(AdPlayerActivity.this, ExoPlayerActivity.class);
+                Intent playVideoIntent = new Intent(AdPlayerActivity.this, PlayerActivity.class);
                 playVideoIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 playVideoIntent.putExtra("SubTitleName", getIntent().getStringArrayListExtra("SubTitleName"));
                 playVideoIntent.putExtra("SubTitlePath", getIntent().getStringArrayListExtra("SubTitlePath"));

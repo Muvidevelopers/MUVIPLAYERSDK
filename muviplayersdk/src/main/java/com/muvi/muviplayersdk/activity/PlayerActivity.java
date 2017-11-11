@@ -191,7 +191,7 @@ enum ContentTypes2 {
     }
 }
 
-public class ExoPlayerActivity extends AppCompatActivity implements SensorOrientationChangeNotifier.Listener, PlaylistProxyListener, AdEvent.AdEventListener, AdErrorEvent.AdErrorListener ,WebApiController.TaskCompleteListener,CastCrew.AppInterface {
+public class PlayerActivity extends AppCompatActivity implements SensorOrientationChangeNotifier.Listener, PlaylistProxyListener, AdEvent.AdEventListener, AdErrorEvent.AdErrorListener ,WebApiController.TaskCompleteListener,CastCrew.AppInterface {
 
 
     private static final int REQUEST_STORAGE = 1;
@@ -427,7 +427,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
         //**************************************** END **********************************************//
 
-        SensorOrientationChangeNotifier.getInstance(ExoPlayerActivity.this).addListener(this);
+        SensorOrientationChangeNotifier.getInstance(PlayerActivity.this).addListener(this);
 
         /*
             Used for Advertisement in player.
@@ -544,7 +544,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
         if (playerModel != null && playerModel.getDomainName() != null && !playerModel.getDomainName().trim().matches("")) {
             rootUrl = playerModel.getDomainName();
         } else {
-            Toast.makeText(ExoPlayerActivity.this,DOMAIN_NAME_MSG, Toast.LENGTH_LONG).show();
+            Toast.makeText(PlayerActivity.this,DOMAIN_NAME_MSG, Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -552,7 +552,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
         if (playerModel != null && playerModel.getAuthToken() != null && !playerModel.getAuthToken().trim().matches("")) {
             authToken = playerModel.getAuthToken();
         } else {
-            Toast.makeText(ExoPlayerActivity.this,VALID_AUTHTOKEN, Toast.LENGTH_LONG).show();
+            Toast.makeText(PlayerActivity.this,VALID_AUTHTOKEN, Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -560,20 +560,20 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
         if (playerModel != null && playerModel.getUserId() != null && !playerModel.getUserId().trim().matches("")) {
             userIdStr = playerModel.getUserId();
         } else {
-            Toast.makeText(ExoPlayerActivity.this, CHECK_USER_ID_MSG, Toast.LENGTH_LONG).show();
+            Toast.makeText(PlayerActivity.this, CHECK_USER_ID_MSG, Toast.LENGTH_LONG).show();
             finish();
             return;
         }
         if (playerModel != null && playerModel.getEmailId() != null && !playerModel.getEmailId().trim().matches("")) {
             emailIdStr = playerModel.getEmailId();
         } else {
-            Toast.makeText(ExoPlayerActivity.this, VALID_EMAIL, Toast.LENGTH_LONG).show();
+            Toast.makeText(PlayerActivity.this, VALID_EMAIL, Toast.LENGTH_LONG).show();
             finish();
             return;
         }
         if (playerModel != null && playerModel.getAppName() != null && !playerModel.getAppName().trim().matches("")) {
         } else {
-            Toast.makeText(ExoPlayerActivity.this,APP_NAME_MSG, Toast.LENGTH_LONG).show();
+            Toast.makeText(PlayerActivity.this,APP_NAME_MSG, Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -585,14 +585,14 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
                 if (playerModel.getVideoUrl().contains("://www.youtube") || playerModel.getVideoUrl().contains("://www.youtu.be")) {
                     if (playerModel.getVideoUrl().contains("live_stream?channel")) {
-                        final Intent playVideoIntent = new Intent(ExoPlayerActivity.this, ThirdPartyPlayer.class);
+                        final Intent playVideoIntent = new Intent(PlayerActivity.this, ThirdPartyPlayer.class);
                         playVideoIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         playVideoIntent.putExtra("PlayerModel", playerModel);
                         startActivity(playVideoIntent);
                         finish();
                         return;
                     } else {
-                        final Intent playVideoIntent = new Intent(ExoPlayerActivity.this, YouTubeAPIActivity.class);
+                        final Intent playVideoIntent = new Intent(PlayerActivity.this, YouTubeAPIActivity.class);
                         playVideoIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         playVideoIntent.putExtra("PlayerModel", playerModel);
                         startActivity(playVideoIntent);
@@ -600,7 +600,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                         return;
                     }
                 } else {
-                    final Intent playVideoIntent = new Intent(ExoPlayerActivity.this, ThirdPartyPlayer.class);
+                    final Intent playVideoIntent = new Intent(PlayerActivity.this, ThirdPartyPlayer.class);
                     playVideoIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     playVideoIntent.putExtra("PlayerModel", playerModel);
                     startActivity(playVideoIntent);
@@ -635,8 +635,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                 mAdsManager = adsManagerLoadedEvent.getAdsManager();
 
                 // Attach event and error event listeners.
-                mAdsManager.addAdErrorListener(ExoPlayerActivity.this);
-                mAdsManager.addAdEventListener(ExoPlayerActivity.this);
+                mAdsManager.addAdErrorListener(PlayerActivity.this);
+                mAdsManager.addAdEventListener(PlayerActivity.this);
                 mAdsManager.init();
             }
         });
@@ -660,7 +660,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
          */
 
         exoplayerdownloadhandler = new Handler();
-        dbHelper = new DBHelper(ExoPlayerActivity.this);
+        dbHelper = new DBHelper(PlayerActivity.this);
         dbHelper.getWritableDatabase();
         audio_1 = dbHelper.getContact(playerModel.getStreamUniqueId() + emailIdStr);
 
@@ -680,11 +680,11 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
          * Initializing Chromecast & styling the chromecast button.
          */
 
-        mAquery = new AQuery(ExoPlayerActivity.this);
+        mAquery = new AQuery(PlayerActivity.this);
         setupCastListener();
-        mCastContext = CastContext.getSharedInstance(ExoPlayerActivity.this);
-        mCastContext.registerLifecycleCallbacksBeforeIceCreamSandwich(ExoPlayerActivity.this, savedInstanceState);
-        mCastSession = CastContext.getSharedInstance(ExoPlayerActivity.this).getSessionManager().getCurrentCastSession();
+        mCastContext = CastContext.getSharedInstance(PlayerActivity.this);
+        mCastContext.registerLifecycleCallbacksBeforeIceCreamSandwich(PlayerActivity.this, savedInstanceState);
+        mCastSession = CastContext.getSharedInstance(PlayerActivity.this).getSessionManager().getCurrentCastSession();
         mCastContext.getSessionManager().addSessionManagerListener(mSessionManagerListener, CastSession.class);
 
 
@@ -692,7 +692,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
         int startPosition = 0;
 
         if (shouldStartPlayback) {
-            // ExoPlayerActivity.this will be the case only if we are coming from the
+            // PlayerActivity.this will be the case only if we are coming from the
             // CastControllerActivity by disconnecting from a device
             mPlaybackState = PlaybackState.PLAYING;
             updatePlaybackLocation(PlaybackLocation.LOCAL);
@@ -711,7 +711,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
         }
 
 
-        Context castContext = new ContextThemeWrapper(ExoPlayerActivity.this, android.support.v7.mediarouter.R.style.Theme_MediaRouter);
+        Context castContext = new ContextThemeWrapper(PlayerActivity.this, android.support.v7.mediarouter.R.style.Theme_MediaRouter);
         Drawable drawable = null;
         TypedArray a = castContext.obtainStyledAttributes(null, android.support.v7.mediarouter.R.styleable.MediaRouteButton, android.support.v7.mediarouter.R.attr.mediaRouteButtonStyle, 0);
         drawable = a.getDrawable(android.support.v7.mediarouter.R.styleable.MediaRouteButton_externalRouteEnabledDrawable);
@@ -719,7 +719,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
         DrawableCompat.setTint(drawable, getResources().getColor(R.color.white));
 
 
-        CastButtonFactory.setUpMediaRouteButton(ExoPlayerActivity.this, mediaRouteButton);
+        CastButtonFactory.setUpMediaRouteButton(PlayerActivity.this, mediaRouteButton);
         mediaRouteButton.setRemoteIndicatorDrawable(drawable);
 
         //************************************************ END ********************************************************//
@@ -756,7 +756,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
             story.setTypeface(storyTypeface);
             Typeface watchTrailerButtonTypeface = Typeface.createFromAsset(getAssets(), getResources().getString(R.string.fonts));
             videoCastCrewTitleTextView.setTypeface(watchTrailerButtonTypeface);
-            videoCastCrewTitleTextView.setText(Util.getTextofLanguage(ExoPlayerActivity.this, Util.CAST_CREW_BUTTON_TITLE, Util.DEFAULT_CAST_CREW_BUTTON_TITLE));
+            videoCastCrewTitleTextView.setText(Util.getTextofLanguage(PlayerActivity.this, Util.CAST_CREW_BUTTON_TITLE, Util.DEFAULT_CAST_CREW_BUTTON_TITLE));
 
         }catch (Exception e){Log.v("BIBHU11","Exception during font applying ="+e.toString());}
 
@@ -767,7 +767,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
         /*
             This service is responsible to calculate downloading content bandwidth .
          */
-        startService(new Intent(ExoPlayerActivity.this, DataConsumptionService.class));
+        startService(new Intent(PlayerActivity.this, DataConsumptionService.class));
 
         //************************************************ END ********************************************************//
 
@@ -906,12 +906,12 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                     Util.call_finish_at_onUserLeaveHint = false;
 
                     if (isDrm) {
-                        Intent intent = new Intent(ExoPlayerActivity.this, SubtitleList.class);
+                        Intent intent = new Intent(PlayerActivity.this, SubtitleList.class);
                         intent.putExtra("SubTitleName", SubTitleName);
                         intent.putExtra("SubTitlePath", SubTitlePath);
                         startActivityForResult(intent, SUBTITLE_REQUEST_CODE);
                     } else {
-                        Intent intent = new Intent(ExoPlayerActivity.this, Subtitle_Resolution.class);
+                        Intent intent = new Intent(PlayerActivity.this, Subtitle_Resolution.class);
                         intent.putExtra("ResolutionFormat", ResolutionFormat);
                         intent.putExtra("ResolutionUrl", ResolutionUrl);
                         intent.putExtra("SubTitleName", SubTitleName);
@@ -970,7 +970,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                 videoCensorRatingTextView.setVisibility(View.GONE);
                 videoCensorRatingTextView1.setVisibility(View.GONE);
             }
-            if (playerModel.getCensorRating().trim() != null && playerModel.getCensorRating().trim().equalsIgnoreCase(Util.getTextofLanguage(ExoPlayerActivity.this, Util.NO_DATA, Util.DEFAULT_NO_DATA))) {
+            if (playerModel.getCensorRating().trim() != null && playerModel.getCensorRating().trim().equalsIgnoreCase(Util.getTextofLanguage(PlayerActivity.this, Util.NO_DATA, Util.DEFAULT_NO_DATA))) {
                 videoCensorRatingTextView.setVisibility(View.GONE);
                 videoCensorRatingTextView1.setVisibility(View.GONE);
             }
@@ -989,7 +989,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
             if (playerModel.getVideoStory().trim() != null && !playerModel.getVideoStory().trim().matches("")) {
                 story.setText(playerModel.getVideoStory());
                 story.setVisibility(View.VISIBLE);
-                ResizableCustomView.doResizeTextView(ExoPlayerActivity.this, story, MAX_LINES, Util.getTextofLanguage(ExoPlayerActivity.this, Util.VIEW_MORE, Util.DEFAULT_VIEW_MORE), true);
+                ResizableCustomView.doResizeTextView(PlayerActivity.this, story, MAX_LINES, Util.getTextofLanguage(PlayerActivity.this, Util.VIEW_MORE, Util.DEFAULT_VIEW_MORE), true);
             } else {
                 story.setVisibility(View.GONE);
             }
@@ -1018,7 +1018,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
   /*      videoCastCrewTitleTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Util.checkNetwork(ExoPlayerActivity.this)) {
+                if (Util.checkNetwork(PlayerActivity.this)) {
                     //Will Add Some Data to send
                     Util.call_finish_at_onUserLeaveHint = false;
                     Util.hide_pause = true;
@@ -1045,12 +1045,12 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                     }
 
 
-                    final Intent detailsIntent = new Intent(ExoPlayerActivity.this, CastAndCrewActivity.class);
+                    final Intent detailsIntent = new Intent(PlayerActivity.this, CastAndCrewActivity.class);
                     detailsIntent.putExtra("cast_movie_id", movieId.trim());
                     detailsIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     startActivity(detailsIntent);
                 } else {
-                    Toast.makeText(getApplicationContext(), Util.getTextofLanguage(ExoPlayerActivity.this, Util.NO_INTERNET_CONNECTION, Util.DEFAULT_NO_INTERNET_CONNECTION), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), Util.getTextofLanguage(PlayerActivity.this, Util.NO_INTERNET_CONNECTION, Util.DEFAULT_NO_INTERNET_CONNECTION), Toast.LENGTH_LONG).show();
                 }
             }
         });*/
@@ -1131,13 +1131,13 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
         LinearLayout.LayoutParams params1 = null;
         if (((getResources().getConfiguration().screenLayout & SCREENLAYOUT_SIZE_MASK) == SCREENLAYOUT_SIZE_LARGE) || ((getResources().getConfiguration().screenLayout & SCREENLAYOUT_SIZE_MASK) == SCREENLAYOUT_SIZE_XLARGE)) {
-            if (ExoPlayerActivity.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            if (PlayerActivity.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                 params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (screenHeight * 45) / 100);
             } else {
                 params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (screenHeight * 45) / 100);
             }
         } else {
-            if (ExoPlayerActivity.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            if (PlayerActivity.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                 params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (screenHeight * 40) / 100);
             } else {
                 params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (screenHeight * 40) / 100);
@@ -1364,7 +1364,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                                 ((ProgressBar) findViewById(R.id.progress_view)).setVisibility(View.GONE);
                                 Util.call_finish_at_onUserLeaveHint = false;
 
-                                Intent resumeIntent = new Intent(ExoPlayerActivity.this, ResumePopupActivity.class);
+                                Intent resumeIntent = new Intent(PlayerActivity.this, ResumePopupActivity.class);
                                 startActivityForResult(resumeIntent, RESUME_VIDEO_REQUEST_CODE);
                             } else {
 
@@ -1426,12 +1426,12 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
             Log.v("BIBHU1","lib path=="+getDir("wasabi", MODE_PRIVATE).getAbsolutePath());
 
             /*
-             * Personalize the application (acquire DRM keys). ExoPlayerActivity.this is only
+             * Personalize the application (acquire DRM keys). PlayerActivity.this is only
 			 * necessary once each time the application is freshly installed
 			 *
 			 * ** Note: personalize() is a blocking call and may take long
 			 * enough to complete to trigger ANR (Application Not Responding)
-			 * errors. In a production application ExoPlayerActivity.this should be called in a
+			 * errors. In a production application PlayerActivity.this should be called in a
 			 * background thread.
 			 */
             if (!Runtime.isPersonalized())
@@ -1450,7 +1450,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
         try {
             EnumSet<PlaylistProxy.Flags> flags = EnumSet.noneOf(PlaylistProxy.Flags.class);
-            playerProxy = new PlaylistProxy(flags, ExoPlayerActivity.this, new Handler());
+            playerProxy = new PlaylistProxy(flags, PlayerActivity.this, new Handler());
             playerProxy.start();
         } catch (ErrorCodeException e) {
             // Consult WasabiErrors.txt for resolution of the error codes
@@ -1518,7 +1518,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
             @Override
             public void onClick(View v) {
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(ExoPlayerActivity.this)) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(PlayerActivity.this)) {
                     final Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
                     try {
                         Util.call_finish_at_onUserLeaveHint = false;
@@ -1560,7 +1560,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                             Collections.reverse(List_Of_Resolution_Url);
                             Collections.reverse(List_Of_Resolution_Url_Used_For_Download);*/
 
-                            pDialog_for_gettig_filesize = new ProgressBarHandler(ExoPlayerActivity.this);
+                            pDialog_for_gettig_filesize = new ProgressBarHandler(PlayerActivity.this);
                             pDialog_for_gettig_filesize.show();
 
                             new DetectDownloadingFileSize().execute();
@@ -1582,21 +1582,21 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
         percentg.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            AlertDialog.Builder dlgAlert = new AlertDialog.Builder(ExoPlayerActivity.this, R.style.MyAlertDialogStyle);
-                                            dlgAlert.setTitle(Util.getTextofLanguage(ExoPlayerActivity.this, Util.STOP_SAVING_THIS_VIDEO, Util.DEFAULT_STOP_SAVING_THIS_VIDEO));
-                                            dlgAlert.setMessage(Util.getTextofLanguage(ExoPlayerActivity.this, Util.YOUR_VIDEO_WONT_BE_SAVED, Util.DEFAULT_YOUR_VIDEO_WONT_BE_SAVED));
-                                            dlgAlert.setPositiveButton(Util.getTextofLanguage(ExoPlayerActivity.this, Util.BTN_KEEP, Util.DEFAULT_BTN_KEEP), null);
+                                            AlertDialog.Builder dlgAlert = new AlertDialog.Builder(PlayerActivity.this, R.style.MyAlertDialogStyle);
+                                            dlgAlert.setTitle(Util.getTextofLanguage(PlayerActivity.this, Util.STOP_SAVING_THIS_VIDEO, Util.DEFAULT_STOP_SAVING_THIS_VIDEO));
+                                            dlgAlert.setMessage(Util.getTextofLanguage(PlayerActivity.this, Util.YOUR_VIDEO_WONT_BE_SAVED, Util.DEFAULT_YOUR_VIDEO_WONT_BE_SAVED));
+                                            dlgAlert.setPositiveButton(Util.getTextofLanguage(PlayerActivity.this, Util.BTN_KEEP, Util.DEFAULT_BTN_KEEP), null);
                                             dlgAlert.setCancelable(false);
-                                            dlgAlert.setPositiveButton(Util.getTextofLanguage(ExoPlayerActivity.this, Util.BTN_KEEP, Util.DEFAULT_BTN_KEEP),
+                                            dlgAlert.setPositiveButton(Util.getTextofLanguage(PlayerActivity.this, Util.BTN_KEEP, Util.DEFAULT_BTN_KEEP),
                                                     new DialogInterface.OnClickListener() {
                                                         public void onClick(DialogInterface dialog, int id) {
                                                             dialog.cancel();
 
                                                         }
                                                     });
-                                            dlgAlert.setNegativeButton(Util.getTextofLanguage(ExoPlayerActivity.this, Util.BTN_DISCARD, Util.DEFAULT_BTN_DISCARD), null);
+                                            dlgAlert.setNegativeButton(Util.getTextofLanguage(PlayerActivity.this, Util.BTN_DISCARD, Util.DEFAULT_BTN_DISCARD), null);
                                             dlgAlert.setCancelable(false);
-                                            dlgAlert.setNegativeButton(Util.getTextofLanguage(ExoPlayerActivity.this, Util.BTN_DISCARD, Util.DEFAULT_BTN_DISCARD),
+                                            dlgAlert.setNegativeButton(Util.getTextofLanguage(PlayerActivity.this, Util.BTN_DISCARD, Util.DEFAULT_BTN_DISCARD),
                                                     new DialogInterface.OnClickListener() {
                                                         public void onClick(DialogInterface dialog, int id) {
                                                             dialog.cancel();
@@ -1611,7 +1611,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                                                                 downloadManager.remove(audio.getDOWNLOADID());
                                                                 dbHelper.deleteRecord(audio);
 
-                                                                SQLiteDatabase DB = ExoPlayerActivity.this.openOrCreateDatabase(DBHelper.DATABASE_NAME, MODE_PRIVATE, null);
+                                                                SQLiteDatabase DB = PlayerActivity.this.openOrCreateDatabase(DBHelper.DATABASE_NAME, MODE_PRIVATE, null);
                                                                 String query = "DELETE FROM " + DBHelper.DOWNLOAD_CONTENT_INFO + " WHERE download_contnet_id = '" + enqueue + "'";
                                                                 DB.execSQL(query);
 
@@ -1632,7 +1632,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                                                                 }
                                                             });
 
-                                                            Toast.makeText(getApplicationContext(), Util.getTextofLanguage(ExoPlayerActivity.this, Util.DOWNLOAD_CANCELLED, Util.DEFAULT_DOWNLOAD_CANCELLED), Toast.LENGTH_SHORT).show();
+                                                            Toast.makeText(getApplicationContext(), Util.getTextofLanguage(PlayerActivity.this, Util.DOWNLOAD_CANCELLED, Util.DEFAULT_DOWNLOAD_CANCELLED), Toast.LENGTH_SHORT).show();
 
                                                         }
                                                     });
@@ -1813,14 +1813,14 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
             LinearLayout.LayoutParams params1 = null;
             if (((getResources().getConfiguration().screenLayout & SCREENLAYOUT_SIZE_MASK) == SCREENLAYOUT_SIZE_LARGE) || ((getResources().getConfiguration().screenLayout & SCREENLAYOUT_SIZE_MASK) == SCREENLAYOUT_SIZE_XLARGE)) {
-                if (ExoPlayerActivity.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                if (PlayerActivity.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                     params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (screenHeight * 45) / 100);
 
                 } else {
                     params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (screenHeight * 45) / 100);
                 }
             } else {
-                if (ExoPlayerActivity.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                if (PlayerActivity.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                     params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (screenHeight * 40) / 100);
 
                 } else {
@@ -1846,14 +1846,14 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
             Util.player_description = true;
             LinearLayout.LayoutParams params1 = null;
             if (((getResources().getConfiguration().screenLayout & SCREENLAYOUT_SIZE_MASK) == SCREENLAYOUT_SIZE_LARGE) || ((getResources().getConfiguration().screenLayout & SCREENLAYOUT_SIZE_MASK) == SCREENLAYOUT_SIZE_XLARGE)) {
-                if (ExoPlayerActivity.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                if (PlayerActivity.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                     params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (screenHeight * 45) / 100);
 
                 } else {
                     params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (screenHeight * 45) / 100);
                 }
             } else {
-                if (ExoPlayerActivity.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                if (PlayerActivity.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                     params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (screenHeight * 40) / 100);
 
                 } else {
@@ -2033,7 +2033,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
                             if ((int) (TimeUnit.MILLISECONDS.toSeconds(emVideoView.getCurrentPosition())) > 0 && ((int) (TimeUnit.MILLISECONDS.toSeconds(emVideoView.getCurrentPosition())) == Integer.parseInt(adDetails[i]))) {
 
-                                if (Util.checkNetwork(ExoPlayerActivity.this)) {
+                                if (Util.checkNetwork(PlayerActivity.this)) {
                                     Util.call_finish_at_onUserLeaveHint = false;
                                     Util.hide_pause = true;
                                     ((ProgressBar) findViewById(R.id.progress_view)).setVisibility(View.GONE);
@@ -2064,7 +2064,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
                                     /**ad **/
 
-                                    Intent adIntent = new Intent(ExoPlayerActivity.this, AdPlayerActivity.class);
+                                    Intent adIntent = new Intent(PlayerActivity.this, AdPlayerActivity.class);
                                     adIntent.putExtra("fromAd", "fromAd");
                                     adIntent.putExtra("PlayerModel", playerModel);
                                     adIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -2072,7 +2072,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                                     /**ad **/
 
                                 } else {
-                                    Toast.makeText(getApplicationContext(), Util.getTextofLanguage(ExoPlayerActivity.this, Util.NO_INTERNET_CONNECTION, Util.DEFAULT_NO_INTERNET_CONNECTION), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(), Util.getTextofLanguage(PlayerActivity.this, Util.NO_INTERNET_CONNECTION, Util.DEFAULT_NO_INTERNET_CONNECTION), Toast.LENGTH_LONG).show();
                                 }
                                 break;
                             }
@@ -2378,7 +2378,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
             Util.call_finish_at_onUserLeaveHint = true;
 
             if (isDrm) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.canDrawOverlays(ExoPlayerActivity.this)) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.canDrawOverlays(PlayerActivity.this)) {
                     List_Of_Resolution_Format.clear();
                     List_Of_FileSize.clear();
                     List_Of_Resolution_Url.clear();
@@ -2389,7 +2389,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                     asynWithdrm.executeOnExecutor(threadPoolExecutor);
                 }
             } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.canDrawOverlays(ExoPlayerActivity.this)) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.canDrawOverlays(PlayerActivity.this)) {
                     {
                         List_Of_Resolution_Format.clear();
                         List_Of_FileSize.clear();
@@ -2408,7 +2408,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                             Collections.reverse(List_Of_Resolution_Url);
                             Collections.reverse(List_Of_Resolution_Url_Used_For_Download);*/
 
-                            pDialog_for_gettig_filesize = new ProgressBarHandler(ExoPlayerActivity.this);
+                            pDialog_for_gettig_filesize = new ProgressBarHandler(PlayerActivity.this);
                             pDialog_for_gettig_filesize.show();
 
                             new DetectDownloadingFileSize().execute();
@@ -2475,7 +2475,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
                 } else {
                     if (playerModel.getPreRoll() == 1 && playerModel.getAdNetworkId() == 1) {
-                        if (Util.checkNetwork(ExoPlayerActivity.this)) {
+                        if (Util.checkNetwork(PlayerActivity.this)) {
                             Util.call_finish_at_onUserLeaveHint = false;
                             Util.hide_pause = true;
                             ((ProgressBar) findViewById(R.id.progress_view)).setVisibility(View.GONE);
@@ -2504,14 +2504,14 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                             }
                             /**ad **/
 
-                            Intent adIntent = new Intent(ExoPlayerActivity.this, AdPlayerActivity.class);
+                            Intent adIntent = new Intent(PlayerActivity.this, AdPlayerActivity.class);
                             adIntent.putExtra("fromAd", "fromAd");
                             adIntent.putExtra("PlayerModel", playerModel);
                             adIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                             startActivityForResult(adIntent, SECOND_ADD_REQUEST_CODE);
                             /**ad **/
                         } else {
-                            Toast.makeText(getApplicationContext(), Util.getTextofLanguage(ExoPlayerActivity.this, Util.NO_INTERNET_CONNECTION, Util.DEFAULT_NO_INTERNET_CONNECTION), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), Util.getTextofLanguage(PlayerActivity.this, Util.NO_INTERNET_CONNECTION, Util.DEFAULT_NO_INTERNET_CONNECTION), Toast.LENGTH_LONG).show();
                         }
                     } else {
                         emVideoView.start();
@@ -2856,7 +2856,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
     private void showSystemUI() {
         story.setText(playerModel.getVideoStory());
-        ResizableCustomView.doResizeTextView(ExoPlayerActivity.this, story, MAX_LINES, Util.getTextofLanguage(ExoPlayerActivity.this,Util.VIEW_MORE,Util.DEFAULT_VIEW_MORE), true);
+        ResizableCustomView.doResizeTextView(PlayerActivity.this, story, MAX_LINES, Util.getTextofLanguage(PlayerActivity.this,Util.VIEW_MORE,Util.DEFAULT_VIEW_MORE), true);
 
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(
@@ -2934,7 +2934,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
         try {
 
-            SQLiteDatabase DB = ExoPlayerActivity.this.openOrCreateDatabase(DBHelper.DATABASE_NAME, MODE_PRIVATE, null);
+            SQLiteDatabase DB = PlayerActivity.this.openOrCreateDatabase(DBHelper.DATABASE_NAME, MODE_PRIVATE, null);
             Cursor cursor = DB.rawQuery("SELECT " + DBHelper.COLUMN_DOWNLOADID + " FROM " + DBHelper.TABLE_NAME + " ", null);
             int count = cursor.getCount();
 
@@ -2943,7 +2943,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
             if (count > 0) {
                 if (cursor.moveToFirst()) {
                     do {
-                        DownloadManager downloadManager1 = (DownloadManager) ExoPlayerActivity.this.getSystemService(DOWNLOAD_SERVICE);
+                        DownloadManager downloadManager1 = (DownloadManager) PlayerActivity.this.getSystemService(DOWNLOAD_SERVICE);
                         DownloadManager.Query download_id_query = new DownloadManager.Query();
                         download_id_query.setFilterById(Long.parseLong(cursor.getString(0).trim())); //filter by id which you have receieved when reqesting download from download manager
                         Cursor id_cursor = downloadManager1.query(download_id_query);
@@ -3018,7 +3018,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
                             Log.v("SUBHA", mlvfile);
                         } else {
-                            mlvfile = Util.getTextofLanguage(ExoPlayerActivity.this, Util.NO_DATA, Util.DEFAULT_NO_DATA);
+                            mlvfile = Util.getTextofLanguage(PlayerActivity.this, Util.NO_DATA, Util.DEFAULT_NO_DATA);
                         }
 
                         if ((mainJson.has("token")) && mainJson.getString("token").trim() != null && !mainJson.getString("token").trim().isEmpty() && !mainJson.getString("token").trim().equals("null") && !mainJson.getString("token").trim().matches("")) {
@@ -3026,7 +3026,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                             Log.v("SUBHA", "token" + token);
 
                         } else {
-                            token = Util.getTextofLanguage(ExoPlayerActivity.this, Util.NO_DATA, Util.DEFAULT_NO_DATA);
+                            token = Util.getTextofLanguage(PlayerActivity.this, Util.NO_DATA, Util.DEFAULT_NO_DATA);
                         }
 
 
@@ -3123,10 +3123,10 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                 Log.d("sanji", playerModel.getStreamUniqueId());
 
 
-                //ExoPlayerActivity.this portion is changed later because of multiple download option.
+                //PlayerActivity.this portion is changed later because of multiple download option.
 
                 if (List_Of_Resolution_Url.size() > 0) {
-                    pDialog_for_gettig_filesize = new ProgressBarHandler(ExoPlayerActivity.this);
+                    pDialog_for_gettig_filesize = new ProgressBarHandler(PlayerActivity.this);
                     pDialog_for_gettig_filesize.show();
 
                     new DetectDownloadingFileSize().execute();
@@ -3137,7 +3137,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
 
             } catch (IllegalArgumentException ex) {
-                Toast.makeText(ExoPlayerActivity.this, Util.getTextofLanguage(ExoPlayerActivity.this, Util.SIGN_OUT_ERROR, Util.DEFAULT_SIGN_OUT_ERROR), Toast.LENGTH_LONG).show();
+                Toast.makeText(PlayerActivity.this, Util.getTextofLanguage(PlayerActivity.this, Util.SIGN_OUT_ERROR, Util.DEFAULT_SIGN_OUT_ERROR), Toast.LENGTH_LONG).show();
 
             }
 
@@ -3146,7 +3146,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
         @Override
         protected void onPreExecute() {
-            pDialog = new ProgressBarHandler(ExoPlayerActivity.this);
+            pDialog = new ProgressBarHandler(PlayerActivity.this);
             pDialog.show();
 
 
@@ -3162,7 +3162,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
         @Override
         protected void onPreExecute() {
-            pDialog = new ProgressBarHandler(ExoPlayerActivity.this);
+            pDialog = new ProgressBarHandler(PlayerActivity.this);
             pDialog.show();
 
         }
@@ -3208,12 +3208,12 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                 String lengh = ""+file_size;
 
                 if(lengh.toString().equals("0.0")){
-                    AlertDialog.Builder dlgAlert = new AlertDialog.Builder(ExoPlayerActivity.this,R.style.MyAlertDialogStyle);
-                    dlgAlert.setMessage(Util.getTextofLanguage(ExoPlayerActivity.this,Util.SLOW_INTERNET_CONNECTION,Util.DEFAULT_SLOW_INTERNET_CONNECTION));
-                    dlgAlert.setTitle(Util.getTextofLanguage(ExoPlayerActivity.this,Util.SORRY,Util.DEFAULT_SORRY));
-                    dlgAlert.setPositiveButton(Util.getTextofLanguage(ExoPlayerActivity.this,Util.BUTTON_OK,Util.DEFAULT_BUTTON_OK), null);
+                    AlertDialog.Builder dlgAlert = new AlertDialog.Builder(PlayerActivity.this,R.style.MyAlertDialogStyle);
+                    dlgAlert.setMessage(Util.getTextofLanguage(PlayerActivity.this,Util.SLOW_INTERNET_CONNECTION,Util.DEFAULT_SLOW_INTERNET_CONNECTION));
+                    dlgAlert.setTitle(Util.getTextofLanguage(PlayerActivity.this,Util.SORRY,Util.DEFAULT_SORRY));
+                    dlgAlert.setPositiveButton(Util.getTextofLanguage(PlayerActivity.this,Util.BUTTON_OK,Util.DEFAULT_BUTTON_OK), null);
                     dlgAlert.setCancelable(false);
-                    dlgAlert.setPositiveButton(Util.getTextofLanguage(ExoPlayerActivity.this,Util.BUTTON_OK,Util.DEFAULT_BUTTON_OK),
+                    dlgAlert.setPositiveButton(Util.getTextofLanguage(PlayerActivity.this,Util.BUTTON_OK,Util.DEFAULT_BUTTON_OK),
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dialog.cancel();
@@ -3223,12 +3223,12 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                     return;
                 }
 
-                AlertDialog.Builder dlgAlert = new AlertDialog.Builder(ExoPlayerActivity.this, R.style.MyAlertDialogStyle);
-                dlgAlert.setTitle(Util.getTextofLanguage(ExoPlayerActivity.this, Util.WANT_TO_DOWNLOAD, Util.DEFAULT_WANT_TO_DOWNLOAD));
+                AlertDialog.Builder dlgAlert = new AlertDialog.Builder(PlayerActivity.this, R.style.MyAlertDialogStyle);
+                dlgAlert.setTitle(Util.getTextofLanguage(PlayerActivity.this, Util.WANT_TO_DOWNLOAD, Util.DEFAULT_WANT_TO_DOWNLOAD));
                 dlgAlert.setMessage(playerModel.getVideoTitle() + " " + "(" + lengh + "MB)");
-                dlgAlert.setPositiveButton(Util.getTextofLanguage(ExoPlayerActivity.this, Util.DOWNLOAD_BUTTON_TITLE, Util.DEFAULT_DOWNLOAD_BUTTON_TITLE), null);
+                dlgAlert.setPositiveButton(Util.getTextofLanguage(PlayerActivity.this, Util.DOWNLOAD_BUTTON_TITLE, Util.DEFAULT_DOWNLOAD_BUTTON_TITLE), null);
                 dlgAlert.setCancelable(false);
-                dlgAlert.setPositiveButton(Util.getTextofLanguage(ExoPlayerActivity.this, Util.DOWNLOAD_BUTTON_TITLE, Util.DEFAULT_DOWNLOAD_BUTTON_TITLE),
+                dlgAlert.setPositiveButton(Util.getTextofLanguage(PlayerActivity.this, Util.DOWNLOAD_BUTTON_TITLE, Util.DEFAULT_DOWNLOAD_BUTTON_TITLE),
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
@@ -3243,9 +3243,9 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
                             }
                         });
-                dlgAlert.setNegativeButton(Util.getTextofLanguage(ExoPlayerActivity.this, Util.CANCEL_BUTTON, Util.DEFAULT_CANCEL_BUTTON), null);
+                dlgAlert.setNegativeButton(Util.getTextofLanguage(PlayerActivity.this, Util.CANCEL_BUTTON, Util.DEFAULT_CANCEL_BUTTON), null);
                 dlgAlert.setCancelable(false);
-                dlgAlert.setNegativeButton(Util.getTextofLanguage(ExoPlayerActivity.this, Util.CANCEL_BUTTON, Util.DEFAULT_CANCEL_BUTTON),
+                dlgAlert.setNegativeButton(Util.getTextofLanguage(PlayerActivity.this, Util.CANCEL_BUTTON, Util.DEFAULT_CANCEL_BUTTON),
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
@@ -3256,7 +3256,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
 
             } catch (IllegalArgumentException ex) {
-                Toast.makeText(ExoPlayerActivity.this, Util.getTextofLanguage(ExoPlayerActivity.this, Util.SIGN_OUT_ERROR, Util.DEFAULT_SIGN_OUT_ERROR), Toast.LENGTH_LONG).show();
+                Toast.makeText(PlayerActivity.this, Util.getTextofLanguage(PlayerActivity.this, Util.SIGN_OUT_ERROR, Util.DEFAULT_SIGN_OUT_ERROR), Toast.LENGTH_LONG).show();
 
             }
 
@@ -3297,7 +3297,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                                     Intent intent = new Intent("NewVodeoAvailable");
                                     sendBroadcast(intent);
 
-                                    SQLiteDatabase DB = ExoPlayerActivity.this.openOrCreateDatabase(DBHelper.DATABASE_NAME, MODE_PRIVATE, null);
+                                    SQLiteDatabase DB = PlayerActivity.this.openOrCreateDatabase(DBHelper.DATABASE_NAME, MODE_PRIVATE, null);
                                     String query1 = "UPDATE " + DBHelper.DOWNLOAD_CONTENT_INFO + " SET download_status = '1'" +
                                             " WHERE email = '" + emailIdStr + "' AND download_contnet_id = '" + model.getDOWNLOADID() + "'";
                                     DB.execSQL(query1);
@@ -3308,7 +3308,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                                             com.intertrust.wasabi.jni.Runtime.processServiceToken(licenseAcquisitionToken);
 
                                             EnumSet<PlaylistProxy.Flags> flags = EnumSet.noneOf(PlaylistProxy.Flags.class);
-                                            playerProxy = new PlaylistProxy(flags, ExoPlayerActivity.this, new Handler());
+                                            playerProxy = new PlaylistProxy(flags, PlayerActivity.this, new Handler());
                                             playerProxy.start();
 
                                         } catch (Exception e) {
@@ -3327,7 +3327,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                                     // 1. process for download fail.
                                     model.setDSTATUS(0);
 
-                                    SQLiteDatabase DB = ExoPlayerActivity.this.openOrCreateDatabase(DBHelper.DATABASE_NAME, MODE_PRIVATE, null);
+                                    SQLiteDatabase DB = PlayerActivity.this.openOrCreateDatabase(DBHelper.DATABASE_NAME, MODE_PRIVATE, null);
                                     String query1 = "UPDATE " + DBHelper.DOWNLOAD_CONTENT_INFO + " SET download_status = '0'" +
                                             " WHERE email = '" + emailIdStr + "' AND download_contnet_id = '" + model.getDOWNLOADID() + "'";
                                     DB.execSQL(query1);
@@ -3345,7 +3345,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                                 long downloaded = cursor.getInt(downloadedIndex);
                                 double progress = 0.0;
                                 if (size != -1) progress = downloaded * 100.0 / size;
-                                // At ExoPlayerActivity.this point you have the progress as a percentage.
+                                // At PlayerActivity.this point you have the progress as a percentage.
                                 model.setProgress((int) progress);
                                 //Util.downloadprogress=(int) progress;
 
@@ -3493,7 +3493,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
         }
 
 
-        SQLiteDatabase DB = ExoPlayerActivity.this.openOrCreateDatabase(DBHelper.DATABASE_NAME, MODE_PRIVATE, null);
+        SQLiteDatabase DB = PlayerActivity.this.openOrCreateDatabase(DBHelper.DATABASE_NAME, MODE_PRIVATE, null);
         String query1 = "INSERT INTO " + DBHelper.DOWNLOAD_CONTENT_INFO + "(download_contnet_id,log_id,authtoken,email," +
                 "ipaddress,movie_id,episode_id,device_type,download_status,server_sending_final_status) VALUES" +
                 "('" + enqueue + "','0','" + authToken.trim() + "','" + emailIdStr.trim() + "','" + ipAddressStr + "'," +
@@ -3513,7 +3513,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
         // Have to unComment
 
-        // ExoPlayerActivity.this code is only responsible for Access period and Watch Period feature on Download Contnet
+        // PlayerActivity.this code is only responsible for Access period and Watch Period feature on Download Contnet
         Cursor cursor = DB.rawQuery("SELECT * FROM " + DBHelper.WATCH_ACCESS_INFO + "" +
                 " WHERE email = '" + emailIdStr.trim() + "' AND stream_unique_id = '" + playerModel.getStreamUniqueId() + "'", null);
 
@@ -3557,9 +3557,9 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
     }
 
     private void requestStoragePermission() {
-        if (ActivityCompat.checkSelfPermission(ExoPlayerActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (ActivityCompat.checkSelfPermission(PlayerActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(ExoPlayerActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_STORAGE);
+            ActivityCompat.requestPermissions(PlayerActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_STORAGE);
         } else {
 
             if (List_Of_Resolution_Url_Used_For_Download.size() > 0) {
@@ -3586,7 +3586,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                 }*/
 
             } else {
-                Toast.makeText(ExoPlayerActivity.this, Util.getTextofLanguage(ExoPlayerActivity.this, Util.DOWNLOAD_INTERRUPTED, Util.DEFAULT_DOWNLOAD_INTERRUPTED), Toast.LENGTH_SHORT).show();
+                Toast.makeText(PlayerActivity.this, Util.getTextofLanguage(PlayerActivity.this, Util.DOWNLOAD_INTERRUPTED, Util.DEFAULT_DOWNLOAD_INTERRUPTED), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -3683,7 +3683,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
     /*****offline *****/
 
 
-    // ExoPlayerActivity.this added later for chromecast//
+    // PlayerActivity.this added later for chromecast//
     private void setupCastListener() {
         mSessionManagerListener = new SessionManagerListener<CastSession>() {
 
@@ -3774,7 +3774,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                         Current_Sesion_DataUsedByChrmoeCast = 0;
                     }
 
-                    // ExoPlayerActivity.this is done because , during cast ending receiver already closed the streaming restriction for ExoPlayerActivity.this user , so we have to
+                    // PlayerActivity.this is done because , during cast ending receiver already closed the streaming restriction for PlayerActivity.this user , so we have to
                     // satrt a new streaming restriction at sender end.
                     restrict_stream_id = "0";
 
@@ -4028,9 +4028,9 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
             @Override
             public void onStatusUpdated() {
 
-//                Intent intent = new Intent(ExoPlayerActivity.this, ExpandedControlsActivity.class);
+//                Intent intent = new Intent(PlayerActivity.this, ExpandedControlsActivity.class);
 //                startActivity(intent);
-//                remoteMediaClient.removeListener(ExoPlayerActivity.this);
+//                remoteMediaClient.removeListener(PlayerActivity.this);
 
                 if (mCastSession != null && mCastSession.isConnected()) {
                     Log.v("BIBHU222", "======" + remoteMediaClient.isPlaying());
@@ -4133,7 +4133,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                 jsonObj.put("domain_name", rootUrl.trim().substring(0, rootUrl.trim().length() - 6));
                 jsonObj.put("is_log", "1");
 
-                // ExoPlayerActivity.this code is changed according to new Video log //
+                // PlayerActivity.this code is changed according to new Video log //
 
                 jsonObj.put("played_length", "0");
                 jsonObj.put("log_temp_id", "0");
@@ -4144,7 +4144,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                 //=====================End===================//
 
 
-                // ExoPlayerActivity.this  Code Is Added For Drm BufferLog By Bibhu ...
+                // PlayerActivity.this  Code Is Added For Drm BufferLog By Bibhu ...
 
                 jsonObj.put("resolution", "BEST");
                 jsonObj.put("start_time", String.valueOf(playerPosition));
@@ -4236,7 +4236,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                 jsonObj.put("domain_name", rootUrl.trim().substring(0, rootUrl.trim().length() - 6));
                 jsonObj.put("is_log", "1");
 
-                // ExoPlayerActivity.this code is changed according to new Video log //
+                // PlayerActivity.this code is changed according to new Video log //
 
                 jsonObj.put("played_length", "0");
                 jsonObj.put("log_temp_id", "0");
@@ -4301,7 +4301,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
         }
     }
 
-    // ExoPlayerActivity.this part is only applicable for multiple download optin feature
+    // PlayerActivity.this part is only applicable for multiple download optin feature
 
     class DetectDownloadingFileSize extends AsyncTask<String, String, String> {
 
@@ -4358,12 +4358,12 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                     // Show PopUp for Multiple Options for Download .
                     ShowDownloadOptionPopUp();
                 }else {
-                    AlertDialog.Builder dlgAlert = new AlertDialog.Builder(ExoPlayerActivity.this,R.style.MyAlertDialogStyle);
-                    dlgAlert.setMessage(Util.getTextofLanguage(ExoPlayerActivity.this,Util.SLOW_INTERNET_CONNECTION,Util.DEFAULT_SLOW_INTERNET_CONNECTION));
-                    dlgAlert.setTitle(Util.getTextofLanguage(ExoPlayerActivity.this,Util.SORRY,Util.DEFAULT_SORRY));
-                    dlgAlert.setPositiveButton(Util.getTextofLanguage(ExoPlayerActivity.this,Util.BUTTON_OK,Util.DEFAULT_BUTTON_OK), null);
+                    AlertDialog.Builder dlgAlert = new AlertDialog.Builder(PlayerActivity.this,R.style.MyAlertDialogStyle);
+                    dlgAlert.setMessage(Util.getTextofLanguage(PlayerActivity.this,Util.SLOW_INTERNET_CONNECTION,Util.DEFAULT_SLOW_INTERNET_CONNECTION));
+                    dlgAlert.setTitle(Util.getTextofLanguage(PlayerActivity.this,Util.SORRY,Util.DEFAULT_SORRY));
+                    dlgAlert.setPositiveButton(Util.getTextofLanguage(PlayerActivity.this,Util.BUTTON_OK,Util.DEFAULT_BUTTON_OK), null);
                     dlgAlert.setCancelable(false);
-                    dlgAlert.setPositiveButton(Util.getTextofLanguage(ExoPlayerActivity.this,Util.BUTTON_OK,Util.DEFAULT_BUTTON_OK),
+                    dlgAlert.setPositiveButton(Util.getTextofLanguage(PlayerActivity.this,Util.BUTTON_OK,Util.DEFAULT_BUTTON_OK),
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dialog.cancel();
@@ -4381,8 +4381,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
     public void ShowDownloadOptionPopUp() {
 
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(ExoPlayerActivity.this, R.style.MyAlertDialogStyle);
-        LayoutInflater inflater = (LayoutInflater) ExoPlayerActivity.this.getSystemService(ExoPlayerActivity.this.LAYOUT_INFLATER_SERVICE);
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(PlayerActivity.this, R.style.MyAlertDialogStyle);
+        LayoutInflater inflater = (LayoutInflater) PlayerActivity.this.getSystemService(PlayerActivity.this.LAYOUT_INFLATER_SERVICE);
 
         View convertView = (View) inflater.inflate(R.layout.activity_sdk_download_popup, null);
         alertDialog.setView(convertView);
@@ -4393,11 +4393,11 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
         Button save = (Button) convertView.findViewById(R.id.save);
         Button cancel = (Button) convertView.findViewById(R.id.cancel);
 
-        save.setText(Util.getTextofLanguage(ExoPlayerActivity.this, Util.SAVE, Util.DEFAULT_SAVE));
-        cancel.setText(Util.getTextofLanguage(ExoPlayerActivity.this, Util.CANCEL_BUTTON, Util.DEFAULT_CANCEL_BUTTON));
-        title_text.setText(Util.getTextofLanguage(ExoPlayerActivity.this, Util.SAVE_OFFLINE_VIDEO, Util.DEFAULT_SAVE_OFFLINE_VIDEO));
+        save.setText(Util.getTextofLanguage(PlayerActivity.this, Util.SAVE, Util.DEFAULT_SAVE));
+        cancel.setText(Util.getTextofLanguage(PlayerActivity.this, Util.CANCEL_BUTTON, Util.DEFAULT_CANCEL_BUTTON));
+        title_text.setText(Util.getTextofLanguage(PlayerActivity.this, Util.SAVE_OFFLINE_VIDEO, Util.DEFAULT_SAVE_OFFLINE_VIDEO));
 
-        DownloadOptionAdapter adapter = new DownloadOptionAdapter(ExoPlayerActivity.this, List_Of_FileSize, List_Of_Resolution_Format);
+        DownloadOptionAdapter adapter = new DownloadOptionAdapter(PlayerActivity.this, List_Of_FileSize, List_Of_Resolution_Format);
         resolution_list.setAdapter(adapter);
 
         save.setOnClickListener(new View.OnClickListener() {
@@ -4446,7 +4446,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
     //============================End=================================//
 
 
-    // ExoPlayerActivity.this AsyncTask is called to get Details of Watch Period and Access Period of download content.
+    // PlayerActivity.this AsyncTask is called to get Details of Watch Period and Access Period of download content.
 
     class AsyncWatchAccessDetails extends AsyncTask<String, String, String> {
 
@@ -4466,7 +4466,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
             Log.v("BIBHU11", "f_url[0]=======" + f_url[0]);
 
-            SQLiteDatabase DB = ExoPlayerActivity.this.openOrCreateDatabase(DBHelper.DATABASE_NAME, MODE_PRIVATE, null);
+            SQLiteDatabase DB = PlayerActivity.this.openOrCreateDatabase(DBHelper.DATABASE_NAME, MODE_PRIVATE, null);
             Cursor cursor = DB.rawQuery("SELECT stream_unique_id FROM " + DBHelper.WATCH_ACCESS_INFO + " WHERE download_id = '" + f_url[0].trim() + "'", null);
             int count = cursor.getCount();
             String Stream_Id = "";
@@ -4494,7 +4494,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                 httppost.addHeader("user_id", userIdStr);
                 httppost.addHeader("device_type", "2");
                 httppost.addHeader("request_data", "");
-                httppost.addHeader("lang_code", Util.getTextofLanguage(ExoPlayerActivity.this, Util.SELECTED_LANGUAGE_CODE, Util.DEFAULT_SELECTED_LANGUAGE_CODE));
+                httppost.addHeader("lang_code", Util.getTextofLanguage(PlayerActivity.this, Util.SELECTED_LANGUAGE_CODE, Util.DEFAULT_SELECTED_LANGUAGE_CODE));
 
 
                 // Execute HTTP Post Request
@@ -4527,7 +4527,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                         if (Dwonload_Complete_Msg.trim().equals(""))
                             Dwonload_Complete_Msg = "Your video has been downloaded successfully.";
 
-                        SQLiteDatabase DB1 = ExoPlayerActivity.this.openOrCreateDatabase(DBHelper.DATABASE_NAME, MODE_PRIVATE, null);
+                        SQLiteDatabase DB1 = PlayerActivity.this.openOrCreateDatabase(DBHelper.DATABASE_NAME, MODE_PRIVATE, null);
 
 
                         String query1 = "UPDATE " + DBHelper.WATCH_ACCESS_INFO + " SET server_current_time = '" + myJson.optLong("created_date") + "' ," +
@@ -4553,9 +4553,9 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
         @Override
         protected void onPostExecute(String file_url) {
             Log.v("BIBHU11", "response of onPostExecute called ======");
-            Intent intent = new Intent(ExoPlayerActivity.this, PopUpService.class);
+            Intent intent = new Intent(PlayerActivity.this, PopUpService.class);
             intent.putExtra("msg", Dwonload_Complete_Msg);
-            ExoPlayerActivity.this.startService(intent);
+            PlayerActivity.this.startService(intent);
         }
     }
 
@@ -4632,7 +4632,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
             case LOADED:
                 onClick1();
              /*   if (pDialog == null){
-                    pDialog = new ProgressDialog(ExoPlayerActivity.this);
+                    pDialog = new ProgressDialog(PlayerActivity.this);
                     pDialog.setMessage("loading");
                     pDialog.show();
                 }*/
@@ -4735,7 +4735,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
 
     public void onClick1() {
         if (mDialog == null) {
-            mDialog = new ProgressBarHandler(ExoPlayerActivity.this);
+            mDialog = new ProgressBarHandler(PlayerActivity.this);
             mDialog.show();
         } else {
             mDialog.hide();
@@ -4792,7 +4792,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
             valueList = Util.videoLogUrl.trim() + "," + authToken.trim() + "," + userIdStr + "," + ipAddressStr + "," + movieId.trim() + "," + episodeId.trim() + "," + watchStatus + "," + "2" + "," + videoLogId + "," + (playerPosition - player_start_time) + "," + log_temp_id + "," + playerPosition;
         }
 
-        new WebApiController(ExoPlayerActivity.this,keyList,valueList,""+logType,rootUrl).execute();
+        new WebApiController(PlayerActivity.this,keyList,valueList,""+logType,rootUrl).execute();
 
     }
 
@@ -4815,7 +4815,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
         keyList = "apiname,authToken,user_id,ip_address,movie_id,episode_id,device_type,log_id,resolution,start_time,end_time,log_unique_id,location,video_type,totalBandwidth";
         valueList = Util.bufferLogUrl.trim()+","+authToken+","+userIdStr+","+ipAddressStr+","+movieId.trim()+","+episodeId.trim()+","+"2"+","+videoBufferLogId+","+resolution.trim()+","+String.valueOf(playerPosition)+","+String.valueOf(playerPosition)+","+videoBufferLogUniqueId+","+Location+","+"mped_dash"+","+totalBandwidth;
 
-        new WebApiController(ExoPlayerActivity.this,keyList,valueList,""+ASYNC_BUFFERLOG_DETAILS,rootUrl).execute();
+        new WebApiController(PlayerActivity.this,keyList,valueList,""+ASYNC_BUFFERLOG_DETAILS,rootUrl).execute();
 
     }
 
@@ -4891,7 +4891,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
                     /**SPOTX***/
                     if (playerModel.getAdNetworkId() == 1 && playerModel.getPostRoll() == 1) {
 
-                        Intent adIntent = new Intent(ExoPlayerActivity.this, AdPlayerActivity.class);
+                        Intent adIntent = new Intent(PlayerActivity.this, AdPlayerActivity.class);
                         adIntent.putExtra("fromAd", "fromAd");
                         adIntent.putExtra("PlayerModel", playerModel);
                         startActivity(adIntent);
@@ -5203,7 +5203,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
      * This method is applicable to handle cast and crew click
      */
     public void handleCastAndCrew(){
-        if (Util.checkNetwork(ExoPlayerActivity.this)) {
+        if (Util.checkNetwork(PlayerActivity.this)) {
 
             Util.hide_pause = true;
             ((ProgressBar) findViewById(R.id.progress_view)).setVisibility(View.GONE);
@@ -5229,7 +5229,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements SensorOrient
             }
 
         } else {
-            Toast.makeText(getApplicationContext(), Util.getTextofLanguage(ExoPlayerActivity.this, Util.NO_INTERNET_CONNECTION, Util.DEFAULT_NO_INTERNET_CONNECTION), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), Util.getTextofLanguage(PlayerActivity.this, Util.NO_INTERNET_CONNECTION, Util.DEFAULT_NO_INTERNET_CONNECTION), Toast.LENGTH_LONG).show();
         }
     }
 
