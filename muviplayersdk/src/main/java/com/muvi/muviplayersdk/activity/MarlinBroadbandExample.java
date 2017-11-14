@@ -272,6 +272,7 @@ public class MarlinBroadbandExample extends AppCompatActivity implements SensorO
     @Override
     protected void onResume() {
         super.onResume();
+        getSupportActionBar().hide();
         SensorOrientationChangeNotifier.getInstance(MarlinBroadbandExample.this).addListener(this);
         Util.app_is_in_player_context = true;
 

@@ -3,13 +3,10 @@ package com.muvi.muviplayersdk.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -28,7 +25,7 @@ public class ResumePopupActivity extends Activity implements SensorOrientationCh
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_resume_playing);
+        setContentView(R.layout.sdk_activity_resume_playing);
         LinearLayout mainLayout = (LinearLayout) findViewById(R.id.mainlayout);
 
        /* Window window = ResumePopupActivity.this.getWindow();

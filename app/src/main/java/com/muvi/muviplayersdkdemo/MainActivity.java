@@ -321,7 +321,7 @@ public class MainActivity extends AppCompatActivity {
                     playerModel.setVideoUrl(url.get(position));
                     playerModel.setUserId("151404");
                     playerModel.setEmailId("bb@gmail.com");
-                    playerModel.setAuthTokenStr("25e74a5c88d19c4b57c8138bf47abdf7");
+                    playerModel.setAuthToken("25e74a5c88d19c4b57c8138bf47abdf7");
                     playerModel.setAppName(getResources().getString(com.example.muviplayersdk.R.string.app_name));
                     playerModel.setDomainName("https://www.muvi.com/rest/");
 

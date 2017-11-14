@@ -386,7 +386,7 @@ public class PlayerActivity extends AppCompatActivity implements SensorOrientati
     @Override
     protected void onResume() {
         super.onResume();
-
+        getSupportActionBar().hide();
         Util.call_finish_at_onUserLeaveHint = true;
 
         /*
@@ -1726,7 +1726,7 @@ public class PlayerActivity extends AppCompatActivity implements SensorOrientati
                                         CallVideoLog(ASYNC_FF_VODEOLOG_DETAILS);
                                     }
 
-                                } else if (isFastForward == false && currentPositionStr >= millisecondsToString(playerPreviousPosition)) {
+                                } else if (isFastForward == false && currentPositionStr >0) {
 
                                     playerPreviousPosition = 0;
 
